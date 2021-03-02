@@ -44,6 +44,6 @@ An effort to put together the r codes that public health specialists frequently 
 	- goodness of fit
 	- test of independence
 	- test of homogeneity
-- fisher's exact test
+- fisher's test
 - mcnemar's test
 - merging data sets 
