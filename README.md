@@ -23,15 +23,12 @@ An effort to put together the r codes that public health specialists frequently 
 	- list variable names 
 	- view data set 
 	- sort by variable 
+	- merging data sets 
 - plots 
 	- boxplot 
 	- histogram 
 	- density plot 
 	- scatter plot 
-- t-tests
-	- one sample t-test
-	- unpaired sample t-test
-	- paired sample t-test (incomplete)
 - testing normality
 	- with histogram 
 	- with qq plot  
@@ -40,6 +37,10 @@ An effort to put together the r codes that public health specialists frequently 
 	- with skewness
 	- with kurtosis
 	- shapiro-wilk test
+- t-tests
+	- one sample t-test
+	- unpaired sample t-test
+	- paired sample t-test (incomplete)
 - chi-square test
 	- goodness of fit
 	- test of independence
@@ -48,4 +49,3 @@ An effort to put together the r codes that public health specialists frequently 
 - mcnemar's test
 - binomial test 
 - wilcoxon test 
-- merging data sets 
