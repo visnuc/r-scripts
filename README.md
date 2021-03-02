@@ -1,7 +1,5 @@
 # R scripts 
 
-**version 0.0.1**
-
 An effort to put together the r codes that public health specialists frequently need to analyze their data.
 
 ## Contributor
