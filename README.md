@@ -39,9 +39,10 @@ An effort to put together the r codes that public health specialists frequently 
 	- with boxplot
 	- with skewness
 	- with kurtosis
-	- shapiro–wilk test
+	- shapiro-wilk test
 - chi-square test
 	- goodness of fit
 	- test of independence
 	- test of homogeneity
 - fisher's exact test
+- merging data

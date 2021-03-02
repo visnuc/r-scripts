@@ -3,7 +3,7 @@
 # ============================
 
 # importing data 
-dataRaw <-read.csv(file.choose(),header=T) 
+dataRaw <-read.csv(file.choose(), header=T) 
 
 washMain <- dataRaw
 vaxTiter <- dataRaw
