@@ -46,4 +46,6 @@ An effort to put together the r codes that public health specialists frequently 
 	- test of homogeneity
 - fisher's test
 - mcnemar's test
+- binomial test 
+- wilcoxon test 
 - merging data sets 
