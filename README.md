@@ -45,4 +45,4 @@ An effort to put together the r codes that public health specialists frequently 
 	- test of independence
 	- test of homogeneity
 - fisher's exact test
-- merging data
+- merging data sets 
