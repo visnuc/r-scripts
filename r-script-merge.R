@@ -38,9 +38,13 @@ View(vt)
 
 nrow(vt)
 nrow(washMain)
+nrow(washMain2)
+
 ncol(vt)
 ncol(vaxTiter)
 ncol(washMain)
 
 washMain2 <- merge(washMain, vt, by = "pid", all.x = T)
 write.table(washMain2, file = "data_wash_2_v20210302.csv", sep = ",", row.names = F)
+
+
