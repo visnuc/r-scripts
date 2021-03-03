@@ -14,6 +14,7 @@ names(washMain)
 View(vaxTiter)
 names(vaxTiter)
 
+install.packages("tidyverse")
 library(tidyverse)
 # vtAll <- vaxTiter %>%
 #   select(Pid, agedays, everything())
