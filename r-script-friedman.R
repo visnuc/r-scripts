@@ -48,4 +48,3 @@ friedman.test(ftLong$value,
 # Friedman chi-squared test statistic 
 # is 2.3333, degrees of freedom is 2, and 
 # sample size is 6. 
-
