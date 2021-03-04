@@ -50,4 +50,4 @@ An effort to put together the r codes that public health professionals frequentl
 - ANOVA
   - One way ANOVA
   - One way repeated-measures ANOVA
-  
+- Pearson's correlation
