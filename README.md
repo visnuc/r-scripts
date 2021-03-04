@@ -39,11 +39,15 @@ An effort to put together the r codes that public health professionals frequentl
 	- one sample t-test
 	- unpaired sample t-test
 	- paired sample t-test (incomplete)
-- chi-square test
-	- goodness of fit
-	- test of independence
-	- test of homogeneity
-- fisher's test
-- mcnemar's test
-- binomial test 
-- wilcoxon test 
+- Chi-square test
+	- Goodness of fit
+	- Test of independence
+	- Test of homogeneity
+- Fisher's test
+- McNemar's test
+- Binomial test 
+- Wilcoxon test 
+- ANOVA
+  - One way ANOVA
+  - One way repeated-measures ANOVA
+  
