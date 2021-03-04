@@ -52,4 +52,4 @@ An effort to put together the r codes that public health professionals frequentl
   - One way repeated-measures ANOVA
 - Pearson's correlation
 - Kruskal-Wallis test
-- Friedman test (incomplete)
+- Friedman test
