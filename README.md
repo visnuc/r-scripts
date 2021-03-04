@@ -1,6 +1,6 @@
 # R scripts 
 
-An effort to put together the r codes that public health specialists frequently need to analyze their data.
+An effort to put together the r codes that public health professionals frequently need to analyze data.
 
 ## Contributor
 
