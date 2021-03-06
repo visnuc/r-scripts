@@ -59,7 +59,7 @@ t.test(myDataDsdc$income ~ myDataDsdc$gender, data=myDataDsdc, var.equal = F)
 # we will take BP before the intake of the drug and reading after the intake, and 
 # compare the BP. But, as the individuals are the same, we will have to be doing 
 # paired t-test
-# ------------------------------------------------------------------------------
+# ---------------------------------------------
 
 # Can't do paired sample t-test when variables are not paired in this data set  ?
 # code: t.test(y1, y2, paired=TRUE)
