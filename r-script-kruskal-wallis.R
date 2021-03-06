@@ -45,7 +45,7 @@ leveneTest(Length ~ Group, data = kwt)
 # of 0.3437 (<0.05), we reject the null hypothesis 
 # and may conclude that the data is homogeneous. 
 
-# Kruskall Wallis test
+# Kruskall Wallis test - if the k populations are equal
 kruskal.test(Length ~ Group, data = kwt)
 # Interpretation e.g.: 
 #   At this point from the Kruskal-Wallis test 
@@ -69,3 +69,14 @@ dunnTest(Length ~ Group,
 # is a significant length difference between 
 # the Viviparous lizard and the Wall lizard 
 # (p-value 0.002<0.01). 
+
+# Visualization
+# install.packages("ggplot2")
+library("ggplot2")
+
+ggplot(kwt, 
+       aes(x = Group, y = Length)) + 
+  geom_boxplot(fill = "grey80", colour = "black") +
+  scale_x_discrete() + 
+  xlab("Species") +
+  ylab("Length (cm)")
