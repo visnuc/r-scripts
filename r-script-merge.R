@@ -14,24 +14,14 @@ washMain <- read.csv("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting
 vtMain <- read.csv("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_vax_titer_wdates_v20210228.csv", 
                      header=T) 
 
-attach(c(washMain, vtMain))
-detach()
 View(washMain)
 View(vtMain)
+
 nrow(washMain)
 nrow(vtMain)
 
-# # number of rows and columns
-# nrow(vt)
-# ncol(vt)
-# # gets names of variables
-# names(vt)
-# # view data set, from tidyverse
-# view(vt)
-# # view data set, default
-# View(vt)
+ncol(vtMain)
 
-names(washMain)
 names(vtMain)
 
 # install.packages("tidyverse")
@@ -39,12 +29,14 @@ library(tidyverse)
 # vtAll <- vaxTiter %>%
 #   select(Pid, agedays, everything())
 
+# creting smaller data set with few variables 
 vt2 <- vtMain %>%
-  select(Pid, agedays, target_month, 
+  select(Pid, target_month, 
          log2mea, log2tet, log2per, 
          log2rotaa, log2rotag,
          log2poligg, log2pol1n, log2pol2n, log2pol3n) %>%
   rename(pid = Pid, 
+         targMon = target_month, 
          log2meas = log2mea, 
          log2teta = log2tet, 
          log2pertu = log2per, 
@@ -57,14 +49,36 @@ vt2 <- vtMain %>%
 
 View(vt2)
 nrow(vt2)
+ncol(vt2)
+dim(vt2) # row and column
+str(vt2)
+
+
+# exporting new data set as csv 
 write.table(vt2, 
             file = "vt2_v20210309.csv", 
             sep = ",", 
             row.names = F)
 
-table(target_month)
-str(vt2)
+# table(target_month)
 
+# transforming data set - from long to wide 
+install.packages("reshape2")
+library("reshape2")
+log2measWide <- dcast(vt2, 
+                 pid ~ target_month, 
+                 value.var = "log2meas",  
+                 fun.aggregate = sum)
+
+dim(log2measWide)
+View(log2measWide)
+
+write.table(log2measWide,
+            file = "log2measWide_v20210309.csv",
+            sep = ",",
+            row.names = F)
+
+# merging data sets 
 wm2 <- merge(washMain, vt2, 
              by = "pid", 
              all.x = T) %>%
