@@ -82,6 +82,7 @@ write.table(wm2,
 class(wm2$target_month)
 class(wm2$log2meas)
 wm2$target_month <- as.factor(wm2$target_month)
+# wm2$target_month <- as.integer(wm2$target_month) 
 str(wm2)
 summary(wm2)
 
@@ -90,7 +91,9 @@ wm2 %>%
   summarise(log2measAvg = mean(log2meas))
 
 View(wm2)
-
+names(wm2)
+wm2 <- wm2[ , -1]
+  
 # # -----------------------
 # #   trials and errors
 # # -----------------------
