@@ -15,6 +15,7 @@ vtMain <- read.csv("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_v
                      header=T) 
 
 attach(c(washMain, vtMain))
+detach()
 View(washMain)
 View(vtMain)
 nrow(washMain)
@@ -83,6 +84,10 @@ class(wm2$log2meas)
 wm2$target_month <- as.factor(wm2$target_month)
 str(wm2)
 summary(wm2)
+
+wm2$log2measAvg <- mean(wm2$log2meas) %>%
+  group_by(target_month)
+View(wm2)
 
 # # -----------------------
 # #   trials and errors
