@@ -1,9 +1,11 @@
 # ========================
 #   DATA MANIPULATION      
 # ========================
+library(tidyverse)
+library("reshape2")
 
 # setting checking working directory 
-setwd("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data")
+setwd("/home/visnu/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data/tmp_data")
 getwd()
 
 # importing data 
@@ -13,15 +15,14 @@ washMain <- read.csv("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting
                      header=T) 
 vtMain <- read.csv("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_vax_titer_wdates_v20210228.csv", 
                      header=T) 
+vtMain <- read.csv("/home/visnu/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_vax_titer_wdates_v20210228.csv", 
+                   header=T) 
 
 View(washMain)
 View(vtMain)
 
 nrow(washMain)
-nrow(vtMain)
-
-ncol(vtMain)
-
+dim(vtMain)
 names(vtMain)
 
 # install.packages("tidyverse")
@@ -36,7 +37,7 @@ vt2 <- vtMain %>%
          log2rotaa, log2rotag,
          log2poligg, log2pol1n, log2pol2n, log2pol3n) %>%
   rename(pid = Pid, 
-         targMon = target_month, 
+         month = target_month, 
          log2meas = log2mea, 
          log2teta = log2tet, 
          log2pertu = log2per, 
@@ -48,11 +49,10 @@ vt2 <- vtMain %>%
          log2pol3 = log2pol3n)
 
 View(vt2)
-nrow(vt2)
-ncol(vt2)
+# nrow(vt2)
+# ncol(vt2)
 dim(vt2) # row and column
 str(vt2)
-
 
 # exporting new data set as csv 
 write.table(vt2, 
@@ -64,14 +64,67 @@ write.table(vt2,
 
 # transforming data set - from long to wide 
 install.packages("reshape2")
-library("reshape2")
+# library("reshape2")
+
 log2measWide <- dcast(vt2, 
-                 pid ~ target_month, 
+                 pid ~ month, 
                  value.var = "log2meas",  
                  fun.aggregate = sum)
 
-dim(log2measWide)
 View(log2measWide)
+str(log2measWide)
+dim(log2measWide)
+
+log2measWide[log2measWide == 0] <- NA
+
+
+log2measWide$log2measAvg <- rowMeans(log2measWide[ ,2:4], 
+                                     na.rm = TRUE)
+# log2measWide$log2measAvg <- rowMeans(log2measWide[ ,c("7", "15", "24")], 
+#                                      na.rm=TRUE)
+
+# log2tetaWide <- dcast(vt2,
+#                       pid ~ month,
+#                       value.var = "log2teta",
+#                       fun.aggregate = sum)
+# 
+# log2pertuWide <- dcast(vt2,
+#                       pid ~ month,
+#                       value.var = "log2pertu",
+#                       fun.aggregate = sum)
+# 
+# log2rotaAWide <- dcast(vt2,
+#                        pid ~ month,
+#                        value.var = "log2rotaA",
+#                        fun.aggregate = sum)
+# 
+# log2rotaGWide <- dcast(vt2,
+#                        pid ~ month,
+#                        value.var = "log2rotaG",
+#                        fun.aggregate = sum)
+# 
+# log2polGWide <- dcast(vt2,
+#                        pid ~ month,
+#                        value.var = "log2polG",
+#                        fun.aggregate = sum)
+# 
+# log2pol1Wide <- dcast(vt2,
+#                       pid ~ month,
+#                       value.var = "log2pol1",
+#                       fun.aggregate = sum)
+# 
+# log2pol2Wide <- dcast(vt2,
+#                       pid ~ month,
+#                       value.var = "log2pol2",
+#                       fun.aggregate = sum)
+# 
+# log2pol3Wide <- dcast(vt2,
+#                       pid ~ month,
+#                       value.var = "log2pol3",
+#                       fun.aggregate = sum)
+# 
+# dim(log2measWide)
+# View(log2rotaGWide)
 
 write.table(log2measWide,
             file = "log2measWide_v20210309.csv",
@@ -145,5 +198,4 @@ wm2 <- wm2[ , -1]
 # vtByMonth <- vaxTiter %>%
 #   count(target_month)
 #
-
 detach(c(washMain, vtMain))
