@@ -85,8 +85,10 @@ wm2$target_month <- as.factor(wm2$target_month)
 str(wm2)
 summary(wm2)
 
-wm2$log2measAvg <- mean(wm2$log2meas) %>%
-  group_by(target_month)
+wm2 %>%
+  group_by(target_month) %>%
+  summarise(log2measAvg = mean(log2meas))
+
 View(wm2)
 
 # # -----------------------
