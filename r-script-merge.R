@@ -118,19 +118,8 @@ summary(wm2)
 #             avg_titer_polioS3 = mean(log2pol3)
 #             ) 
 # 
-# View(vtRaw)
-# write.table(vtRaw, 
-#             file = "tmp_titer_status.csv", 
-#             sep = ",", 
-#             row.names = F)
-# 
 # vtByMonth <- vaxTiter %>%
 #   count(target_month)
-# 
-# View(vtByMonth)
-# write.table(vtByMonth, 
-#             file = "tmp_month_counts.csv", 
-#             sep = ",", 
-#             row.names = F)
+#
 
 detach(c(washMain, vtMain))
