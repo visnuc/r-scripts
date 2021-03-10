@@ -1,6 +1,6 @@
 # R scripts 
 
-An effort to put together the r codes that public health professionals frequently need to analyze data.
+An effort to put together frequently used r codes that public health professionals need to analyze data.
 
 ## Contributor
 
@@ -15,30 +15,32 @@ An effort to put together the r codes that public health professionals frequentl
 
 ## Contents 
 
-- getting started 
-	- set up directory 
-	- import data
-	- list variable names 
-	- view data set 
-	- sort by variable 
-	- merging data sets 
-- plots 
-	- boxplot 
-	- histogram 
-	- density plot 
-	- scatter plot 
-- testing normality
+- Data manipulation 
+	- Set up directory 
+	- Import data
+	- List variable names 
+	- View data set 
+	- Sort by variable 
+	- Merging data sets 
+	- Transformation 
+	  - Long to Wide 
+- Plots 
+	- Boxplot 
+	- Histogram 
+	- Density plot 
+	- Scatter plot 
+- Normality testing
 	- with histogram 
 	- with qq plot  
 	- with stem and leaf plot 
 	- with boxplot
 	- with skewness
 	- with kurtosis
-	- shapiro-wilk test
-- t-tests
-	- one sample t-test
-	- unpaired sample t-test
-	- paired sample t-test (incomplete)
+	- Shapiro-wilk test
+- T-tests
+	- One sample t-test
+	- Unpaired sample t-test
+	- Paired sample t-test (incomplete)
 - Chi-square test
 	- Goodness of fit
 	- Test of independence
@@ -53,3 +55,4 @@ An effort to put together the r codes that public health professionals frequentl
 - Pearson's correlation
 - Kruskal-Wallis test
 - Friedman test
+- Difference in Differences
