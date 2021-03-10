@@ -30,7 +30,7 @@ An effort to put together frequently used r codes that public health professiona
 	- View data set 
 	- Export data frame 
 	- Merging data sets 
-	- Transformation 
+	- Data transformation 
 	  - Long to Wide 
 - Data visualization  
 	- Boxplot 
