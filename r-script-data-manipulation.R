@@ -123,35 +123,7 @@ dim(vt3)
 # # -----------------------
 # # # lists preloaded data 
 # # data()
-# 
-# vt2 <- vtMain %>%
-#   select(Pid, agedays, target_month, 
-#          log2mea, log2tet, log2per, 
-#          log2rotaa, log2rotag,
-#          log2poligg, log2pol1n, log2pol2n, log2pol3n) %>%
-#   rename(pid = Pid, 
-#          log2meas = log2mea, 
-#          log2teta = log2tet, 
-#          log2pertu = log2per, 
-#          log2rotaA = log2rotaa, 
-#          log2rotaG = log2rotag, 
-#          log2polG = log2poligg, 
-#          log2pol1 = log2pol1n, 
-#          log2pol2 = log2pol2n, 
-#          log2pol3 = log2pol3n) %>%
-#   na.omit() %>%
-#   group_by(target_month) %>%
-#   summarise(avg_titer_measles = mean(log2meas), 
-#             avg_titer_tetanus = mean(log2teta), 
-#             avg_titer_pertussis = mean(log2pertu), 
-#             avg_titer_rotavirusIgA = mean(log2rotaA), 
-#             avg_titer_rotavirusIgG = mean(log2rotaG), 
-#             avg_titer_polioIgG = mean(log2polG), 
-#             avg_titer_polioS1 = mean(log2pol1), 
-#             avg_titer_polioS2 = mean(log2pol2), 
-#             avg_titer_polioS3 = mean(log2pol3)
-#             ) 
-# 
+
 # vtByMonth <- vaxTiter %>%
 #   count(target_month)
 #
@@ -168,46 +140,6 @@ dim(vt3)
 # log2measWide$log2measAvg <- rowMeans(log2measWide[ ,c("7", "15", "24")], 
 #                                      na.rm=TRUE)
 
-# log2tetaWide <- dcast(vt2,
-#                       pid ~ month,
-#                       value.var = "log2teta",
-#                       fun.aggregate = sum)
-# 
-# log2pertuWide <- dcast(vt2,
-#                       pid ~ month,
-#                       value.var = "log2pertu",
-#                       fun.aggregate = sum)
-# 
-# log2rotaAWide <- dcast(vt2,
-#                        pid ~ month,
-#                        value.var = "log2rotaA",
-#                        fun.aggregate = sum)
-# 
-# log2rotaGWide <- dcast(vt2,
-#                        pid ~ month,
-#                        value.var = "log2rotaG",
-#                        fun.aggregate = sum)
-# 
-# log2polGWide <- dcast(vt2,
-#                        pid ~ month,
-#                        value.var = "log2polG",
-#                        fun.aggregate = sum)
-# 
-# log2pol1Wide <- dcast(vt2,
-#                       pid ~ month,
-#                       value.var = "log2pol1",
-#                       fun.aggregate = sum)
-# 
-# log2pol2Wide <- dcast(vt2,
-#                       pid ~ month,
-#                       value.var = "log2pol2",
-#                       fun.aggregate = sum)
-# 
-# log2pol3Wide <- dcast(vt2,
-#                       pid ~ month,
-#                       value.var = "log2pol3",
-#                       fun.aggregate = sum)
-# 
 # dim(log2measWide)
 # View(log2rotaGWide)
 # log2measWide[log2measWide == 0] <- NA
