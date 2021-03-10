@@ -4,21 +4,16 @@
 
 # ---------------------------------
 # Assumptions
-#   1: Treatment and control groups 
-#     have Parallel Trends in outcome
-#   2: Allocation of intervention 
-#     was not determined by outcome
-#   3: Composition of intervention 
-#     and comparison groups is stable 
+#   1: Treatment and control groups have Parallel Trends in outcome
+#   2: Allocation of intervention was not determined by outcome
+#   3: Composition of intervention and comparison groups is stable 
 #     for repeated cross-sectional design
 
 # ---------------------------------
 # Problem e.g.: 
-#   An imaginary policy implementation 
-# began in 1994, but, only in countries 
-# E, G, and F. We want to know causal 
-# effect of the policy on 
-# a generic outcome y.
+#   An imaginary policy implementation began in 1994, but, only 
+# in countries E, G, and F. We want to know causal effect 
+# of the policy on a generic outcome y.
 
 # ---------------------------------
 library(foreign)
@@ -37,15 +32,11 @@ View(ddDt)
 
 # ---------------------------------
 # Visualization
-ggplot(ddDt, 
-       aes(x = year, y = y, 
-           group = country, 
-           color = country)) + 
+ggplot(ddDt, aes(x = year, y = y, group = country, color = country)) + 
   geom_line() +
   geom_point() +
   scale_color_viridis_d() +
-  geom_vline(xintercept = 1993.9, 
-             linetype = "dashed")
+  geom_vline(xintercept = 1993.9, linetype = "dashed")
 
 # ---------------------------------
 # creating a new variable time,
