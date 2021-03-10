@@ -1,11 +1,15 @@
 # ========================
 #   DATA MANIPULATION      
 # ========================
-library(tidyverse)
-library("reshape2")
 
+# --------------------------------------
+library(tidyverse)
+library(reshape)
+
+# --------------------------------------
 # setting checking working directory 
 setwd("/home/visnu/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data/tmp_data")
+setwd("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/tmp_data")
 getwd()
 
 # importing data 
@@ -15,22 +19,17 @@ washMain <- read.csv("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting
                      header=T) 
 vtMain <- read.csv("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_vax_titer_wdates_v20210228.csv", 
                      header=T) 
-vtMain <- read.csv("/home/visnu/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_vax_titer_wdates_v20210228.csv", 
-                   header=T) 
+# vtMain <- read.csv("/home/visnu/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_vax_titer_wdates_v20210228.csv", 
+#                    header=T) 
 
-View(washMain)
-View(vtMain)
-
-nrow(washMain)
-dim(vtMain)
+attach(vtMain)
 names(vtMain)
 
 # install.packages("tidyverse")
 library(tidyverse)
-# vtAll <- vaxTiter %>%
-#   select(Pid, agedays, everything())
 
-# creting smaller data set with few variables 
+# --------------------------------------
+# making smaller data set with few variables 
 vt2 <- vtMain %>%
   select(Pid, target_month, 
          log2mea, log2tet, log2per, 
@@ -49,37 +48,108 @@ vt2 <- vtMain %>%
          log2pol3 = log2pol3n)
 
 View(vt2)
-# nrow(vt2)
-# ncol(vt2)
-dim(vt2) # row and column
+dim(vt2) # row and column # nrow(vt2); ncol(vt2)
 str(vt2)
 
+# --------------------------------------
 # exporting new data set as csv 
 write.table(vt2, 
             file = "vt2_v20210309.csv", 
             sep = ",", 
             row.names = F)
 
+# --------------------------------------
+# long to wide - with reshape
+install.packages("reshape")
+library("reshape")
+vt2Wide <- reshape(vt2, 
+                   idvar = "pid", 
+                   timevar = "month", 
+                   direction = "wide")
+
+attach(vt2Wide)
+names(vt2Wide)
+# export(vt2Wide, "vt2Wide.csv") # doesn't work 
+
+write.table(vt2Wide, 
+            file = "vt2Wide_v20210310.csv", 
+            sep = ",", 
+            row.names = F)
+
+# --------------------------------------
+# merging data sets 
+wm2 <- merge(washMain, vt2, 
+             by = "pid", 
+             all.x = T) %>%
+  na.omit()
+
+write.table(wm2,
+            file = "wm2_v20210309.csv",
+            sep = ",",
+            row.names = F)
+
+class(wm2$target_month)
+class(wm2$log2meas)
+wm2$target_month <- as.factor(wm2$target_month)
+# wm2$target_month <- as.integer(wm2$target_month) 
+str(wm2)
+summary(wm2)
+
+wm2 %>%
+  group_by(target_month) %>%
+  summarise(log2measAvg = mean(log2meas))
+
+View(wm2)
+names(wm2)
+wm2 <- wm2[ , -1]
+  
+# # --------------------------------------
+# #   trials and errors
+# # -----------------------
+# # # lists preloaded data 
+# # data()
+# 
+# vt2 <- vtMain %>%
+#   select(Pid, agedays, target_month, 
+#          log2mea, log2tet, log2per, 
+#          log2rotaa, log2rotag,
+#          log2poligg, log2pol1n, log2pol2n, log2pol3n) %>%
+#   rename(pid = Pid, 
+#          log2meas = log2mea, 
+#          log2teta = log2tet, 
+#          log2pertu = log2per, 
+#          log2rotaA = log2rotaa, 
+#          log2rotaG = log2rotag, 
+#          log2polG = log2poligg, 
+#          log2pol1 = log2pol1n, 
+#          log2pol2 = log2pol2n, 
+#          log2pol3 = log2pol3n) %>%
+#   na.omit() %>%
+#   group_by(target_month) %>%
+#   summarise(avg_titer_measles = mean(log2meas), 
+#             avg_titer_tetanus = mean(log2teta), 
+#             avg_titer_pertussis = mean(log2pertu), 
+#             avg_titer_rotavirusIgA = mean(log2rotaA), 
+#             avg_titer_rotavirusIgG = mean(log2rotaG), 
+#             avg_titer_polioIgG = mean(log2polG), 
+#             avg_titer_polioS1 = mean(log2pol1), 
+#             avg_titer_polioS2 = mean(log2pol2), 
+#             avg_titer_polioS3 = mean(log2pol3)
+#             ) 
+# 
+# vtByMonth <- vaxTiter %>%
+#   count(target_month)
+#
 # table(target_month)
 
-# transforming data set - from long to wide 
-install.packages("reshape2")
+# # long to wide - with reshape2
+# install.packages("reshape2")
 # library("reshape2")
+# log2measWide <- dcast(vt2, 
+#                       pid ~ month, 
+#                       value.var = "log2meas",  
+#                       fun.aggregate = sum)
 
-log2measWide <- dcast(vt2, 
-                 pid ~ month, 
-                 value.var = "log2meas",  
-                 fun.aggregate = sum)
-
-View(log2measWide)
-str(log2measWide)
-dim(log2measWide)
-
-log2measWide[log2measWide == 0] <- NA
-
-
-log2measWide$log2measAvg <- rowMeans(log2measWide[ ,2:4], 
-                                     na.rm = TRUE)
 # log2measWide$log2measAvg <- rowMeans(log2measWide[ ,c("7", "15", "24")], 
 #                                      na.rm=TRUE)
 
@@ -125,77 +195,22 @@ log2measWide$log2measAvg <- rowMeans(log2measWide[ ,2:4],
 # 
 # dim(log2measWide)
 # View(log2rotaGWide)
+# log2measWide[log2measWide == 0] <- NA
 
-write.table(log2measWide,
-            file = "log2measWide_v20210309.csv",
-            sep = ",",
-            row.names = F)
+# log2measWide$log2measAvg <- rowMeans(log2measWide[ ,2:4], 
+#                                      na.rm = TRUE)
 
-# merging data sets 
-wm2 <- merge(washMain, vt2, 
-             by = "pid", 
-             all.x = T) %>%
-  na.omit()
-
-nrow(wm2)
-View(wm2)
-table(wm2$target_month)
-
-write.table(wm2,
-            file = "wm2_v20210309.csv",
-            sep = ",",
-            row.names = F)
-
-class(wm2$target_month)
-class(wm2$log2meas)
-wm2$target_month <- as.factor(wm2$target_month)
-# wm2$target_month <- as.integer(wm2$target_month) 
-str(wm2)
-summary(wm2)
-
-wm2 %>%
-  group_by(target_month) %>%
-  summarise(log2measAvg = mean(log2meas))
-
-View(wm2)
-names(wm2)
-wm2 <- wm2[ , -1]
-  
-# # -----------------------
-# #   trials and errors
-# # -----------------------
-# # # lists preloaded data 
-# # data()
+# View(log2measWide)
+# str(log2measWide)
+# dim(log2measWide)
 # 
-# vt2 <- vtMain %>%
-#   select(Pid, agedays, target_month, 
-#          log2mea, log2tet, log2per, 
-#          log2rotaa, log2rotag,
-#          log2poligg, log2pol1n, log2pol2n, log2pol3n) %>%
-#   rename(pid = Pid, 
-#          log2meas = log2mea, 
-#          log2teta = log2tet, 
-#          log2pertu = log2per, 
-#          log2rotaA = log2rotaa, 
-#          log2rotaG = log2rotag, 
-#          log2polG = log2poligg, 
-#          log2pol1 = log2pol1n, 
-#          log2pol2 = log2pol2n, 
-#          log2pol3 = log2pol3n) %>%
-#   na.omit() %>%
-#   group_by(target_month) %>%
-#   summarise(avg_titer_measles = mean(log2meas), 
-#             avg_titer_tetanus = mean(log2teta), 
-#             avg_titer_pertussis = mean(log2pertu), 
-#             avg_titer_rotavirusIgA = mean(log2rotaA), 
-#             avg_titer_rotavirusIgG = mean(log2rotaG), 
-#             avg_titer_polioIgG = mean(log2polG), 
-#             avg_titer_polioS1 = mean(log2pol1), 
-#             avg_titer_polioS2 = mean(log2pol2), 
-#             avg_titer_polioS3 = mean(log2pol3)
-#             ) 
-# 
-# vtByMonth <- vaxTiter %>%
-#   count(target_month)
-#
+# nrow(wm2)
+# View(wm2)
+# table(wm2$target_month)
+
+# vtAll <- vaxTiter %>%
+#   select(Pid, agedays, everything())
+
+
+
 detach(c(washMain, vtMain))
