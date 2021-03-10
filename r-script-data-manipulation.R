@@ -2,11 +2,11 @@
 #   DATA MANIPULATION      
 # ========================
 
-# --------------------------------------
+# ---------------------------------
 library(tidyverse)
 library(reshape)
 
-# --------------------------------------
+# ---------------------------------
 # setting checking working directory 
 setwd("/home/visnu/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data/tmp_data")
 setwd("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/tmp_data")
@@ -28,7 +28,7 @@ names(vtMain)
 # install.packages("tidyverse")
 library(tidyverse)
 
-# --------------------------------------
+# ---------------------------------
 # making smaller data set with few variables 
 vt2 <- vtMain %>%
   select(Pid, target_month, 
@@ -51,14 +51,14 @@ View(vt2)
 dim(vt2) # row and column # nrow(vt2); ncol(vt2)
 str(vt2)
 
-# --------------------------------------
+# ---------------------------------
 # exporting new data set as csv 
 write.table(vt2, 
             file = "vt2_v20210309.csv", 
             sep = ",", 
             row.names = F)
 
-# --------------------------------------
+# ---------------------------------
 # long to wide - with reshape
 install.packages("reshape")
 library("reshape")
@@ -76,7 +76,7 @@ write.table(vt2Wide,
             sep = ",", 
             row.names = F)
 
-# --------------------------------------
+# ---------------------------------
 # merging data sets 
 wm2 <- merge(washMain, vt2, 
              by = "pid", 
@@ -103,7 +103,7 @@ View(wm2)
 names(wm2)
 wm2 <- wm2[ , -1]
   
-# # --------------------------------------
+# ---------------------------------
 # #   trials and errors
 # # -----------------------
 # # # lists preloaded data 
@@ -211,6 +211,4 @@ wm2 <- wm2[ , -1]
 # vtAll <- vaxTiter %>%
 #   select(Pid, agedays, everything())
 
-
-
-detach(c(washMain, vtMain))
+# detach(c(washMain, vtMain))
