@@ -15,44 +15,56 @@ An effort to put together frequently used r codes that public health professiona
 
 ## Contents 
 
-- Data manipulation 
-	- Set up directory 
+- Data manipulation   
+	- Set up working dir
+	- Install packages 
+	- Loading library 
 	- Import data
-	- List variable names 
+	- Attach data
+	- Get var names 
+	- Making subset of data
+	- Renaming var
+	- Get total row
+	- Get total column 
+	- Get data dimension 
 	- View data set 
-	- Sort by variable 
+	- Export data frame 
 	- Merging data sets 
 	- Transformation 
 	  - Long to Wide 
-- Plots 
+- Data visualization  
 	- Boxplot 
 	- Histogram 
 	- Density plot 
 	- Scatter plot 
-- Normality testing
-	- with histogram 
-	- with qq plot  
-	- with stem and leaf plot 
-	- with boxplot
-	- with skewness
-	- with kurtosis
-	- Shapiro-wilk test
-- T-tests
-	- One sample t-test
-	- Unpaired sample t-test
-	- Paired sample t-test (incomplete)
-- Chi-square test
-	- Goodness of fit
-	- Test of independence
-	- Test of homogeneity
-- Fisher's test
-- McNemar's test
-- Binomial test 
-- Wilcoxon test 
-- ANOVA
-  - One way ANOVA
-  - One way repeated-measures ANOVA
-- Pearson's correlation
-- Kruskal-Wallis test
-- Friedman test
-- Difference in Differences
+- Statistical tests 
+  - Normality testing
+	  - with histogram 
+  	- with qq plot  
+	  - with stem and leaf plot 
+	  - with boxplot
+  	- with skewness
+	  - with kurtosis
+	  - Shapiro-wilk test
+  - ANOVA
+    - One way ANOVA
+    - One way repeated-measures ANOVA
+  - Binomial test
+  - Chi-square test
+	  - Goodness of fit
+	  - Test of independence
+	  - Test of homogeneity
+	- Cochran's Q test
+  - Difference in Differences
+  - Fisher's test
+  - Friedman test
+  - Kruskal-Wallis test
+  - McNemar's test
+  - Pearson's correlation test 
+  - T-tests
+	  - One sample t-test
+	  - Unpaired sample t-test
+	  - Paired sample t-test (incomplete)
+  - Spearman's (rank) correlation test
+  - Wilcoxon test
+  

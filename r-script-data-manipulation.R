@@ -3,6 +3,7 @@
 # ========================
 
 # ---------------------------------
+# install.packages("tidyverse")
 library("tidyverse")
 library("reshape")
 library("datasets")
@@ -26,9 +27,6 @@ vtMain <- read.csv("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_v
 
 attach(vtMain)
 names(vtMain)
-
-# install.packages("tidyverse")
-library(tidyverse)
 
 # ---------------------------------
 # making smaller data set 
@@ -68,6 +66,8 @@ vt3 <- vt2Wide %>%
 attach(vt3)
 names(vt3)
 as.numeric(vt3$avgLog2rotA)
+nrow(vt3)
+ncol(vt3)
 dim(vt3)
 str(vt3)
 View(vt3)
@@ -84,7 +84,8 @@ write.table(vt3,
             row.names = F)
 
 # ---------------------------------
-# long to wide - with reshape
+# data transformation - long to wide 
+#   - with reshape
 install.packages("reshape")
 library("reshape")
 vt2Wide <- reshape(vt2, 
