@@ -3,16 +3,18 @@
 # ========================
 
 # ---------------------------------
-library(tidyverse)
-library(reshape)
+library("tidyverse")
+library("reshape")
+library("datasets")
 
 # ---------------------------------
-# setting checking working directory 
+# setting working directory 
 setwd("/home/visnu/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data/tmp_data")
 setwd("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/tmp_data")
 getwd()
 
-# importing data 
+# ---------------------------------
+# data import
 dataRaw <- read.csv(file.choose(), header=T)
 
 washMain <- read.csv("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_wash_rev_final_v20210228.csv", 
@@ -29,7 +31,7 @@ names(vtMain)
 library(tidyverse)
 
 # ---------------------------------
-# making smaller data set with few variables 
+# making smaller data set 
 vt2 <- vtMain %>%
   select(Pid, target_month, 
          log2mea, log2tet, log2per, 
@@ -47,14 +49,37 @@ vt2 <- vtMain %>%
          log2pol2 = log2pol2n, 
          log2pol3 = log2pol3n)
 
-View(vt2)
-dim(vt2) # row and column # nrow(vt2); ncol(vt2)
-str(vt2)
+vt3 <- vt2Wide %>%
+  select(pid, log2measAvg, 
+         log2tetaAvg, log2pertuAvg, 
+         log2rotaAavg, log2roraGAvg, 
+         log2polGAvg, log2pol1avg, 
+         log2pol2avg, log2pol3avg) %>%
+  rename(avgLog2mea = log2measAvg, 
+         avgLog2tet = log2tetaAvg, 
+         avgLog2pert = log2pertuAvg, 
+         avgLog2rotA = log2rotaAavg, 
+         avgLog2rotG = log2roraGAvg, 
+         avgLog2polG = log2polGAvg, 
+         avgLog2pol1 = log2pol1avg, 
+         avgLog2pol2 = log2pol2avg, 
+         avgLog2pol3 = log2pol3avg)
+
+attach(vt3)
+names(vt3)
+as.numeric(vt3$avgLog2rotA)
+dim(vt3)
+str(vt3)
+View(vt3)
+sum(is.na(vt3))
+
+nrow(washMain)
+View(washMain)
 
 # ---------------------------------
 # exporting new data set as csv 
-write.table(vt2, 
-            file = "vt2_v20210309.csv", 
+write.table(vt3, 
+            file = "vt3_v20210310.csv", 
             sep = ",", 
             row.names = F)
 
@@ -69,7 +94,7 @@ vt2Wide <- reshape(vt2,
 
 attach(vt2Wide)
 names(vt2Wide)
-# export(vt2Wide, "vt2Wide.csv") # doesn't work 
+# export(vt2Wide, "vt2Wide.csv") # not working
 
 write.table(vt2Wide, 
             file = "vt2Wide_v20210310.csv", 
@@ -78,30 +103,20 @@ write.table(vt2Wide,
 
 # ---------------------------------
 # merging data sets 
-wm2 <- merge(washMain, vt2, 
+wm3 <- merge(washMain, vt3, 
              by = "pid", 
-             all.x = T) %>%
-  na.omit()
+             all.x = T, all.y = T)
 
-write.table(wm2,
-            file = "wm2_v20210309.csv",
+write.table(wm3,
+            file = "wm3_v20210310.csv",
             sep = ",",
             row.names = F)
 
-class(wm2$target_month)
-class(wm2$log2meas)
-wm2$target_month <- as.factor(wm2$target_month)
-# wm2$target_month <- as.integer(wm2$target_month) 
-str(wm2)
-summary(wm2)
-
-wm2 %>%
-  group_by(target_month) %>%
-  summarise(log2measAvg = mean(log2meas))
-
-View(wm2)
+attach(wm2)
 names(wm2)
-wm2 <- wm2[ , -1]
+dim(vt3)
+
+
   
 # ---------------------------------
 # #   trials and errors
@@ -212,3 +227,19 @@ wm2 <- wm2[ , -1]
 #   select(Pid, agedays, everything())
 
 # detach(c(washMain, vtMain))
+# dim(vt2) # row and column # nrow(vt2); ncol(vt2)
+
+# class(wm2$target_month)
+# class(wm2$log2meas)
+# wm2$target_month <- as.factor(wm2$target_month)
+# # wm2$target_month <- as.integer(wm2$target_month) 
+# str(wm2)
+# summary(wm2)
+# 
+# wm2 %>%
+#   group_by(target_month) %>%
+#   summarise(log2measAvg = mean(log2meas))
+# 
+# View(wm2)
+# names(wm2)
+# wm2 <- wm2[ , -1]
