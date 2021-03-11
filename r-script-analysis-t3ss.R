@@ -145,7 +145,7 @@ chisq.test(contin_table, simulate.p.value = T, B = 10000)
 contin_table
 fisher.test(contin_table)
 
----------------------------------
+# -------------------------------
 # Binary logistic regression - unadjusted
 
 # t3ssRegUnadj <- glm(cf_temp_fever_01 ~ lab_set_01, 
@@ -173,7 +173,7 @@ summary(t3ssRegUnadj)
 # OR & 95% CI
 round(exp(cbind(coef(t3ssRegUnadj), confint(t3ssRegUnadj))), 3)
 
-
+# -------------------------------
 # Binary logistic regression - adjusted
 
 t3ssRegAdj <- glm(ho_mucoid_01 ~ lab_ial_01 + lab_set_01 + 
