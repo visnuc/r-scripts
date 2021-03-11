@@ -44,8 +44,8 @@ An effort to put together frequently used r codes that public health professiona
     - with stem-leaf plot 
     - with boxplot
   	- with skewness
-	  - with kurtosis
-	  - Shapiro-wilk test
+    - with kurtosis
+    - Shapiro-wilk test
 - Tests
   - ANOVA
     - One way ANOVA
