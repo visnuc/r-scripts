@@ -19,7 +19,7 @@ An effort to put together frequently used r codes that public health professiona
 	- Set up working dir
 	- Install packages 
 	- Loading library 
-	- Import data
+	- Import data 
 	- Attach data
 	- Get var names 
 	- Making subset of data
@@ -37,7 +37,7 @@ An effort to put together frequently used r codes that public health professiona
 	- Histogram 
 	- Density plot 
 	- Scatter plot 
-- Statistical tests 
+- Tests 
   - Normality testing
 	  - with histogram 
   	- with qq plot  
