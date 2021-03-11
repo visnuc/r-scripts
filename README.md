@@ -62,6 +62,8 @@ An effort to put together frequently used r codes that public health professiona
   - Kruskal-Wallis test
   - McNemar's test
   - Pearson's correlation test 
+  - Regression 
+    - Binary logistic
   - T-tests
 	  - One sample t-test
 	  - Unpaired sample t-test
