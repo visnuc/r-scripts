@@ -16,15 +16,15 @@ An effort to put together frequently used r codes that public health professiona
 ## Contents 
 
 - Data manipulation   
-	- Set up working dir
+	- Set up working directory
 	- Install packages 
 	- Loading library 
 	- Import data 
 	- Attach data
 	- Get var names 
 	- Making subset of data
-	- Recoding var
-	- Renaming var
+	- Recoding variables
+	- Renaming variables
 	- Get total row
 	- Get total column 
 	- Get data dimension 
