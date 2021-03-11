@@ -37,15 +37,16 @@ An effort to put together frequently used r codes that public health professiona
 	- Histogram 
 	- Density plot 
 	- Scatter plot 
-- Tests 
+- Checks 
   - Normality testing
 	  - with histogram 
   	- with qq plot  
-	  - with stem and leaf plot 
-	  - with boxplot
+    - with stem-leaf plot 
+    - with boxplot
   	- with skewness
 	  - with kurtosis
 	  - Shapiro-wilk test
+- Tests
   - ANOVA
     - One way ANOVA
     - One way repeated-measures ANOVA
