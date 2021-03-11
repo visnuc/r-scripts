@@ -22,6 +22,7 @@ myDataDsdc$country <- revalue(myDataDsdc$country,
                                 "8"="Tanzania")) 
 myDataDsdc$momedcat <- as.factor(myDataDsdc$momedcat)
 myDataDsdc$momedcat <- revalue(myDataDsdc$momedcat, c("0"="Poor", "1"="Good"))
+
 # making contingency table
 contin_table <- table(myDataDsdc$country, myDataDsdc$momedcat)
 contin_table
@@ -29,8 +30,10 @@ contin_table
 chisq.test(contin_table)
 chisq.test(contin_table)$observed
 chisq.test(contin_table)$expected
+
 # Monte Carlo simulation as expected freq <5
 chisq.test(contin_table, simulate.p.value = T, B = 10000) 
+
 
 # =======================================
 # Chi-square test: Test of homogeneity
@@ -43,6 +46,7 @@ comm
 # Ha: Two groups DO NOT share same proportion of communication method 
 chisq.test(comm, correct = F)
 chisq.test(comm, correct = F)$expected
+
 
 # ========================
 # Fisher's Exact test
