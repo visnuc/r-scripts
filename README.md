@@ -23,6 +23,7 @@ An effort to put together frequently used r codes that public health professiona
 	- Attach data
 	- Get var names 
 	- Making subset of data
+	- Recoding var
 	- Renaming var
 	- Get total row
 	- Get total column 
