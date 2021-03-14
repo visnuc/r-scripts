@@ -182,11 +182,33 @@ t3ssRegAdj <- glm(ho_mucoid_01 ~ lab_ial_01 + lab_set_01 +
                     lab_ipgD_01+ lab_ipgF_01 + 
                     lab_mxiH_01 + lab_mxiK_01 + 
                     lab_mxiE_01 + lab_mxiC_01 + 
-                    lab_spa47_01 + lab_spa32_01, 
-                  family = binomial(link = "logit"), 
+                    lab_spa32_01, 
+                  family = "binomial", 
+                  data = t3ss)
+
+t3ssRegAdj <- glm(ho_mucoid_01 ~ lab_set_01 + lab_icsB_01, 
+                  family = "binomial", 
                   data = t3ss)
 
 summary(t3ssRegAdj)
 
 # OR & 95% CI
 round(exp(cbind(coef(t3ssRegAdj), confint(t3ssRegAdj))), 3)
+
+
+# -------------------------------
+# plotting 
+coefplot(t3ssRegAdj, innerCI = 2, outerCI = 0, intercept = F, 
+         title = "", 
+         xlab = "95% Confidence Interval", 
+         ylab = "Predictor genes", 
+         decreasing = T, 
+         col = "skyblue2", 
+         newNames = c(lab_set_01 = "set", 
+                      lab_icsB_01 = "icsB")) + 
+  theme(axis.line = element_line(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) + 
+  geom_point(pch = 21)

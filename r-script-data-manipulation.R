@@ -2,34 +2,37 @@
 #   DATA MANIPULATION      
 # ========================
 
+# install packages
+install.packages("reshape")
+
 # ---------------------------------
-# install.packages("tidyverse")
+# libraries
 library("tidyverse")
 library("reshape")
 library("datasets")
 
 # ---------------------------------
-# setting working directory 
-setwd("/home/visnu/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data/tmp_data")
+# working directory 
+setwd("/home/visnu/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data")
 setwd("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/tmp_data")
 getwd()
+
 
 # ---------------------------------
 # data import
 dataRaw <- read.csv(file.choose(), header=T)
-
+# on Windows
 washMain <- read.csv("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_wash_rev_final_v20210228.csv", 
                      header=T) 
 vtMain <- read.csv("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_vax_titer_wdates_v20210228.csv", 
                      header=T) 
-# vtMain <- read.csv("/home/visnu/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_vax_titer_wdates_v20210228.csv", 
-#                    header=T) 
+# on Linux 
+vtMain <- read.csv("/home/visnu/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_vax_titer_wdates_v20210228.csv",
+                   header=T)
 
-attach(vtMain)
-names(vtMain)
 
 # ---------------------------------
-# making smaller data set 
+# subsetting 
 vt2 <- vtMain %>%
   select(Pid, target_month, 
          log2mea, log2tet, log2per, 
@@ -63,18 +66,19 @@ vt3 <- vt2Wide %>%
          avgLog2pol2 = log2pol2avg, 
          avgLog2pol3 = log2pol3avg)
 
+
+# ---------------------------------
+# others
 attach(vt3)
+dim(vt3)
 names(vt3)
 as.numeric(vt3$avgLog2rotA)
-nrow(vt3)
 ncol(vt3)
-dim(vt3)
+nrow(vt3)
 str(vt3)
-View(vt3)
 sum(is.na(vt3))
+View(vt3)
 
-nrow(washMain)
-View(washMain)
 
 # ---------------------------------
 # exporting new data set as csv 
@@ -83,24 +87,17 @@ write.table(vt3,
             sep = ",", 
             row.names = F)
 
+
 # ---------------------------------
 # data transformation - long to wide 
-#   - with reshape
-install.packages("reshape")
-library("reshape")
+
+# install.packages("reshape")
+# library("reshape")
 vt2Wide <- reshape(vt2, 
                    idvar = "pid", 
                    timevar = "month", 
                    direction = "wide")
 
-attach(vt2Wide)
-names(vt2Wide)
-# export(vt2Wide, "vt2Wide.csv") # not working
-
-write.table(vt2Wide, 
-            file = "vt2Wide_v20210310.csv", 
-            sep = ",", 
-            row.names = F)
 
 # ---------------------------------
 # merging data sets 
@@ -108,71 +105,17 @@ wm3 <- merge(washMain, vt3,
              by = "pid", 
              all.x = T, all.y = T)
 
-write.table(wm3,
-            file = "wm3_v20210310.csv",
-            sep = ",",
-            row.names = F)
 
-attach(wm2)
-names(wm2)
-dim(vt3)
-
-
-  
 # ---------------------------------
-# #   trials and errors
-# # -----------------------
-# # # lists preloaded data 
-# # data()
+# remove NAs
+wm4 <- wm3 %>%
+  na.omit()
 
-# vtByMonth <- vaxTiter %>%
-#   count(target_month)
-#
-# table(target_month)
+# checking for NAs
+any(is.na(wm4))
 
-# # long to wide - with reshape2
-# install.packages("reshape2")
-# library("reshape2")
-# log2measWide <- dcast(vt2, 
-#                       pid ~ month, 
-#                       value.var = "log2meas",  
-#                       fun.aggregate = sum)
-
-# log2measWide$log2measAvg <- rowMeans(log2measWide[ ,c("7", "15", "24")], 
-#                                      na.rm=TRUE)
-
-# dim(log2measWide)
-# View(log2rotaGWide)
-# log2measWide[log2measWide == 0] <- NA
-
-# log2measWide$log2measAvg <- rowMeans(log2measWide[ ,2:4], 
-#                                      na.rm = TRUE)
-
-# View(log2measWide)
-# str(log2measWide)
-# dim(log2measWide)
-# 
-# nrow(wm2)
-# View(wm2)
-# table(wm2$target_month)
-
-# vtAll <- vaxTiter %>%
-#   select(Pid, agedays, everything())
-
-# detach(c(washMain, vtMain))
-# dim(vt2) # row and column # nrow(vt2); ncol(vt2)
-
-# class(wm2$target_month)
-# class(wm2$log2meas)
-# wm2$target_month <- as.factor(wm2$target_month)
-# # wm2$target_month <- as.integer(wm2$target_month) 
-# str(wm2)
-# summary(wm2)
-# 
-# wm2 %>%
-#   group_by(target_month) %>%
-#   summarise(log2measAvg = mean(log2meas))
-# 
-# View(wm2)
-# names(wm2)
-# wm2 <- wm2[ , -1]
+# ---------------------------------
+# remove certain values from data frame
+for(i in names(wm3)){
+  wm3[[i]][wm3[[i]] == "#DIV/0!"] = NA
+}

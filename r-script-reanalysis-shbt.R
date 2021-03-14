@@ -1,6 +1,6 @@
 # ---------------------------------
 # install packages 
-install.packages("plotrix")
+install.packages("coefplot")
 
 # ---------------------------------
 # libraries

@@ -50,8 +50,8 @@ An effort to put together the r codes that public health professionals frequentl
     - Shapiro-wilk test
 - Tests
   - ANOVA
-    - One way ANOVA
-    - One way repeated-measures ANOVA
+    - One Way ANOVA
+    - One Way Repeated-Measures ANOVA
   - Binomial test
   - Chi-square test
 	  - Goodness of fit
