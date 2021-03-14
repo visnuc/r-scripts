@@ -173,9 +173,9 @@ summary(t3ssRegUnadj)
 # OR & 95% CI
 round(exp(cbind(coef(t3ssRegUnadj), confint(t3ssRegUnadj))), 3)
 
+
 # -------------------------------
 # Binary logistic regression - adjusted
-
 t3ssRegAdj <- glm(ho_mucoid_01 ~ lab_ial_01 + lab_set_01 + 
                     lab_virB_01 + lab_ipaBCD_01 + 
                     lab_ipgB1_01 + lab_icsB_01 + 
