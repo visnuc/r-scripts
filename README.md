@@ -58,18 +58,19 @@ An effort to put together the r codes that public health professionals frequentl
 	  - Test of independence
 	  - Test of homogeneity
 	- Cochran's Q test
+	- Correlation test 
+	  - Pearson
+	  - Spearman (rank)
   - Difference in Differences
   - Fisher's test
   - Friedman test
   - Kruskal-Wallis test
   - McNemar's test
-  - Pearson's correlation test 
   - Regression 
     - Binary logistic
   - T-tests
 	  - One sample t-test
 	  - Unpaired sample t-test
 	  - Paired sample t-test (incomplete)
-  - Spearman's (rank) correlation test
   - Wilcoxon test
   
