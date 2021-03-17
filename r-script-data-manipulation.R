@@ -12,7 +12,7 @@ library("datasets")
 
 # ---------------------------------
 # working directory 
-setwd("/home/visnu/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data")
+setwd("~/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data")
 setwd("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/tmp_data")
 getwd()
 
@@ -20,14 +20,12 @@ getwd()
 # ---------------------------------
 # data import
 dataRaw <- read.csv(file.choose(), header=T)
-# on Windows
-washMain <- read.csv("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_wash_rev_final_v20210228.csv", 
+
+# on Windows + Linux
+washMain <- read.csv("~/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_wash_rev_final_v20210228.csv", 
                      header=T) 
-vtMain <- read.csv("C:/Users/visnu.pritom/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_vax_titer_wdates_v20210228.csv", 
+vtMain <- read.csv("~/Dropbox/Projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_vax_titer_wdates_v20210228.csv", 
                      header=T) 
-# on Linux 
-vtMain <- read.csv("/home/visnu/Dropbox/projects_DSDC/study_stunting_vs_vaccination_dsdc/data/data_vax_titer_wdates_v20210228.csv",
-                   header=T)
 
 
 # ---------------------------------
@@ -88,7 +86,7 @@ write.table(vt3,
 
 
 # ---------------------------------
-# data transformation - long to wide 
+#   long to wide format 
 
 # install.packages("reshape")
 # library("reshape")

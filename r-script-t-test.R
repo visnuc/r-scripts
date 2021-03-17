@@ -1,24 +1,35 @@
-# setting custom working directory
+# ===============================
+#   T-TESTs
+# ===============================
+
+# -------------------------------
+# install 
+install.packages("devtools")
+
+# -------------------------------
+# libraries
+library("devtools")
+
+# -------------------------------
+# working directory
 setwd("/my/desired/directory/for/r") 
 
-# import data set in csv format 
+# -------------------------------
+# data import 
 myData <-read.csv(file.choose(), header=T) 
 
 
-# ============
-#   T-TESTs
-# ============
-
-# ---------------------
+# -------------------------------
 #   One sample t-test 
-# ---------------------
-# e.g., there is a data where Hb of children was found as X. Now, I want to check
-# whether the children of this hospital has the same level of Hb, or more, or less. 
-# As there is only one sample to test, and see whether my hypothesis is right or 
-# wrong, we will be doing one sample t-test. 
+# -------------------------------
+# e.g., there is a data where Hb of children was found as X. 
+# Now, I want to check whether the children of this hospital 
+# has the same level of Hb, or more, or less. 
+# As there is only one sample to test, and see whether my 
+# hypothesis is right or wrong, we will be doing one sample t-test. 
 
+# -------------------------------
 #   Assumptions
-# ---------------
 #   1. define null and alternate hypothesis 
 #         e.g., H0 - no differences in means 
 #               Ha - difference exists
