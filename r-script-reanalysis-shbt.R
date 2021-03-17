@@ -1,9 +1,9 @@
 # ---------------------------------
-# install packages 
-# install.packages("dplyr")
+#     get packages 
+install.packages("dplyr")
 
 # ---------------------------------
-# libraries
+#     libraries
 library("plyr")
 library("tidyverse")
 library("reshape")
@@ -17,21 +17,21 @@ library("utils")
 
 
 # ---------------------------------
-# working directory 
+#     working directory 
 setwd("~/Dropbox/tmp_sync/tmp_shbt/poster_presentation/del_tmp")
 
 # ---------------------------------
-# list objects in dir 
+#     list objects in dir 
 dir()
 
 # ---------------------------------
-# data import 
+#     data import 
 shock <- read.spss(file.choose(), header=T)
 shock <- read.csv(file.choose(), header=T)
 
 
 # ---------------------------------
-# others 
+#     others 
 attach(shock)
 names(shock)
 nrow(shock)
@@ -41,7 +41,7 @@ str(shbtSmall2$pp_sex_bivar)
 
 
 # ---------------------------------
-# data export 
+#     data export 
 write.table(shock, 
             file = "data_shock_20210317.csv", 
             sep = ",", 
@@ -49,7 +49,7 @@ write.table(shock,
 
 
 # ---------------------------------
-# subsetting 
+#     subsetting 
 shock <- shock %>%
   select(pp_pid, pp_age_total_mnth, pp_sex_bivar, 
          socio_restype_notbuilding_bivar, socio_water_bivar, 
@@ -228,14 +228,6 @@ shock$dx_id_bivar <- recode(shock$dx_id_bivar, "yes" = 1, "no" = 0)
 shock$dx_pd_bivar <- recode(shock$dx_pd_bivar, "yes" = 1, "no" = 0) 
 shock$dx_aki_bivar <- recode(shock$dx_aki_bivar, "yes" = 1, "no" = 0)
 
-# shock$inv_bl_cs_bivar <- recode(shock$inv_bl_cs_bivar, )
-# shock$inv_rs_cs_bivar <- recode(shock$inv_rs_cs_bivar, )
-# shock$inv_st_cs_bivar <- recode(shock$inv_st_cs_bivar, )
-# shock$inv_st_rs_cs_bivar <- recode(shock$inv_st_rs_cs_bivar, )
-# shock$inv_u_cs_bivar <- recode(shock$inv_u_cs_bivar, )
-# shock$inv_csf_cs_bivar <- recode(shock$inv_csf_cs_bivar, )
-# shock$inv_trac_cs_bivar <- recode(shock$inv_trac_cs_bivar, )
-# shock$inv_trac_cs_multi_org_bivar <- recode(shock$inv_trac_cs_multi_org_bivar, )
 shock$inv_biochem_hyper_na_bivar <- recode(shock$inv_biochem_hyper_na_bivar, "hyperna" = 1, "not" = 0)
 shock$inv_biochem_hypo_na_bivar <- recode(shock$inv_biochem_hypo_na_bivar,  "hypona" = 1, "not" = 0)
 shock$inv_biochem_hyper_k_bivar <- recode(shock$inv_biochem_hyper_k_bivar, "yes" = 1, "no" = 0)
@@ -276,15 +268,26 @@ shock$reg_hai_hap <- recode(shock$reg_hai_hap, "yes (death)" = 1, "no" = 0)
 # ---------------------------------
 #     two-way contingency table
 continTable <- table(shock$outcome_bivar, shock$pp_sex_bivar)
-continTable
+
+continTable <- table(shock$outcome_bivar, shock$mx_line_1_bivar)
+continTable <- table(shock$outcome_bivar, shock$mx_line_2_bivar)
+continTable <- table(shock$outcome_bivar, shock$mx_line_3_bivar)
+continTable <- table(shock$outcome_bivar, shock$reg_meropenem)
+continTable <- table(shock$outcome_bivar, shock$reg_steroids)
+continTable <- table(shock$outcome_bivar, shock$gap_shk_bt_3h)
+
 colnames(continTable) <- c("Female", "Male")
+
+colnames(continTable) <- c("No", "Yes")
 rownames(continTable) <- c("Survival", "Death")
+
+continTable
 
 # class(continTable)
 barplot(continTable, 
         legend = F, 
         beside = T, 
-        main = "Death & Survival by Gender")
+        main = "Death & Survival")
 
 # relative frequencies percentage 
 prop.table(continTable)*100
@@ -298,7 +301,7 @@ barplot(prop.table(continTable, 2)*100,
 
 
 # ---------------------------------
-# Chi-square of independence
+#     Chi-square of independence
 chisq.test(continTable)
 chisq.test(continTable)$observed
 chisq.test(continTable)$expected
@@ -308,13 +311,13 @@ chisq.test(continTable, simulate.p.value = T, B = 10000)
 
 
 # -------------------------------
-# Fisher's Exact test
+#     Fisher's Exact test
 contin_table
 fisher.test(continTable)
 
 
 # -------------------------------
-# Binary logistic regression - unadjusted
+#     Binary logistic regression - unadjusted
 shbtRegUnadj <- glm(reg_outcome ~ reg_meropenem, # Pr 0.0287
                   family = binomial(link = "logit"),
                   data = shbtSmall2)
@@ -342,7 +345,7 @@ round(exp(cbind(coef(shbtRegUnadj), confint(shbtRegUnadj))), 3)
 
 
 # -------------------------------
-# Binary logistic regression - adjusted
+#     Binary logistic regression - adjusted
 # shbtRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + 
 #                     reg_steroids + reg_mod_anemia + 
 #                     reg_sev_pneumonia + reg_sclerema, 
@@ -363,7 +366,7 @@ round(exp(cbind(coef(shbtRegAdj), confint(shbtRegAdj))), 3)
 
 
 # -------------------------------
-# plotting 
+#     plotting 
 coefplot(shbtRegAdj, innerCI = 2, outerCI = 0, intercept = F, 
          title = "", 
          xlab = "95% Confidence Interval", 
