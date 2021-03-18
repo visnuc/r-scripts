@@ -18,8 +18,8 @@ An effort to put together the r codes that public health professionals frequentl
 
 - Data manipulation   
   - Attach data
-	- Install packages 
-	- Loading library 
+  - Install packages
+  - Loading library 
 	- Import data
 	- Names of variables 
 	- Recoding 
