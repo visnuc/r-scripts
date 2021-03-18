@@ -19,6 +19,8 @@ library("utils")
 # ---------------------------------
 #     working directory 
 setwd("~/Dropbox/tmp_sync/tmp_shbt/poster_presentation/del_tmp")
+setwd("C:/Users/visnu.pritom/Dropbox/tmp_sync/tmp_shbt/poster_presentation/del_tmp")
+
 
 # ---------------------------------
 #     list objects in dir 
