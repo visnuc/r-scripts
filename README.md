@@ -17,23 +17,23 @@ An effort to put together the r codes that public health professionals frequentl
 ## Contents 
 
 - Data manipulation   
-	- Set up working directory
+  - Attach data
 	- Install packages 
 	- Loading library 
-	- Import data 
-	- Attach data
-	- Get var names 
-	- Making subset of data
-	- Recoding variables
-	- Renaming variables
-	- Get total row
-	- Get total column 
+	- Import data
+	- Names of variables 
+	- Recoding 
+	- Renaming 
+	- Rows in total 
+	- Columns in total 
 	- Get data dimension 
-	- View data set 
 	- Export data frame 
 	- Merging data sets 
-	- Data transformation 
+	- Set up working directory
+	- Subsetting 
+	- Transforming data
 	  - Long to Wide 
+	- View data
 - Data visualization  
 	- Boxplot 
 	- Histogram 
