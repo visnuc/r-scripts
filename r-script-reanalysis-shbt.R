@@ -19,8 +19,6 @@ library("utils")
 # ---------------------------------
 #     working directory 
 setwd("~/Dropbox/tmp_sync/tmp_shbt/poster_presentation/del_tmp")
-setwd("C:/Users/visnu.pritom/Dropbox/tmp_sync/tmp_shbt/poster_presentation/del_tmp")
-
 
 # ---------------------------------
 #     list objects in dir 
@@ -102,16 +100,13 @@ shock$pp_location <- NULL
 shock$bt <- NULL
 shock$bt_asso_cause <- NULL
 shock$BT_AS0 <- NULL
-
 shock$cc_disori <- NULL
 shock$cc_lethargy <- NULL
 shock$cc_other_symp_coded <- NULL
 shock$cc_other_symp_bivar <- NULL
-
 shock$prev_rx_curr_dx <- NULL
 shock$prev_rx_curr_dx_coded <- NULL
 shock$PREV_0 <- NULL
-
 shock$cf_rr_coded <- NULL
 shock$cf_lung <- NULL
 shock$cf_spo2 <- NULL
@@ -121,8 +116,7 @@ shock$cf_bp_dia <- NULL
 shock$cf_dh <- NULL
 shock$cf_temp_coded <- NULL
 shock$cf_bs <- NULL
-
-shock$mx_ampi_bivar <- NULL
+shock$mx_ampi_bivar	<- NULL
 shock$mx_genta_bivar <- NULL
 shock$mx_ceftri_bivar	<- NULL
 shock$mx_levoflox_bivar	<- NULL
@@ -213,7 +207,7 @@ shock$cf_abd_dist_bivar <- recode(shock$cf_abd_dist_bivar, "normal" = 0, "disten
 shock$cf_bs_slug_bivar <- recode(shock$cf_bs_slug_bivar, "sluggish" = 1, "not" = 0)
 shock$cf_rbs_bivar <- recode(shock$cf_rbs_bivar, "no" = 0, "hypo" = 1)
 
-shock$mx_line_1_bivar <- recode(shock$mx_line_1_bivar, "yes" = 1, "no" = 0)
+shock$mx_line_1_bivar	<- recode(shock$mx_line_1_bivar, "yes" = 1, "no" = 0)
 shock$mx_line_2_bivar <- recode(shock$mx_line_2_bivar, "yes" = 1, "no" = 0)	
 shock$mx_line_3_bivar <- recode(shock$mx_line_3_bivar, "yes" = 1, "no" = 0)
 shock$mx_line_4_bivar <- recode(shock$mx_line_4_bivar, "yes" = 1, "no" = 0)
