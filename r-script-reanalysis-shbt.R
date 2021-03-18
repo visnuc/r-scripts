@@ -118,17 +118,19 @@ shock$cf_bp_dia <- NULL
 shock$cf_dh <- NULL
 shock$cf_temp_coded <- NULL
 shock$cf_bs <- NULL
-shock$mx_ampi_bivar	<- NULL
+
+shock$mx_ampi_bivar <- NULL
 shock$mx_genta_bivar <- NULL
-shock$mx_ceftri_bivar	<- NULL
-shock$mx_levoflox_bivar	<- NULL
-shock$mx_ceftaz_bivar	<- NULL
+shock$mx_ceftri_bivar <- NULL
+shock$mx_levoflox_bivar <- NULL
+shock$mx_ceftaz_bivar <- NULL
 shock$mx_amika_bivar <- NULL
-shock$mx_mero_imi_bivar	<- NULL
+shock$mx_mero_imi_bivar <- NULL
 shock$mx_vanco_bivar <- NULL
 shock$mx_metro_bivar <- NULL
 shock$mx_floclox_bivar <- NULL
-shock$gap_shk_bt_8h	<- NULL
+
+shock$gap_shk_bt_8h <- NULL
 shock$gap_shk_bt_10h <- NULL
 shock$gap_shk_bt_12h <- NULL
 shock$gap_shk_bt_14h <- NULL
@@ -209,7 +211,7 @@ shock$cf_abd_dist_bivar <- recode(shock$cf_abd_dist_bivar, "normal" = 0, "disten
 shock$cf_bs_slug_bivar <- recode(shock$cf_bs_slug_bivar, "sluggish" = 1, "not" = 0)
 shock$cf_rbs_bivar <- recode(shock$cf_rbs_bivar, "no" = 0, "hypo" = 1)
 
-shock$mx_line_1_bivar	<- recode(shock$mx_line_1_bivar, "yes" = 1, "no" = 0)
+shock$mx_line_1_bivar <- recode(shock$mx_line_1_bivar, "yes" = 1, "no" = 0)
 shock$mx_line_2_bivar <- recode(shock$mx_line_2_bivar, "yes" = 1, "no" = 0)	
 shock$mx_line_3_bivar <- recode(shock$mx_line_3_bivar, "yes" = 1, "no" = 0)
 shock$mx_line_4_bivar <- recode(shock$mx_line_4_bivar, "yes" = 1, "no" = 0)
