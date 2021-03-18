@@ -20,20 +20,20 @@ An effort to put together the r codes that public health professionals frequentl
   - Attach data
   - Install packages
   - Loading library 
-	- Import data
-	- Names of variables 
-	- Recoding 
-	- Renaming 
-	- Rows in total 
-	- Columns in total 
-	- Get data dimension 
-	- Export data frame 
-	- Merging data sets 
-	- Set up working directory
-	- Subsetting 
-	- Transforming data
-	  - Long to Wide 
-	- View data
+  - Import data
+  - Names of variables 
+  - Recoding 
+  - Renaming 
+  - Rows in total 
+  - Columns in total 
+  - Get data dimension 
+  - Export data frame 
+  - Merging data sets 
+  - Set up working directory
+  - Subsetting 
+  - Transforming data
+    - Long to Wide 
+  - View data
 - Data visualization  
 	- Boxplot 
 	- Histogram 
