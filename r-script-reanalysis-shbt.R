@@ -144,9 +144,11 @@ shock$gap_shk_bt_36h <- NULL
 shock$gap_shk_bt_48h <- NULL
 shock$gap_shk_bt_60h <- NULL
 shock$gap_shk_bt_72h <- NULL
+
 shock$outcome <- NULL
 shock$dx_s_shock <- NULL
 shock$dx_oth_bivar <- NULL
+
 shock$inv_biochem_na_coded <- NULL
 shock$inv_biochem_k_coded <- NULL
 shock$inv_biochem_cl_coded <- NULL
