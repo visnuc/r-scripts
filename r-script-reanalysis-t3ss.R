@@ -1,110 +1,144 @@
+# ---------------------------------
 # libraries
 library(foreign)
 library(tidyverse)
 library(plyr)
 library(MASS)
 
+
+# ---------------------------------
+# set working directory
+setwd("~/MEGA/biotech/04_spring_2013/thesis_550_A/manuscript/manuscript/statistical_analysis/t3ss_data_set")
+getwd()
+
+
+# ---------------------------------
+# list files in dir 
+dir()
+
+
+# ---------------------------------
 # import data
 t3ss <- read.spss(file.choose(), header=T)
 t3ss <- read.csv(file.choose(), header=T)
 
-# set working directory
-setwd("/home/visnu/Dropbox/tmp_sync/statistical_analysis")
-getwd()
-
-# ---------------------------------
-# recode
-t3ssReg <- t3ss %>%
-  select(lab_id, 
-         cf_temp_fever_01, 
-         ho_bloody_01, ho_cough_01, ho_mucoid_01, ho_re_str_01, 
-         lab_ial_01, lab_set_01, lab_virB_01, lab_ipaBCD_01, 
-         lab_ipgB1_01, lab_icsB_01, lab_ipgD_01, lab_ipgF_01, 
-         lab_mxiH_01, lab_mxiK_01, lab_mxiE_01, lab_mxiC_01, 
-         lab_spa47_01, lab_spa32_01) %>%
-  mutate(cf_temp_fever_01 = recode(cf_temp_fever_01, Yes = 1, No = 0), 
-         ho_bloody_01 = recode(ho_bloody_01, Yes = 1, No = 0),
-         ho_cough_01 = recode(ho_cough_01, Yes = 1, No = 0),
-         ho_mucoid_01 = recode(ho_mucoid_01, Yes = 1, No = 0),
-         ho_re_str_01 = recode(ho_re_str_01, Yes = 1, No = 0),
-         lab_ial_01 = recode(lab_ial_01, Positive = 1, Negative = 0),
-         lab_set_01 = recode(lab_set_01, Positive = 1, Negative = 0),
-         lab_virB_01 = recode(lab_virB_01, Positive = 1, Negative = 0),
-         lab_ipaBCD_01 = recode(lab_ipaBCD_01, Positive = 1, Negative = 0),
-         lab_ipgB1_01 = recode(lab_ipgB1_01, Positive = 1, Negative = 0),
-         lab_icsB_01 = recode(lab_icsB_01, Positive = 1, Negative = 0),
-         lab_ipgD_01 = recode(lab_ipgD_01, Positive = 1, Negative = 0),
-         lab_ipgF_01 = recode(lab_ipgF_01, Positive = 1, Negative = 0),
-         lab_mxiH_01 = recode(lab_mxiH_01, Positive = 1, Negative = 0),
-         lab_mxiK_01 = recode(lab_mxiK_01, Positive = 1, Negative = 0),
-         lab_mxiE_01 = recode(lab_mxiE_01, Positive = 1, Negative = 0),
-         lab_mxiC_01 = recode(lab_mxiC_01, Positive = 1, Negative = 0),
-         lab_spa47_01 = recode(lab_spa47_01, Positive = 1, Negative = 0),
-         lab_spa32_01 = recode(lab_spa32_01, Positive = 1, Negative = 0))
-
-t3ssChisq <- t3ss %>%
-  select(lab_ID, lab_Sero, lab_p140, 
-         lab_ipaH, lab_ial_01, lab_set_01, lab_sen, 
-         lab_virB_01, lab_ipaBCD_01, 
-         lab_ipgC, lab_ipgB1_01, lab_ipgA, lab_icsB_01, 
-         lab_ipgD_01, lab_ipgE, lab_ipgF_01, 
-         lab_mxiH_01, lab_mxiI, lab_mxiK_01, lab_mxiE_01, lab_mxiC_01, 
-         lab_spa15, lab_spa47_01, lab_spa32_01, lab_spa24, 
-         ho_mucoid_01, ho_bloody_01, ho_vomiting_01, ho_abd_pain_01, 
-         ho_re_str_01, ho_cough_01, ho_fever_01, ho_convul_01, 
-         ho_measles_01, 
-         cf_mod_sev_dis_01, cf_temp_fever_01, cf_eye_sunken_01, 
-         cf_dry_mouth_01, cf_skin_pinch_slow_01, cf_restless_01, 
-         cf_dh_01, cf_ped_ede_01, cf_rec_pro_01) %>%
-  rename(lab_id = lab_ID, 
-         lab_sero = lab_Sero) %>%
-  mutate(ho_mucoid_01 = recode(ho_mucoid_01, Yes = 1, No = 0),
-         ho_bloody_01 = recode(ho_bloody_01, Yes = 1, No = 0),
-         ho_vomiting_01 = recode(ho_vomiting_01, Yes = 1, No = 0),
-         ho_abd_pain_01 = recode(ho_abd_pain_01, Yes = 1, No = 0),
-         ho_re_str_01 = recode(ho_re_str_01, Yes = 1, No = 0),
-         ho_cough_01 = recode(ho_cough_01, Yes = 1, No = 0),
-         ho_fever_01 = recode(ho_fever_01, Yes = 1, No = 0),
-         ho_convul_01 = recode(ho_convul_01, Yes = 1, No = 0),
-         ho_measles_01 = recode(ho_measles_01, Yes = 1, No = 0),
-         cf_mod_sev_dis_01 = recode(cf_mod_sev_dis_01, Yes = 1, No = 0),
-         cf_temp_fever_01 = recode(cf_temp_fever_01, Yes = 1, No = 0), 
-         cf_eye_sunken_01 = recode(cf_eye_sunken_01, Yes = 1, No = 0), 
-         cf_dry_mouth_01 = recode(cf_dry_mouth_01, Yes = 1, No = 0), 
-         cf_skin_pinch_slow_01 = recode(cf_skin_pinch_slow_01, Yes = 1, No = 0), 
-         cf_restless_01 = recode(cf_restless_01, Yes = 1, No = 0), 
-         cf_dh_01 = recode(cf_dh_01, Yes = 1, No = 0), 
-         cf_ped_ede_01 = recode(cf_ped_ede_01, Yes = 1, No = 0), 
-         cf_rec_pro_01 = recode(cf_rec_pro_01, Yes = 1, No = 0), 
-         lab_p140 = recode(lab_p140, Positive = 1, Negative = 0),
-         lab_ipaH = recode(lab_ipaH, Positive = 1, Negative = 0),
-         lab_ial_01 = recode(lab_ial_01, Positive = 1, Negative = 0),
-         lab_set_01 = recode(lab_set_01, Positive = 1, Negative = 0),
-         lab_sen = recode(lab_sen, Positive = 1, Negative = 0),
-         lab_virB_01 = recode(lab_virB_01, Positive = 1, Negative = 0),
-         lab_ipaBCD_01 = recode(lab_ipaBCD_01, Positive = 1, Negative = 0),
-         lab_ipgC = recode(lab_ipgC, Positive = 1, Negative = 0),
-         lab_ipgB1_01 = recode(lab_ipgB1_01, Positive = 1, Negative = 0),
-         lab_ipgA = recode(lab_ipgA, Positive = 1, Negative = 0),
-         lab_icsB_01 = recode(lab_icsB_01, Positive = 1, Negative = 0),
-         lab_ipgD_01 = recode(lab_ipgD_01, Positive = 1, Negative = 0),
-         lab_ipgE = recode(lab_ipgE, Positive = 1, Negative = 0),
-         lab_ipgF_01 = recode(lab_ipgF_01, Positive = 1, Negative = 0),
-         lab_mxiH_01 = recode(lab_mxiH_01, Positive = 1, Negative = 0),
-         lab_mxiI = recode(lab_mxiI, Positive = 1, Negative = 0),
-         lab_mxiK_01 = recode(lab_mxiK_01, Positive = 1, Negative = 0),
-         lab_mxiE_01 = recode(lab_mxiE_01, Positive = 1, Negative = 0),
-         lab_mxiC_01 = recode(lab_mxiC_01, Positive = 1, Negative = 0),
-         lab_spa15 = recode(lab_spa15, Positive = 1, Negative = 0),
-         lab_spa47_01 = recode(lab_spa47_01, Positive = 1, Negative = 0),
-         lab_spa32_01 = recode(lab_spa32_01, Positive = 1, Negative = 0), 
-         lab_spa24 = recode(lab_spa24, Posotive = 1, Negative = 0))
-
+# -------------------------------
+# others 
 attach(t3ss)
 names(t3ss)
-View(t3ssChisq)
+View(t3ss)
 dim(t3ss)
 str(t3ss)
+
+
+# ---------------------------------
+#   subset 
+t3ssReg <- subset(t3ss, select = c(lab_id, 
+                                   cf_temp_fever_01, 
+                                   ho_bloody_01, ho_cough_01, 
+                                   ho_mucoid_01, ho_re_str_01, 
+                                   lab_ial_01, lab_set_01, lab_virB_01, 
+                                   lab_ipaBCD_01, lab_ipgB1_01, 
+                                   lab_icsB_01, lab_ipgD_01, lab_ipgF_01, 
+                                   lab_mxiH_01, lab_mxiK_01, lab_mxiE_01, 
+                                   lab_mxiC_01, lab_spa47_01, 
+                                   lab_spa32_01))
+
+View(t3ssReg)
+
+t3ssChisq <- subset(t3ss, 
+                    select = c(lab_id, lab_sero, lab_p140, 
+                               lab_ipaH, lab_ial_01, lab_set_01, lab_sen, 
+                               lab_virB_01, lab_ipaBCD_01, lab_ipgC, 
+                               lab_ipgB1_01, lab_ipgA, lab_icsB_01, 
+                               lab_ipgD_01, lab_ipgE, lab_ipgF_01, 
+                               lab_mxiH_01, lab_mxiI, lab_mxiK_01, 
+                               lab_mxiE_01, lab_mxiC_01, lab_spa15, 
+                               lab_spa47_01, lab_spa32_01, lab_spa24, 
+                               ho_mucoid_01, ho_bloody_01, ho_vomiting_01, 
+                               ho_abd_pain_01, ho_re_str_01, ho_cough_01, 
+                               ho_fever_01, ho_convul_01, ho_measles_01,
+                               cf_mod_sev_dis_01, cf_temp_fever_01, 
+                               cf_eye_sunken_01, cf_dry_mouth_01, 
+                               cf_skin_pinch_slow_01, cf_restless_01, 
+                               cf_dh_01, cf_ped_ede_01, cf_rec_pro_01))
+
+
+
+# ---------------------------------
+#     removing variables 
+t3ss$dis_cid <- NULL
+t3ss$ho_mucoid <- NULL
+t3ss$ho_bloody <- NULL
+t3ss$ho_vomiting <- NULL
+t3ss$ho_abd_pain <- NULL
+t3ss$ho_re_str <- NULL
+t3ss$ho_cough <- NULL
+t3ss$ho_fever <- NULL
+t3ss$ho_convul <- NULL
+t3ss$ho_measles <- NULL
+
+t3ss$cf_mod_sev_dis <- NULL
+t3ss$cf_temp_fever <- NULL
+t3ss$cf_eye_sunken <- NULL
+t3ss$cf_dry_mouth <- NULL
+t3ss$cf_skin_pinch_slow <- NULL
+t3ss$cf_restless <- NULL
+t3ss$cf_dh <- NULL
+t3ss$cf_ped_ede <- NULL
+t3ss$cf_rec_pro <- NULL
+
+
+# ---------------------------------
+#     recoding
+t3ss$lab_p140 <- recode(t3ss$lab_p140, "Positive" = 1, "Negative" = 0)
+t3ss$lab_ipaH <- recode(t3ss$lab_ipaH, "Positive" = 1, "Negative" = 0)
+t3ss$lab_ial_01 <- recode(t3ss$lab_ial_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_set1A <- recode(t3ss$lab_set1A, "Positive" = 1, "Negative" = 0)
+t3ss$lab_set1B <- recode(t3ss$lab_set1B, "Positive" = 1, "Negative" = 0)
+t3ss$lab_set_01 <- recode(t3ss$lab_set_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_sen <- recode(t3ss$lab_sen, "Positive" = 1, "Negative" = 0)
+t3ss$lab_virB_01 <- recode(t3ss$lab_virB_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_ipaBCD_01 <- recode(t3ss$lab_ipaBCD_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_ipgC <- recode(t3ss$lab_ipgC, "Positive" = 1, "Negative" = 0)
+t3ss$lab_ipgB1_01 <- recode(t3ss$lab_ipgB1_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_ipgA <- recode(t3ss$lab_ipgA, "Positive" = 1, "Negative" = 0)
+t3ss$lab_icsB_01 <- recode(t3ss$lab_icsB_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_ipgD_01 <- recode(t3ss$lab_ipgD_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_ipgE <- recode(t3ss$lab_ipgE, "Positive" = 1, "Negative" = 0)
+t3ss$lab_ipgF_01 <- recode(t3ss$lab_ipgF_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_mxiH_01 <- recode(t3ss$lab_mxiH_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_mxiI <- recode(t3ss$lab_mxiI, "Positive" = 1, "Negative" = 0)
+t3ss$lab_mxiK_01 <- recode(t3ss$lab_mxiK_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_mxiE_01 <- recode(t3ss$lab_mxiE_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_mxiC_01 <- recode(t3ss$lab_mxiC_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_spa15 <- recode(t3ss$lab_spa15, "Positive" = 1, "Negative" = 0)
+t3ss$lab_spa47_01 <- recode(t3ss$lab_spa47_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_spa32_01 <- recode(t3ss$lab_spa32_01, "Positive" = 1, "Negative" = 0)
+t3ss$lab_spa24 <- recode(t3ss$lab_spa24, "Positive" = 1, "Negative" = 0)
+t3ss$lab_spa <- recode(t3ss$lab_spa, "Positive" = 1, "Negative" = 0)
+
+t3ss$ho_mucoid_01 <- recode(t3ss$ho_mucoid_01, "Yes" = 1, "No" = 0)
+t3ss$ho_bloody_01 <- recode(t3ss$ho_bloody_01, "Yes" = 1, "No" = 0)
+t3ss$ho_vomiting_01 <- recode(t3ss$ho_vomiting_01, "Yes" = 1, "No" = 0)
+t3ss$ho_abd_pain_01 <- recode(t3ss$ho_abd_pain_01, "Yes" = 1, "No" = 0)
+t3ss$ho_re_str_01 <- recode(t3ss$ho_re_str_01, "Yes" = 1, "No" = 0)
+t3ss$ho_cough_01 <- recode(t3ss$ho_cough_01, "Yes" = 1, "No" = 0)
+t3ss$ho_fever_01 <- recode(t3ss$ho_fever_01, "Yes" = 1, "No" = 0)
+t3ss$ho_convul_01 <- recode(t3ss$ho_convul_01, "Yes" = 1, "No" = 0)
+t3ss$ho_measles_01 <- recode(t3ss$ho_measles_01, "Yes" = 1, "No" = 0)
+
+t3ss$cf_mod_sev_dis_01 <- recode(t3ss$cf_mod_sev_dis_01, "Yes" = 1, "No" = 0)
+t3ss$cf_temp_fever_01 = recode(t3ss$cf_temp_fever_01, "Yes" = 1, "No" = 0)
+t3ss$cf_eye_sunken_01 <- recode(t3ss$cf_eye_sunken_01, "Yes" = 1, "No" = 0)
+t3ss$cf_dry_mouth_01 <- recode(t3ss$cf_dry_mouth_01, "Yes" = 1, "No" = 0)
+t3ss$cf_skin_pinch_slow_01 <- recode(t3ss$cf_skin_pinch_slow_01, "Yes" = 1, "No" = 0)
+t3ss$cf_restless_01 <- recode(t3ss$cf_restless_01, "Yes" = 1, "No" = 0)
+t3ss$cf_dh_01 <- recode(t3ss$cf_dh_01, "Yes" = 1, "No" = 0)
+t3ss$cf_ped_ede_01 <- recode(t3ss$cf_ped_ede_01, "Yes" = 1, "No" = 0)
+t3ss$cf_rec_pro_01 <- recode(t3ss$cf_rec_pro_01, "Yes" = 1, "No" = 0)
+
+
 
 # -------------------------------
 # export data
