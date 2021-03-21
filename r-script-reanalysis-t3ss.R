@@ -1,10 +1,7 @@
 # ---------------------------------
 # libraries
-<<<<<<< HEAD
 library("arm")
 library("car")
-=======
->>>>>>> 6d357fe6e1052335bdbc0624313287141a6a1c48
 library("coefplot")
 library("datasets")
 library("dplyr")
@@ -16,11 +13,8 @@ library("plyr")
 library("reshape")
 library("tidyverse")
 library("utils")
-<<<<<<< HEAD
 library("visreg")
-=======
 
->>>>>>> 6d357fe6e1052335bdbc0624313287141a6a1c48
 
 # ---------------------------------
 # set working directory
@@ -38,7 +32,6 @@ dir()
 t3ss <- read.spss(file.choose(), header=T)
 t3ss <- read.dta(file.choose())
 t3ss <- read.csv(file.choose(), header=T)
-<<<<<<< HEAD
 
 
 # -------------------------------
@@ -50,9 +43,6 @@ dim(t3ss)
 str(t3ss)
 
 
-=======
-
-
 # -------------------------------
 # others 
 attach(t3ss)
@@ -62,8 +52,6 @@ dim(t3ssReg)
 str(t3ss)
 
 
-
->>>>>>> 6d357fe6e1052335bdbc0624313287141a6a1c48
 # -------------------------------
 # export data
 write.table(t3ss, 
@@ -72,10 +60,6 @@ write.table(t3ss,
             row.names = F)
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 6d357fe6e1052335bdbc0624313287141a6a1c48
 # ---------------------------------
 #   subset 
 t3ssReg <- subset(t3ss, select = c(lab_id, 
