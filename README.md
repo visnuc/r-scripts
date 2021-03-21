@@ -39,6 +39,7 @@ An effort to put together the r codes that public health professionals frequentl
 	- Histogram 
 	- Density plot 
 	- Scatter plot 
+	- Coefficient plot 
 - Checks 
   - Normality testing
 	  - with histogram 

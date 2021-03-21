@@ -394,7 +394,6 @@ coefplot(t3ssRegAdj, innerCI = 0, outerCI = 1.96, intercept = F,
          ylab = "Predictor genes", 
          decreasing = T, 
          col = "skyblue2", 
-         
          newNames = c(reg_toxin = "set | sen", 
                       reg_ipgA_icsB = "ipgA & icsB", 
                       reg_mxiC = "mxiC", 
