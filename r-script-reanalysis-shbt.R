@@ -1,19 +1,19 @@
 # ---------------------------------
-#     get packages 
-install.packages("dplyr")
-
-# ---------------------------------
 #     libraries
-library("plyr")
-library("tidyverse")
-library("reshape")
-library("datasets")
-library("foreign")
+library("arm")
+library("car")
 library("coefplot")
-library("ggplot2")
-library("plotrix")
+library("datasets")
 library("dplyr")
+library("foreign")
+library("ggplot2")
+library("MASS")
+library("plotrix")
+library("plyr")
+library("reshape")
+library("tidyverse")
 library("utils")
+library("visreg")
 
 
 # ---------------------------------
@@ -118,17 +118,19 @@ shock$cf_bp_dia <- NULL
 shock$cf_dh <- NULL
 shock$cf_temp_coded <- NULL
 shock$cf_bs <- NULL
-shock$mx_ampi_bivar	<- NULL
+
+shock$mx_ampi_bivar <- NULL
 shock$mx_genta_bivar <- NULL
-shock$mx_ceftri_bivar	<- NULL
-shock$mx_levoflox_bivar	<- NULL
-shock$mx_ceftaz_bivar	<- NULL
+shock$mx_ceftri_bivar <- NULL
+shock$mx_levoflox_bivar <- NULL
+shock$mx_ceftaz_bivar <- NULL
 shock$mx_amika_bivar <- NULL
-shock$mx_mero_imi_bivar	<- NULL
+shock$mx_mero_imi_bivar <- NULL
 shock$mx_vanco_bivar <- NULL
 shock$mx_metro_bivar <- NULL
 shock$mx_floclox_bivar <- NULL
-shock$gap_shk_bt_8h	<- NULL
+
+shock$gap_shk_bt_8h <- NULL
 shock$gap_shk_bt_10h <- NULL
 shock$gap_shk_bt_12h <- NULL
 shock$gap_shk_bt_14h <- NULL
@@ -142,9 +144,11 @@ shock$gap_shk_bt_36h <- NULL
 shock$gap_shk_bt_48h <- NULL
 shock$gap_shk_bt_60h <- NULL
 shock$gap_shk_bt_72h <- NULL
+
 shock$outcome <- NULL
 shock$dx_s_shock <- NULL
 shock$dx_oth_bivar <- NULL
+
 shock$inv_biochem_na_coded <- NULL
 shock$inv_biochem_k_coded <- NULL
 shock$inv_biochem_cl_coded <- NULL
@@ -209,7 +213,7 @@ shock$cf_abd_dist_bivar <- recode(shock$cf_abd_dist_bivar, "normal" = 0, "disten
 shock$cf_bs_slug_bivar <- recode(shock$cf_bs_slug_bivar, "sluggish" = 1, "not" = 0)
 shock$cf_rbs_bivar <- recode(shock$cf_rbs_bivar, "no" = 0, "hypo" = 1)
 
-shock$mx_line_1_bivar	<- recode(shock$mx_line_1_bivar, "yes" = 1, "no" = 0)
+shock$mx_line_1_bivar <- recode(shock$mx_line_1_bivar, "yes" = 1, "no" = 0)
 shock$mx_line_2_bivar <- recode(shock$mx_line_2_bivar, "yes" = 1, "no" = 0)	
 shock$mx_line_3_bivar <- recode(shock$mx_line_3_bivar, "yes" = 1, "no" = 0)
 shock$mx_line_4_bivar <- recode(shock$mx_line_4_bivar, "yes" = 1, "no" = 0)
@@ -359,7 +363,7 @@ shbtRegAdj <- glm(formula = reg_outcome ~ reg_meropenem +
                     reg_sev_pneumonia + reg_sclerema + 
                     gap_shk_bt_3h, 
                   family = "binomial", 
-                  data = shbtSmall2)
+                  data = shock)
 
 summary(shbtRegAdj)
 
@@ -369,9 +373,10 @@ round(exp(cbind(coef(shbtRegAdj), confint(shbtRegAdj))), 3)
 
 # -------------------------------
 #     plotting 
-coefplot(shbtRegAdj, innerCI = 2, outerCI = 0, intercept = F, 
+coefplot(shbtRegAdj)
+coefplot(shbtRegAdj, innerCI = 0, outerCI = 1.96, intercept = F, 
          title = "", 
-         xlab = "95% Confidence Interval", 
+         xlab = "Regression coefficient at 95% CI", 
          ylab = "Predictors", 
          decreasing = T, 
          col = "skyblue2", 
@@ -380,8 +385,8 @@ coefplot(shbtRegAdj, innerCI = 2, outerCI = 0, intercept = F,
                       reg_steroids = "Corticosteroids", 
                       reg_mod_anemia = "Moderate anemia", 
                       reg_sev_pneumonia = "Severe Pneumonia", 
-                      reg_hai_hap = "Hospital Acquired Infection", 
-                      gap_shk_bt_3h = "Gap between Shock & BT 3h")) + 
+                      reg_hai_hap = "Hosp. Acquired Infection", 
+                      gap_shk_bt_3h = "Gap in Shock & BT 3h")) + 
   theme(axis.line = element_line(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
