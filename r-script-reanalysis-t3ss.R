@@ -44,15 +44,6 @@ str(t3ss)
 
 
 # -------------------------------
-# others 
-attach(t3ss)
-names(t3ssReg)
-View(t3ss)
-dim(t3ssReg)
-str(t3ss)
-
-
-# -------------------------------
 # export data
 write.table(t3ss, 
             file = "haabijaabi.csv", 
@@ -394,9 +385,9 @@ coefplot(t3ssRegAdj, innerCI = 0, outerCI = 1.96, intercept = F,
          ylab = "Predictor genes", 
          decreasing = T, 
          col = "skyblue2", 
-         newNames = c(reg_toxin = "set | sen", 
+         newNames = c(reg_toxin = "set & sen", 
                       reg_ipgA_icsB = "ipgA & icsB", 
-                      reg_mxiC = "mxiC", 
+                      reg_mxiC = "mxiC",
                       reg_ipgB1_spa15 = "ipgB1 & spa15")) + 
   theme(axis.line = element_line(),
         panel.grid.major = element_blank(),
