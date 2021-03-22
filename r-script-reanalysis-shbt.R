@@ -38,6 +38,7 @@ attach(shock)
 names(shock)
 nrow(shock)
 View(shock)
+shock$mx_line_1_bivar
 dim(shock)
 str(shbtSmall2$pp_sex_bivar)
 
@@ -349,6 +350,19 @@ summary(shbtRegUnadj)
 # OR & 95% CI
 round(exp(cbind(coef(shbtRegUnadj), confint(shbtRegUnadj))), 3)
 
+shkRegUnad <- glm(formula = reg_outcome ~ reg_meropenem, family = "binomial", data = shock)
+shkRegUnad <- glm(formula = reg_outcome ~ reg_steroids, family = "binomial", data = shock)
+shkRegUnad <- glm(formula = reg_outcome ~ reg_mod_anemia, family = "binomial", data = shock)
+shkRegUnad <- glm(formula = reg_outcome ~ reg_hai_hap, family = "binomial", data = shock)
+shkRegUnad <- glm(formula = reg_outcome ~ reg_sev_pneumonia, family = "binomial", data = shock)
+shkRegUnad <- glm(formula = reg_outcome ~ reg_sclerema, family = "binomial", data = shock)
+shkRegUnad <- glm(formula = reg_outcome ~ gap_shk_bt_3h, family = "binomial", data = shock)
+
+summary(shkRegUnad)
+
+# OR & 95% CI
+round(exp(cbind(coef(shkRegUnad), confint(shkRegUnad))), 3)
+
 
 # -------------------------------
 #     Binary logistic regression - adjusted
@@ -358,22 +372,28 @@ round(exp(cbind(coef(shbtRegUnadj), confint(shbtRegUnadj))), 3)
 #                   family = binomial(link = "logit"), # ?? link = "logit"
 #                   data = shbtSmall2)
 
-shbtRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + 
+shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + 
                     reg_mod_anemia + reg_hai_hap + reg_sev_pneumonia + 
                     reg_sclerema + gap_shk_bt_3h, 
                   family = "binomial", 
                   data = shock)
 
-summary(shbtRegAdj)
+shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + 
+                   reg_mod_anemia + reg_hai_hap + reg_sev_pneumonia + 
+                   reg_sclerema + gap_shk_bt_3h, 
+                  family = "binomial", 
+                  data = shock)
+
+summary(shkRegAdj)
+
 
 # OR & 95% CI
-round(exp(cbind(coef(shbtRegAdj), confint(shbtRegAdj))), 3)
-
+round(exp(cbind(coef(shkRegAdj), confint(shkRegAdj))), 3)
 
 # -------------------------------
 #     plotting 
-coefplot(shbtRegAdj, 
-         innerCI = 0, outerCI = 1.96, lwdInner = 0, lwdOuter = 0.4, 
+coefplot(shkRegAdj, 
+         innerCI = 0, outerCI = 2, lwdInner = 0, lwdOuter = 0.4, 
          intercept = F, 
          zeroColor = "darkgrey", zeroLWD = 0.5, zeroType = 9, 
          title = "", 
@@ -387,7 +407,7 @@ coefplot(shbtRegAdj,
                       reg_mod_anemia = "Moderate anemia", 
                       reg_sev_pneumonia = "Severe Pneumonia", 
                       reg_hai_hap = "Hosp. Acquired Infection", 
-                      gap_shk_bt_3h = "Gap in Shock & BT 3h")) + 
+                      gap_shk_bt_3h = "Shock-BT gap 3hrs")) + 
   theme(axis.line = element_line(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
