@@ -358,10 +358,9 @@ round(exp(cbind(coef(shbtRegUnadj), confint(shbtRegUnadj))), 3)
 #                   family = binomial(link = "logit"), # ?? link = "logit"
 #                   data = shbtSmall2)
 
-shbtRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + 
-                    reg_steroids + reg_mod_anemia + reg_hai_hap + 
-                    reg_sev_pneumonia + reg_sclerema + 
-                    gap_shk_bt_3h, 
+shbtRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + 
+                    reg_mod_anemia + reg_hai_hap + reg_sev_pneumonia + 
+                    reg_sclerema + gap_shk_bt_3h, 
                   family = "binomial", 
                   data = shock)
 
@@ -373,8 +372,10 @@ round(exp(cbind(coef(shbtRegAdj), confint(shbtRegAdj))), 3)
 
 # -------------------------------
 #     plotting 
-coefplot(shbtRegAdj)
-coefplot(shbtRegAdj, innerCI = 0, outerCI = 1.96, intercept = F, 
+coefplot(shbtRegAdj, 
+         innerCI = 0, outerCI = 1.96, lwdInner = 0, lwdOuter = 0.4, 
+         intercept = F, 
+         zeroColor = "darkgrey", zeroLWD = 0.5, zeroType = 9, 
          title = "", 
          xlab = "Regression coefficient at 95% CI", 
          ylab = "Predictors", 
@@ -393,4 +394,3 @@ coefplot(shbtRegAdj, innerCI = 0, outerCI = 1.96, intercept = F,
         panel.border = element_blank(),
         panel.background = element_blank()) + 
   geom_point(pch = 21)
-
