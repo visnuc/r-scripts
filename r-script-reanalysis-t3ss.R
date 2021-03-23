@@ -359,16 +359,16 @@ round(exp(cbind(coef(t3ssRegUnadj), confint(t3ssRegUnadj))), 3)
 
 #   final models
 t3ssRegAdj <- glm(ho_bloody_01 ~ reg_toxin + reg_ipgA_icsB, 
-                  family = "binomial", 
+                  family = "binomial" (link="logit"), 
                   data = t3ss) 
 
 t3ssRegAdj <- glm(ho_mucoid_01 ~ reg_toxin + reg_mxiC, 
-                  family = "binomial", 
+                  family = "binomial" (link="logit"), 
                   data = t3ss)
 
 t3ssRegAdj <- glm(ho_re_str_01 ~ reg_toxin + reg_ipgA_icsB + reg_mxiC + 
                     reg_ipgB1_spa15, 
-                  family = "binomial", 
+                  family = "binomial" (link="logit"), 
                   data = t3ss)
 
 summary(t3ssRegAdj)

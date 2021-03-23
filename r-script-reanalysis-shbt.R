@@ -375,13 +375,13 @@ round(exp(cbind(coef(shkRegUnad), confint(shkRegUnad))), 3)
 shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + 
                     reg_mod_anemia + reg_hai_hap + reg_sev_pneumonia + 
                     reg_sclerema + gap_shk_bt_3h, 
-                  family = "binomial", 
+                  family = "binomial" (link="logit"), 
                   data = shock)
 
 shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + 
                    reg_mod_anemia + reg_hai_hap + reg_sev_pneumonia + 
                    reg_sclerema + gap_shk_bt_3h, 
-                  family = "binomial", 
+                  family = "binomial" (link="logit"), 
                   data = shock)
 
 summary(shkRegAdj)
