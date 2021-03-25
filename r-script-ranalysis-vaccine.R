@@ -1,21 +1,21 @@
 # ---------------------------------
 #     libraries
 # ---------------------------------
-library("arm")
-library("car")
-library("codebook")
-library("coefplot")
-library("datasets")
-library("devtools")
-library("dplyr")
-library("e1071")
-library("foreign")
-library("ggplot2")
+library(arm)
+library(car)
+library(codebook)
+library(coefplot)
+library(datasets)
+library(devtools)
+library(dplyr)
+library(e1071)
+library(foreign)
+library(ggplot2)
 library(ggpubr)
-library("haven")
-library("MASS")
-library("moments") 
-library("plotrix")
+library(haven)
+library(MASS)
+library(moments)
+library(plotrix)
 library(plyr)
 library(reshape)
 library(rstatix)
@@ -36,13 +36,11 @@ setwd("C:/Users/visnu.pritom/Dropbox/tmp_sync/tmp_shbt/poster_presentation/del_t
 dir()
 
 
-
 # ---------------------------------
 #     data import 
 # ---------------------------------
 vaccine <- read.spss(file.choose(), header=T)
 vaccine <- read.csv(file.choose(), header=T)
-
 
 
 # ---------------------------------
@@ -59,11 +57,7 @@ str(vaccine)
 # ---------------------------------
 #     data export 
 # ---------------------------------
-write.table(vaccine, 
-            file = "later.csv", 
-            sep = ",", 
-            row.names = F)
-
+write.table(vaccine, file = "later.csv", sep = ",", row.names = F)
 
 
 # ---------------------------------
@@ -110,7 +104,7 @@ qqnorm(vaccine$avgLog2pol1, pch = 1, frame = F); qqline(vaccine$avgLog2pol1, col
 qqnorm(vaccine$avgLog2pol2, pch = 1, frame = F); qqline(vaccine$avgLog2pol2, col = "skyblue4", lwd = 1) # not 
 qqnorm(vaccine$avgLog2pol3, pch = 1, frame = F); qqline(vaccine$avgLog2pol3, col = "skyblue4", lwd = 1) # not
 
-#   Shapiro–Wilk test
+#   Shapiro-Wilk test
 shapiro.test(vaccine$momwt) # p = 1.18e-12
 shapiro.test(vaccine$momht) # p = 0.022, variable not normal
 shapiro.test(vaccine$income) # p < 2.2e-16
@@ -130,7 +124,6 @@ shapiro.test(vaccine$avgLog2pol1) # p < 2.2e-16
 shapiro.test(vaccine$avgLog2pol2) # p < 2.2e-16
 shapiro.test(vaccine$avgLog2pol3) # p < 2.2e-16
 
-
 #   with stem-leaf plot 
 stem(vaccine$momwt)
 
@@ -147,8 +140,6 @@ kurtosis(vaccine$momwt)
 # if kurtosis ~3, its near normal
 # kurtosis >3, distro had higher peak and thin tails, not normal 
 # kurtosis <3, distro has thicker tails and lower peak, not normal 
-
-
 
 
 # ---------------------------------
@@ -193,7 +184,6 @@ shock <- shock %>%
          outcome_bivar, bt_cause_bivar,
          reg_mod_anemia, reg_meropenem, reg_steroids, reg_outcome,
          reg_sclerema, reg_sev_pneumonia, reg_hai_hap) 
-
 
 
 # ---------------------------------
@@ -247,7 +237,6 @@ barplot(prop.table(continTable, 2)*100,
         main = "Death & Survival by Gender")
 
 
-
 # ---------------------------------
 #   Chi-square test of independence
 # ---------------------------------
@@ -265,7 +254,6 @@ chisq.test(continTable, simulate.p.value = T, B = 10000)
 fisher.test(continTable)
 
 
-
 # ---------------------------------------
 # Unpaired/Independent sample t-test 
 # ---------------------------------------
@@ -279,7 +267,6 @@ t.test(vaccine$bwlz ~ vaccine$reversed, data=vaccine, var.equal = T)
 vaccine %>%
   group_by(reversed) %>%
   get_summary_stats(bweight, type = "mean_sd")
-
 
 
 # -------------------------------
@@ -367,7 +354,6 @@ summary(shkRegAdj)
 
 # OR & 95% CI
 round(exp(cbind(coef(shkRegAdj), confint(shkRegAdj))), 3)
-
 
 
 # ---------------------------------
