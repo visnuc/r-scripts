@@ -44,7 +44,7 @@ kurtosis(myDataDsdc$income)
 # Shapiro–Wilk test
 library("dplyr")
 # library("ggpubr")
-shapiro.test(myDataDsdc$income)  #                                              ? 
+shapiro.test(myDataDsdc$income)  
 
 # Kolmogorov-Smirnov test
 library("dgof")

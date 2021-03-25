@@ -3,19 +3,18 @@
 # ===============================
 
 # -------------------------------
-# install 
-install.packages("devtools")
-
-# -------------------------------
 # libraries
+# -------------------------------
 library("devtools")
 
 # -------------------------------
 # working directory
+# -------------------------------
 setwd("/my/desired/directory/for/r") 
 
 # -------------------------------
 # data import 
+# -------------------------------
 myData <-read.csv(file.choose(), header=T) 
 
 
@@ -44,9 +43,7 @@ myData <-read.csv(file.choose(), header=T)
 #   6. state results 
 #   7. state conclusion 
 
-install.packages("devtools")
-# or
-# install.packages("ggpubr")
+
 myDataDsdc <-read.csv(file.choose(),header=T)
 summary(myDataDsdc$income)
 
