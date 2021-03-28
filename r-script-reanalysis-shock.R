@@ -26,7 +26,7 @@ library(utils)
 # ---------------------------------
 #     working directory 
 # ---------------------------------
-setwd("~/MEGA/projects/icddrb/study_retro_shock_bt/manuscript_shock/data")
+setwd("/home/visnu/MEGA/projects/icddrb/study_retro_shock/manuscript_shock/data")
 setwd("C:/Users/visnu.pritom/Dropbox/tmp_sync/tmp_shbt/poster_presentation/del_tmp")
 
 
@@ -61,7 +61,7 @@ s3 <- merge(shock, shockSpo2, by = "pp_pid", all.x = T)
 # ---------------------------------
 #     export data 
 # ---------------------------------
-write.table(s3, 
+write.table(shock, 
             file = "data_shock_part_20210328.csv", 
             sep = ",", 
             row.names = F)
@@ -116,6 +116,8 @@ shock2 <- shock %>%
 #     removing var
 # ---------------------------------
 shock$socio_restype_notbuilding_bivar <- NULL
+shock$socio_water_bivar <- NULL 
+
 shock$bt_cause_coded <- NULL
 shock$pp_location <- NULL
 shock$bt <- NULL
@@ -200,6 +202,7 @@ names(shock)[4] <- "socio_restype_bivar"
 shock$pp_sex_bivar <- recode(shock$pp_sex_bivar, "male" = 1, "female" = 0)
 shock$socio_restype_bivar <- recode(shock$socio_restype_bivar, "building" = 0, "not building" = 1)
 shock$socio_water_bivar <- recode(shock$socio_water_bivar, "safe" = 0, "unsafe" = 1)
+shock$socio_safe_water_bivar <- recode(shock$socio_water_bivar, "0" = 1, "1" = 0)
 
 shock$pedi_imm_bivar <- recode(shock$pedi_imm_bivar, "immunized" = 1, "not" = 0)
 shock$pedi_dev_bivar <- recode(shock$pedi_dev_bivar, "appropriate" = 1, "delayed" = 0)
@@ -294,15 +297,26 @@ shock$reg_hai_hap <- recode(shock$reg_hai_hap, "yes (death)" = 1, "no" = 0)
 #     two-way contingency table
 # ---------------------------------
 continTable <- table(shock$reg_outcome, shock$pp_sex_bivar)
-continTable <- table(shock$reg_outcome, shock$socio_water_bivar)
+continTable <- table(shock$reg_outcome, shock$socio_safe_water_bivar)
 # sum(is.na(shock$socio_water_bivar))
 # sNoNA <- na.omit(shock)
 continTable <- table(shock$reg_outcome, shock$pedi_imm_bivar)
 continTable <- table(shock$reg_outcome, shock$pedi_feed_bivar)
 
-continTable <- table(shock$outcome_bivar, shock$reg_meropenem)
-continTable <- table(shock$outcome_bivar, shock$reg_steroids)
-continTable <- table(shock$outcome_bivar, shock$gap_shk_bt_3h)
+continTable <- table(shock$reg_outcome, shock$cc_diarr_bivar)
+continTable <- table(shock$reg_outcome, shock$cf_lung_crepts_bivar)
+continTable <- table(shock$reg_outcome, shock$cf_lcwi_bivar)
+continTable <- table(shock$reg_outcome, shock$cf_dh_bivar)
+continTable <- table(shock$reg_outcome, shock$cf_ede_bivar)
+continTable <- table(shock$reg_outcome, shock$cf_abd_dist_bivar)
+continTable <- table(shock$reg_outcome, shock$dx_conv_bivar)
+
+continTable <- table(shock$reg_outcome, shock$mx_line_1_bivar)
+continTable <- table(shock$reg_outcome, shock$mx_line_2_bivar)
+continTable <- table(shock$reg_outcome, shock$mx_line_3_bivar)
+continTable <- table(shock$reg_outcome, shock$reg_meropenem)
+continTable <- table(shock$reg_outcome, shock$reg_steroids)
+continTable <- table(shock$reg_outcome, shock$gap_shk_bt_3h)
 
 continTable
 
