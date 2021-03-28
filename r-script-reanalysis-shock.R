@@ -41,6 +41,7 @@ dir()
 # ---------------------------------
 shock <- read.spss(file.choose(), header=T)
 shock <- read.csv(file.choose(), header=T)
+shockBlcs <- read.csv(file.choose(), header=T)
 
 
 # ---------------------------------
@@ -55,7 +56,7 @@ dim(shock)
 
 # ---------------------------------
 # merging data sets 
-s3 <- merge(shock, shockSpo2, by = "pp_pid", all.x = T)
+s13 <- merge(shock, shockBlcs, by = "pp_pid", all.x = T)
 
 
 # ---------------------------------
@@ -257,6 +258,7 @@ shock$dx_id_bivar <- recode(shock$dx_id_bivar, "yes" = 1, "no" = 0)
 shock$dx_pd_bivar <- recode(shock$dx_pd_bivar, "yes" = 1, "no" = 0) 
 shock$dx_aki_bivar <- recode(shock$dx_aki_bivar, "yes" = 1, "no" = 0)
 
+shock$inv_bl_cs_bivar <- recode(shock$inv_bl_cs_bivar, )
 shock$inv_biochem_hyper_na_bivar <- recode(shock$inv_biochem_hyper_na_bivar, "hyperna" = 1, "not" = 0)
 shock$inv_biochem_hypo_na_bivar <- recode(shock$inv_biochem_hypo_na_bivar,  "hypona" = 1, "not" = 0)
 shock$inv_biochem_hyper_k_bivar <- recode(shock$inv_biochem_hyper_k_bivar, "yes" = 1, "no" = 0)
@@ -311,6 +313,18 @@ continTable <- table(shock$reg_outcome, shock$cf_ede_bivar)
 continTable <- table(shock$reg_outcome, shock$cf_abd_dist_bivar)
 continTable <- table(shock$reg_outcome, shock$dx_conv_bivar)
 
+continTable <- table(shock$reg_outcome, shock$inv_biochem_hyper_na_bivar)
+continTable <- table(shock$reg_outcome, shock$inv_biochem_hypo_na_bivar)
+continTable <- table(shock$reg_outcome, shock$inv_biochem_hyper_k_bivar)
+continTable <- table(shock$reg_outcome, shock$inv_biochem_hypo_k_bivar)
+continTable <- table(shock$reg_outcome, shock$inv_biochem_met_acido_bivar)
+continTable <- table(shock$reg_outcome, shock$inv_biochem_cr_aki_bivar)
+continTable <- table(shock$reg_outcome, shock$inv_biochem_ca_low_bivar)
+continTable <- table(shock$reg_outcome, shock$inv_biochem_hi_mg_bivar)
+continTable <- table(shock$reg_outcome, shock$inv_hem_mod_anemia_9.3)
+continTable <- table(shock$reg_outcome, shock$inv_hem_thombocytopenia_bivar)
+continTable <- table(shock$reg_outcome, shock$mx_line_1_bivar)
+
 continTable <- table(shock$reg_outcome, shock$mx_line_1_bivar)
 continTable <- table(shock$reg_outcome, shock$mx_line_2_bivar)
 continTable <- table(shock$reg_outcome, shock$mx_line_3_bivar)
@@ -326,18 +340,10 @@ colnames(continTable) <- c("No", "Yes")
 
 continTable
 
-# class(continTable)
-barplot(continTable, legend = F, beside = T, main = "Death & Survival")
-
 # relative frequencies percentage 
 prop.table(continTable)*100
 prop.table(continTable, 1)*100 # conditional, row-wise
 prop.table(continTable, 2)*100 # conditional, column-wise
-
-barplot(prop.table(continTable, 2)*100, 
-        legend = F, 
-        beside = T, 
-        main = "Death & Survival by Gender")
 
 
 # ---------------------------------
@@ -349,7 +355,6 @@ chisq.test(continTable)$expected
 
 # Monte Carlo simulation as expected freq <5
 chisq.test(continTable, simulate.p.value = T, B = 10000) 
-
 
 # ---------------------------------
 #     Fisher's Exact test
