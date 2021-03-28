@@ -1,41 +1,52 @@
 # ---------------------------------
 # libraries
-library("arm")
-library("car")
-library("coefplot")
-library("datasets")
-library("dplyr")
-library("foreign")
-library("ggplot2")
-library("MASS")
-library("plotrix")
-library("plyr")
-library("reshape")
-library("tidyverse")
-library("utils")
-library("visreg")
+# ---------------------------------
+library(arm)
+library(car)
+library(codebook)
+library(coefplot)
+library(datasets)
+library(devtools)
+library(dplyr)
+library(e1071)
+library(foreign)
+library(ggplot2)
+library(ggpubr)
+library(haven)
+library(MASS)
+library(moments)
+library(plotrix)
+library(plyr)
+library(reshape)
+library(rstatix)
+library(tidyverse)
+library(utils)
 
 
 # ---------------------------------
-# set working directory
+#   set working directory
+# ---------------------------------
 setwd("~/MEGA/biotech/04_spring_2013/thesis_550_A/manuscript/manuscript/statistical_analysis/t3ss_data_set")
 getwd()
 
 
 # ---------------------------------
-# list files in dir 
+#   list files in dir 
+# ---------------------------------
 dir()
 
 
 # ---------------------------------
-# import data
+#   import data
+# ---------------------------------
 t3ss <- read.spss(file.choose(), header=T)
 t3ss <- read.dta(file.choose())
 t3ss <- read.csv(file.choose(), header=T)
 
 
 # -------------------------------
-# others 
+#   others 
+# ---------------------------------
 attach(t3ss)
 names(t3ss)
 View(t3ss)
@@ -44,15 +55,14 @@ str(t3ss)
 
 
 # -------------------------------
-# export data
-write.table(t3ss, 
-            file = "haabijaabi.csv", 
-            sep = ",", 
-            row.names = F)
+#   export data
+# ---------------------------------
+write.table(t3ss, file = "laetr.csv", sep = ",", row.names = F)
 
 
 # ---------------------------------
-#   subset 
+#   subsetting 
+# ---------------------------------
 t3ssReg <- subset(t3ss, select = c(lab_id, 
                                    cf_temp_fever_01, 
                                    ho_bloody_01, ho_cough_01, 
@@ -114,6 +124,7 @@ t3ssChisq <- subset(t3ss,
 
 # ---------------------------------
 #   conditional variable 
+# ---------------------------------
 t3ss$reg_ial <- t3ss$lab_ial_01
 t3ss$reg_toxin <- ifelse(t3ss$lab_set_01 == 1 | t3ss$lab_sen == 1 , 1, 0)
 t3ss$reg_virB <- t3ss$lab_virB
@@ -130,9 +141,9 @@ t3ss$reg_spa47 <- t3ss$lab_spa47_01
 t3ss$reg_spa32_spa24 <- ifelse(t3ss$lab_spa32_01 == 1 & t3ss$lab_spa24 == 1 , 1, 0)
 
 
-
 # ---------------------------------
 #     removing variables 
+# ---------------------------------
 t3ss$dis_cid <- NULL
 t3ss$ho_mucoid <- NULL
 t3ss$ho_bloody <- NULL
@@ -156,7 +167,8 @@ t3ss$cf_rec_pro <- NULL
 
 
 # ---------------------------------
-#     recoding
+#   recoding
+# ---------------------------------
 t3ss$lab_p140 <- recode(t3ss$lab_p140, "Positive" = 1, "Negative" = 0)
 t3ss$lab_ipaH <- recode(t3ss$lab_ipaH, "Positive" = 1, "Negative" = 0)
 t3ss$lab_ial_01 <- recode(t3ss$lab_ial_01, "Positive" = 1, "Negative" = 0)
@@ -205,44 +217,61 @@ t3ss$cf_ped_ede_01 <- recode(t3ss$cf_ped_ede_01, "Yes" = 1, "No" = 0)
 t3ss$cf_rec_pro_01 <- recode(t3ss$cf_rec_pro_01, "Yes" = 1, "No" = 0)
 
 
+# ---------------------------------
+# two-way contingency table
+# ---------------------------------
+continTable <- table(t3ss$ho_abd_pain_01, t3ss$lab_ial_01)
+continTable <- table(t3ss$ho_mucoid_01, t3ss$lab_set_01)
+continTable <- table(t3ss$ho_bloody_01, t3ss$lab_set_01)
+continTable <- table(t3ss$ho_re_str_01, t3ss$lab_set_01)
+continTable <- table(t3ss$ho_mucoid_01, t3ss$lab_sen)
+continTable <- table(t3ss$ho_bloody_01, t3ss$lab_sen)
+continTable <- table(t3ss$ho_re_str_01, t3ss$lab_sen)
+
+continTable <- table(t3ss$lab_ipaBCD_01, t3ss$ho_abd_pain_01)
+continTable <- table(t3ss$lab_set_01, t3ss$cf_temp_fever_01)
+continTable <- table(t3ss$lab_set_01, t3ss$cf_dh)
+continTable <- table(t3ss$lab_spa24, t3ss$ho_re_str_01)
+continTable <- table(t3ss$lab_set_01, t3ss$ho_cough_01)
+continTable <- table(t3ss$lab_ipgD_01, t3ss$ho_cough_01)
+continTable <- table(t3ss$lab_set_01, t3ss$cf_mod_sev_dis)
+
+continTable
+
+rownames(continTable) <- c("no_pain", "abd_pain")
+rownames(continTable) <- c("non_mucoid", "mucoid")
+rownames(continTable) <- c("non_bloody", "bloody")
+rownames(continTable) <- c("no_straining", "straining")
+
+colnames(continTable) <- c("No", "Yes")
+
+continTable
+
+# relative frequencies percentage 
+prop.table(continTable)*100
+prop.table(continTable, 1)*100 # conditional, row-wise
+prop.table(continTable, 2)*100 # conditional, column-
+
 # -------------------------------
-# chi-square test of independence
-
-# contingency table
-contin_table <- table(t3ss$lab_ial_01, t3ss$ho_abd_pain_01)
-contin_table <- table(t3ss$lab_set_01, t3ss$ho_mucoid_01)
-contin_table <- table(t3ss$lab_set_01, t3ss$ho_bloody_01)
-contin_table <- table(t3ss$lab_set_01, t3ss$ho_re_str_01)
-contin_table <- table(t3ss$lab_sen, t3ss$ho_mucoid_01)
-contin_table <- table(t3ss$lab_sen, t3ss$ho_bloody_01)
-contin_table <- table(t3ss$lab_sen, t3ss$ho_re_str_01)
-
-contin_table <- table(t3ss$lab_ipaBCD_01, t3ss$ho_abd_pain_01)
-contin_table <- table(t3ss$lab_set_01, t3ss$cf_temp_fever_01)
-contin_table <- table(t3ss$lab_set_01, t3ss$cf_dh)
-contin_table <- table(t3ss$lab_spa24, t3ss$ho_re_str_01)
-contin_table <- table(t3ss$lab_set_01, t3ss$ho_cough_01)
-contin_table <- table(t3ss$lab_ipgD_01, t3ss$ho_cough_01)
-contin_table <- table(t3ss$lab_set_01, t3ss$cf_mod_sev_dis)
-
-contin_table
-
-# test of independence 
-chisq.test(contin_table)
-chisq.test(contin_table)$observed
-chisq.test(contin_table)$expected
+#   Chi-square test of independence
+# ---------------------------------
+chisq.test(continTable)
+chisq.test(continTable)$observed
+chisq.test(continTable)$expected
 
 # Monte Carlo simulation as expected freq <5
-chisq.test(contin_table, simulate.p.value = T, B = 10000) 
-
-# -------------------------------
-# Fisher's Exact test
-contin_table
-fisher.test(contin_table)
+chisq.test(continTable, simulate.p.value = T, B = 10000) 
 
 
 # -------------------------------
-# Binary logistic regression - unadjusted
+#   Fisher's Exact test
+# -------------------------------
+fisher.test(continTable)
+
+
+# -------------------------------
+#   Binary logistic regression - unadjusted
+# -------------------------------
 
 # final models - unadjusted 
 t3ssRegUnadj <- glm(cf_temp_fever_01 ~ reg_toxin, family = "binomial", data = t3ss) 
@@ -263,7 +292,8 @@ round(exp(cbind(coef(t3ssRegUnadj), confint(t3ssRegUnadj))), 3)
 
 
 # -------------------------------
-# # Binary logistic regression - adjusted
+#   Binary logistic regression - adjusted
+# -------------------------------
 
 # t3ssRegAdj <- glm(cf_temp_fever_01 ~ reg_ial + reg_toxin + reg_virB + 
 #                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB + 
@@ -378,7 +408,8 @@ round(exp(cbind(coef(t3ssRegAdj), confint(t3ssRegAdj))), 3)
 
 
 # -------------------------------
-# plotting 
+#   plotting 
+# -------------------------------
 coefplot(t3ssRegAdj, innerCI = 0, outerCI = 1.96, intercept = F, 
          title = "", 
          xlab = "Regression coefficient at 95% CI", 

@@ -1,26 +1,32 @@
 # ---------------------------------
 #     libraries
 # ---------------------------------
-library("arm")
-library("car")
-library("coefplot")
-library("datasets")
-library("dplyr")
-library("foreign")
-library("ggplot2")
-library("MASS")
-library("plotrix")
-library("plyr")
-library("reshape")
-library("tidyverse")
-library("utils")
-library("visreg")
+library(arm)
+library(car)
+library(codebook)
+library(coefplot)
+library(datasets)
+library(devtools)
+library(dplyr)
+library(e1071)
+library(foreign)
+library(ggplot2)
+library(ggpubr)
+library(haven)
+library(MASS)
+library(moments)
+library(plotrix)
+library(plyr)
+library(reshape)
+library(rstatix)
+library(tidyverse)
+library(utils)
 
 
 # ---------------------------------
 #     working directory 
 # ---------------------------------
-setwd("~/Dropbox/tmp_sync/tmp_shbt/poster_presentation/del_tmp")
+setwd("~/MEGA/projects/icddrb/study_retro_shock_bt/manuscript_shock/data")
 setwd("C:/Users/visnu.pritom/Dropbox/tmp_sync/tmp_shbt/poster_presentation/del_tmp")
 
 
@@ -44,16 +50,19 @@ attach(shock)
 names(shock)
 nrow(shock)
 View(shock)
-shock$mx_line_1_bivar
 dim(shock)
-str(shbtSmall2$pp_sex_bivar)
+
+
+# ---------------------------------
+# merging data sets 
+s3 <- merge(shock, shockSpo2, by = "pp_pid", all.x = T)
 
 
 # ---------------------------------
 #     export data 
 # ---------------------------------
-write.table(shock, 
-            file = "data_shock_20210317.csv", 
+write.table(s3, 
+            file = "data_shock_part_20210328.csv", 
             sep = ",", 
             row.names = F)
 
@@ -61,8 +70,8 @@ write.table(shock,
 # ---------------------------------
 #     subsetting 
 # ---------------------------------
-shock <- shock %>%
-  select(pp_pid, pp_age_total_mnth, pp_sex_bivar, 
+shock2 <- shock %>%
+  select(pp_pid, pp_age_est_yr, pp_sex_bivar, 
          socio_restype_notbuilding_bivar, socio_water_bivar, 
          pedi_imm_bivar, pedi_dev_bivar, pedi_birth_bivar, 
          pedi_feed_bivar, anthro_wt, anthro_ht, 
@@ -72,9 +81,10 @@ shock <- shock %>%
          cc_fever_bivar, cc_fever_d, 
          prevrx_currdx_abx_bivar, past_chd_bivar, past_tri21_bivar, 
          cf_rr, cf_rr_fast_br_bivar, cf_lung_crepts_bivar, 
-         cf_lcwi_bivar, cf_hypoxia_bivar, cf_p_rate, cf_p_char_bivar, 
-         cf_map_bivar, cf_crt_bivar, cf_peri_bivar, cf_uo_bivar, 
-         cf_dh_bivar, cf_ede_bivar, cf_hightemp_bivar, cf_abd_dist_bivar, 
+         cf_lcwi_bivar, cf_spo2, cf_hypoxia_bivar, cf_p_rate, 
+         cf_p_char_bivar, cf_map_bivar, cf_crt_bivar, 
+         cf_peri_bivar, cf_uo_bivar, cf_dh_bivar, 
+         cf_ede_bivar, cf_hightemp_bivar, cf_abd_dist_bivar, 
          cf_bs_slug_bivar, cf_rbs_bivar, 
          mx_line_1_bivar, mx_line_2_bivar, mx_line_3_bivar, 
          mx_line_4_bivar, mx_steroid_bivar, 
@@ -102,11 +112,10 @@ shock <- shock %>%
          reg_sclerema, reg_sev_pneumonia, reg_hai_hap) 
 
 
-
 # ---------------------------------
 #     removing var
 # ---------------------------------
-shbtSmall2$socio_restype_notbuilding_bivar <- NULL
+shock$socio_restype_notbuilding_bivar <- NULL
 shock$bt_cause_coded <- NULL
 shock$pp_location <- NULL
 shock$bt <- NULL
@@ -177,7 +186,6 @@ shock$inv_hem_band <- NULL
 shock$inv_hem_lympho <- NULL
 shock$inv_hem_mono <- NULL
 shock$inv_hem_pc <- NULL
-
 
 
 # ---------------------------------
@@ -282,31 +290,30 @@ shock$reg_sev_pneumonia <- recode(shock$reg_sev_pneumonia, "yes (death)" = 1, "n
 shock$reg_hai_hap <- recode(shock$reg_hai_hap, "yes (death)" = 1, "no" = 0)
 
 
-
 # ---------------------------------
 #     two-way contingency table
 # ---------------------------------
-continTable <- table(shock$outcome_bivar, shock$pp_sex_bivar)
+continTable <- table(shock$reg_outcome, shock$pp_sex_bivar)
+continTable <- table(shock$reg_outcome, shock$socio_water_bivar)
+# sum(is.na(shock$socio_water_bivar))
+# sNoNA <- na.omit(shock)
+continTable <- table(shock$reg_outcome, shock$pedi_imm_bivar)
+continTable <- table(shock$reg_outcome, shock$pedi_feed_bivar)
 
-continTable <- table(shock$outcome_bivar, shock$mx_line_1_bivar)
-continTable <- table(shock$outcome_bivar, shock$mx_line_2_bivar)
-continTable <- table(shock$outcome_bivar, shock$mx_line_3_bivar)
 continTable <- table(shock$outcome_bivar, shock$reg_meropenem)
 continTable <- table(shock$outcome_bivar, shock$reg_steroids)
 continTable <- table(shock$outcome_bivar, shock$gap_shk_bt_3h)
 
-colnames(continTable) <- c("Female", "Male")
+continTable
 
-colnames(continTable) <- c("No", "Yes")
 rownames(continTable) <- c("Survival", "Death")
+colnames(continTable) <- c("Female", "Male")
+colnames(continTable) <- c("No", "Yes")
 
 continTable
 
 # class(continTable)
-barplot(continTable, 
-        legend = F, 
-        beside = T, 
-        main = "Death & Survival")
+barplot(continTable, legend = F, beside = T, main = "Death & Survival")
 
 # relative frequencies percentage 
 prop.table(continTable)*100
@@ -333,8 +340,37 @@ chisq.test(continTable, simulate.p.value = T, B = 10000)
 # ---------------------------------
 #     Fisher's Exact test
 # ---------------------------------
-contin_table
 fisher.test(continTable)
+
+
+# ---------------------------------------
+# Unpaired/Independent sample t-test 
+# ---------------------------------------
+#   3. df = [(n1 - 1) + (n2 - 1)]
+t.test(shock$anthro_wt ~ shock$reg_outcome, data=shock, var.equal = T)
+t.test(shock$cf_rr ~ shock$reg_outcome, data=shock, var.equal = T)
+t.test(shock$cf_spo2 ~ shock$reg_outcome, data=shock, var.equal = T)
+# var.equal T or F, which one when  
+
+shock %>% group_by(reg_outcome) %>% get_summary_stats(anthro_wt, type = "mean_sd")
+shock %>% group_by(reg_outcome) %>% get_summary_stats(cf_rr, type = "mean_sd")
+shock %>% group_by(reg_outcome) %>% get_summary_stats(cf_spo2, type = "mean_sd")
+
+
+# -------------------------------
+#   Wilcoxon test
+# -------------------------------
+# vaccine$reversed <- as.factor(vaccine$reversed)
+# vaccine$reversed <- revalue(vaccine$reversed, c("0"="Not-reversed", "1"="Reversed"))
+boxplot(shock$pp_age_total_mnth ~ shock$pp_age_total_mnth)
+
+# two sided test 
+# exact = T, may produce errors if there are ties in ranks of observations 
+wilcox.test(shock$pp_age_total_mnth ~ shock$reg_outcome, 
+            mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, 
+            exact = F, correct = T) 
+
+shock %>% group_by(reg_outcome) %>% get_summary_stats(pp_age_total_mnth, type = "median_iqr")
 
 
 # ---------------------------------
@@ -414,7 +450,7 @@ coefplot(shkRegAdj,
          intercept = F, 
          zeroColor = "darkgrey", zeroLWD = 0.5, zeroType = 9, 
          title = "", 
-         xlab = "Regression coefficient at 95% CI", 
+         xlab = "Reg. coefficients", 
          ylab = "Predictors", 
          decreasing = T, 
          col = "skyblue2", 
@@ -423,8 +459,8 @@ coefplot(shkRegAdj,
                       reg_steroids = "Corticosteroids", 
                       reg_mod_anemia = "Moderate anemia", 
                       reg_sev_pneumonia = "Severe Pneumonia", 
-                      reg_hai_hap = "Hosp. Acquired Infection", 
-                      gap_shk_bt_3h = "Shock-BT gap 3hrs")) + 
+                      reg_hai_hap = "Hosp. Acq. Infection", 
+                      gap_shk_bt_3h = "Early BT in 3hrs")) + 
   theme(axis.line = element_line(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
