@@ -2,33 +2,23 @@
 # libraries
 # ---------------------------------
 library(arm)
-library(car)
-library(codebook)
-library(coefplot)
-library(datasets)
-library(devtools)
-library(dplyr)
+library(car); library(codebook); library(coefplot)
+library(datasets); library(devtools); library(dplyr)
 library(e1071)
 library(foreign)
-library(ggplot2)
-library(ggpubr)
-library(ggthemes)
+library(ggplot2); library(ggpubr); library(ggthemes)
 library(haven)
-library(MASS)
-library(moments)
-library(plotrix)
-library(plyr)
-library(reshape)
-library(rstatix)
+library(MASS); library(moments)
+library(pastecs); library(plotrix); library(plyr); library(psych)
+library(Rcmdr); library(RColorBrewer); library(reshape); library(rstatix)
 library(tidyverse)
 library(utils)
-library(RColorBrewer)
 
 
 # ---------------------------------
 #   set working directory
 # ---------------------------------
-setwd("/home/visnu/MEGA/biotech/04_spring_2013/thesis_550_A/manuscript/manuscript/statisticalAnalysis/t3ssData")
+setwd("/home/visnu/MEGA/800x/mathematics/statistics/discovering_statistics_using_r_-_field_miles_field/discovering_statistics_using_r_-_field_miles_datafiles")
 getwd()
 
 

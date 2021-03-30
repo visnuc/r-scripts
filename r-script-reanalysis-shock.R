@@ -41,7 +41,6 @@ dir()
 # ---------------------------------
 shock <- read.spss(file.choose(), header=T)
 shock <- read.csv(file.choose(), header=T)
-shockBlcs <- read.csv(file.choose(), header=T)
 
 
 # ---------------------------------
@@ -63,7 +62,7 @@ s13 <- merge(shock, shockBlcs, by = "pp_pid", all.x = T)
 #     export data 
 # ---------------------------------
 write.table(shock, 
-            file = "data_shock_part_20210328.csv", 
+            file = "data_shock_part_20210329.csv", 
             sep = ",", 
             row.names = F)
 
@@ -208,6 +207,7 @@ shock$socio_safe_water_bivar <- recode(shock$socio_water_bivar, "0" = 1, "1" = 0
 shock$pedi_imm_bivar <- recode(shock$pedi_imm_bivar, "immunized" = 1, "not" = 0)
 shock$pedi_dev_bivar <- recode(shock$pedi_dev_bivar, "appropriate" = 1, "delayed" = 0)
 shock$pedi_birth_bivar <- recode(shock$pedi_birth_bivar, "LUCS" = 1, "NVD" = 0)
+shock$pedi_birth_bivar <- recode(shock$pedi_birth_bivar, "1" = 0, "0" = 1)
 shock$pedi_feed_bivar <- recode(shock$pedi_feed_bivar, "EBF" = 1, "not" = 0)
 
 shock$cc_diarr_bivar <- recode(shock$cc_diarr_bivar, "yes" = 1, "no" = 0)
@@ -258,7 +258,7 @@ shock$dx_id_bivar <- recode(shock$dx_id_bivar, "yes" = 1, "no" = 0)
 shock$dx_pd_bivar <- recode(shock$dx_pd_bivar, "yes" = 1, "no" = 0) 
 shock$dx_aki_bivar <- recode(shock$dx_aki_bivar, "yes" = 1, "no" = 0)
 
-shock$inv_bl_cs_bivar <- recode(shock$inv_bl_cs_bivar, )
+shock$inv_bl_cs_bivar <- recode(shock$inv_bl_cs_bivar, "1" = 1, "2" = 0)
 shock$inv_biochem_hyper_na_bivar <- recode(shock$inv_biochem_hyper_na_bivar, "hyperna" = 1, "not" = 0)
 shock$inv_biochem_hypo_na_bivar <- recode(shock$inv_biochem_hypo_na_bivar,  "hypona" = 1, "not" = 0)
 shock$inv_biochem_hyper_k_bivar <- recode(shock$inv_biochem_hyper_k_bivar, "yes" = 1, "no" = 0)
@@ -313,6 +313,7 @@ continTable <- table(shock$reg_outcome, shock$cf_ede_bivar)
 continTable <- table(shock$reg_outcome, shock$cf_abd_dist_bivar)
 continTable <- table(shock$reg_outcome, shock$dx_conv_bivar)
 
+continTable <- table(shock$reg_outcome, shock$inv_bl_cs_bivar)
 continTable <- table(shock$reg_outcome, shock$inv_biochem_hyper_na_bivar)
 continTable <- table(shock$reg_outcome, shock$inv_biochem_hypo_na_bivar)
 continTable <- table(shock$reg_outcome, shock$inv_biochem_hyper_k_bivar)
@@ -323,7 +324,18 @@ continTable <- table(shock$reg_outcome, shock$inv_biochem_ca_low_bivar)
 continTable <- table(shock$reg_outcome, shock$inv_biochem_hi_mg_bivar)
 continTable <- table(shock$reg_outcome, shock$inv_hem_mod_anemia_9.3)
 continTable <- table(shock$reg_outcome, shock$inv_hem_thombocytopenia_bivar)
-continTable <- table(shock$reg_outcome, shock$mx_line_1_bivar)
+
+continTable <- table(shock$reg_outcome, shock$pedi_birth_bivar)
+continTable <- table(shock$reg_outcome, shock$cc_cough_bivar)
+continTable <- table(shock$reg_outcome, shock$cf_rr_fast_br_bivar)
+continTable <- table(shock$reg_outcome, shock$cf_hypoxia_bivar)
+continTable <- table(shock$reg_outcome, shock$cf_rbs_bivar)
+
+continTable <- table(shock$reg_outcome, shock$reg_sclerema)
+continTable <- table(shock$reg_outcome, shock$reg_sev_pneumonia)
+continTable <- table(shock$reg_outcome, shock$dx_ileus_bivar)
+continTable <- table(shock$reg_outcome, shock$dx_awd_bivar)
+continTable <- table(shock$reg_outcome, shock$dx_id_bivar)
 
 continTable <- table(shock$reg_outcome, shock$mx_line_1_bivar)
 continTable <- table(shock$reg_outcome, shock$mx_line_2_bivar)
@@ -332,10 +344,10 @@ continTable <- table(shock$reg_outcome, shock$reg_meropenem)
 continTable <- table(shock$reg_outcome, shock$reg_steroids)
 continTable <- table(shock$reg_outcome, shock$gap_shk_bt_3h)
 
-continTable
-
 rownames(continTable) <- c("Survival", "Death")
 colnames(continTable) <- c("Female", "Male")
+colnames(continTable) <- c("No_org", "Growth")
+colnames(continTable) <- c("LUCS", "NVD")
 colnames(continTable) <- c("No", "Yes")
 
 continTable
@@ -362,6 +374,13 @@ chisq.test(continTable, simulate.p.value = T, B = 10000)
 fisher.test(continTable)
 
 
+# ---------------------------------
+#     normality check
+# ---------------------------------
+qqnorm(shock$cf_rbs, pch = 1, frame = F); qqline(shock$cf_rbs, col = "skyblue4", lwd = 1) # not
+shapiro.test(shock$cf_rbs) # p = 4.873e-09, not normal if p<0.05
+
+
 # ---------------------------------------
 # Unpaired/Independent sample t-test 
 # ---------------------------------------
@@ -385,11 +404,11 @@ boxplot(shock$pp_age_total_mnth ~ shock$pp_age_total_mnth)
 
 # two sided test 
 # exact = T, may produce errors if there are ties in ranks of observations 
-wilcox.test(shock$pp_age_total_mnth ~ shock$reg_outcome, 
+wilcox.test(shock$cf_rbs ~ shock$reg_outcome, 
             mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, 
             exact = F, correct = T) 
 
-shock %>% group_by(reg_outcome) %>% get_summary_stats(pp_age_total_mnth, type = "median_iqr")
+shock %>% group_by(reg_outcome) %>% get_summary_stats(cf_rbs, type = "median_iqr")
 
 
 # ---------------------------------

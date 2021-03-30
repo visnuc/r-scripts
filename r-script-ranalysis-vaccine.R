@@ -106,7 +106,7 @@ qqnorm(vaccine$avgLog2pol3, pch = 1, frame = F); qqline(vaccine$avgLog2pol3, col
 
 #   Shapiro-Wilk test
 shapiro.test(vaccine$momwt) # p = 1.18e-12
-shapiro.test(vaccine$momht) # p = 0.022, variable not normal
+shapiro.test(vaccine$momht) # p = 0.022, not normal if p<0.05
 shapiro.test(vaccine$income) # p < 2.2e-16
 shapiro.test(vaccine$nrgpro) # p = 6.833e-07
 shapiro.test(vaccine$blength) # p = 0.002515
