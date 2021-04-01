@@ -2,24 +2,15 @@
 # libraries
 # ---------------------------------
 library(arm)
-library(car)
-library(codebook)
-library(coefplot)
-library(datasets)
-library(devtools)
-library(dplyr)
+library(car); library(codebook); library(coefplot)
+library(datasets); library(devtools); library(dplyr)
 library(e1071)
 library(foreign)
-library(ggplot2)
-library(ggpubr)
-library(ggthemes)
+library(ggplot2); library(ggpubr); library(ggthemes); library(grid); library(gridExtra)
 library(haven)
-library(MASS)
-library(moments)
-library(plotrix)
-library(plyr)
-library(reshape)
-library(rstatix)
+library(MASS); library(moments)
+library(plotrix); library(plyr)
+library(reshape); library(rstatix)
 library(tidyverse)
 library(utils)
 library(RColorBrewer)
@@ -49,8 +40,7 @@ t3ss <- read.dta(file.choose())
 # -------------------------------
 #   others 
 # ---------------------------------
-attach(t3ss)
-names(t3ss)
+attach(t3ss); names(t3ss)
 View(t3ss)
 dim(t3ss)
 str(t3ss)
@@ -65,16 +55,17 @@ write.table(t3ss, file = "laetr.csv", sep = ",", row.names = F)
 # ---------------------------------
 #   subsetting 
 # ---------------------------------
-t3ssReg <- subset(t3ss, select = c(lab_id, 
-                                   cf_temp_fever_01, 
-                                   ho_bloody_01, ho_cough_01, 
-                                   ho_mucoid_01, ho_re_str_01, 
-                                   reg_toxin, reg_virB, reg_ipaBCD_ipgC, 
-                                   reg_ial, reg_ipgB1_spa15, 
-                                   reg_ipgA_icsB, reg_ipgD_ipgE, 
-                                   reg_ipgF, reg_mxiH_mxiI, reg_mxiK, 
-                                   reg_mxiE, reg_mxiC, reg_spa47, 
-                                   reg_spa32_spa24))
+t3ssReg <- subset(t3ss, 
+                  select = c(lab_id, 
+                             cf_temp_fever_01,
+                             ho_bloody_01, ho_cough_01,
+                             ho_mucoid_01, ho_re_str_01,
+                             reg_toxin, reg_virB, reg_ipaBCD_ipgC,
+                             reg_ial, reg_ipgB1_spa15,
+                             reg_ipgA_icsB, reg_ipgD_ipgE,
+                             reg_ipgF, reg_mxiH_mxiI, reg_mxiK, 
+                             reg_mxiE, reg_mxiC, reg_spa47,
+                             reg_spa32_spa24))
 
 
 t3ssChisq <- subset(t3ss, 
@@ -386,18 +377,31 @@ round(exp(cbind(coef(t3ssRegUnadj), confint(t3ssRegUnadj))), 3)
 # 
 # summary(t3ssRegAdj)
 
-
 #   final models
-t3ssRegAdj <- glm(ho_bloody_01 ~ reg_toxin + reg_ipgA_icsB, 
+t3ssRegAdj1 <- glm(ho_bloody_01 ~ reg_toxin + reg_ipgA_icsB, 
+                   family = "binomial" (link="logit"), 
+                   data = t3ss) 
+t3ssRegAdj2 <- glm(ho_mucoid_01 ~ reg_toxin + reg_mxiC, 
+                   family = "binomial" (link="logit"), 
+                   data = t3ss)
+t3ssRegAdj3 <- glm(ho_re_str_01 ~ reg_toxin + reg_ipgA_icsB + reg_mxiC + reg_ipgB1_spa15, 
+                   family = "binomial" (link="logit"), 
+                   data = t3ss)
+
+
+#   final models - tmp 
+set_sen <- reg_toxin
+ipgA_icsB <- reg_ipgA_icsB
+mxiC <- reg_mxiC
+ipgB1_spa15 <- reg_ipgB1_spa15
+
+t3ssRegAdj1 <- glm(ho_bloody_01 ~ set_sen + ipgA_icsB, 
                   family = "binomial" (link="logit"), 
                   data = t3ss) 
-
-t3ssRegAdj <- glm(ho_mucoid_01 ~ reg_toxin + reg_mxiC, 
+t3ssRegAdj2 <- glm(ho_mucoid_01 ~ set_sen + mxiC, 
                   family = "binomial" (link="logit"), 
                   data = t3ss)
-
-t3ssRegAdj <- glm(ho_re_str_01 ~ reg_toxin + reg_ipgA_icsB + reg_mxiC + 
-                    reg_ipgB1_spa15, 
+t3ssRegAdj3 <- glm(ho_re_str_01 ~ set_sen + ipgA_icsB + mxiC + ipgB1_spa15, 
                   family = "binomial" (link="logit"), 
                   data = t3ss)
 
@@ -408,18 +412,65 @@ round(exp(cbind(coef(t3ssRegAdj), confint(t3ssRegAdj))), 3)
 
 
 # -------------------------------
-#   plotting 
+#   Coefficient plotting - multiple
 # -------------------------------
-coefplot(t3ssRegAdj, innerCI = 0, outerCI = 1.96, intercept = F, 
-         title = "", 
-         xlab = "Regression coefficient at 95% CI", 
-         ylab = "Predictor genes", 
-         decreasing = T, 
-         col = "skyblue2", 
-         newNames = c(reg_toxin = "set & sen", 
-                      reg_ipgA_icsB = "ipgA & icsB", 
-                      reg_mxiC = "mxiC",
-                      reg_ipgB1_spa15 = "ipgB1 & spa15")) + 
+# Thanks to https://github.com/dsparks
+
+# Put model estimates into temporary data.frames 
+model1Frame <- data.frame(Variable = rownames(summary(t3ssRegAdj1)$coef),
+                          Coefficient = summary(t3ssRegAdj1)$coef[, 1],
+                          SE = summary(t3ssRegAdj1)$coef[, 2],
+                          modelName = "Bloody stool")
+model2Frame <- data.frame(Variable = rownames(summary(t3ssRegAdj2)$coef),
+                          Coefficient = summary(t3ssRegAdj2)$coef[, 1],
+                          SE = summary(t3ssRegAdj2)$coef[, 2],
+                          modelName = "Mucoid stool")
+model3Frame <- data.frame(Variable = rownames(summary(t3ssRegAdj3)$coef),
+                          Coefficient = summary(t3ssRegAdj3)$coef[, 1],
+                          SE = summary(t3ssRegAdj3)$coef[, 2],
+                          modelName = "Rectal straining")
+
+# Combine these data.frames 
+allModelFrame <- data.frame(rbind(model1Frame, model2Frame, model3Frame))  # etc.
+
+# Widths of your confidence intervals 
+interval1 <- -qnorm((1-0.9)/2) # 90% multiplier
+interval2 <- -qnorm((1-0.95)/2) # 95% multiplier
+
+# Plot 
+mPlots <- ggplot(allModelFrame, aes(colour = modelName)) + 
+  geom_hline(yintercept = 0, colour = gray(1/2), lty = 2) + 
+  geom_linerange(aes(x = Variable, 
+                     ymin = Coefficient - SE*interval1, 
+                     ymax = Coefficient + SE*interval1), 
+                 lwd = 1, position = position_dodge(width = 1/2)) + 
+  geom_pointrange(aes(x = Variable, 
+                      y = Coefficient, 
+                      ymin = Coefficient - SE*interval2, 
+                      ymax = Coefficient + SE*interval2), 
+                  lwd = 1/2, position = position_dodge(width = 1/2),
+                  shape = 21, fill = "WHITE") + 
+  coord_flip() + 
+  theme_bw() +
+  ggtitle("Comparing several models")
+
+print(mPlots)  # The trick is position_dodge()
+
+
+# -------------------------------
+#   coefficient plotting - individual 
+# -------------------------------
+
+coefplot3 <- coefplot(t3ssRegAdj3, innerCI = 0, outerCI = 1.96, intercept = F,
+                      title = "",
+                      xlab = "Regression coefficient at 95% CI",
+                      ylab = "Predictor genes",
+                      decreasing = T,
+                      col = "skyblue2",
+                      newNames = c(reg_toxin = "set & sen", 
+                                   reg_ipgA_icsB = "ipgA & icsB", 
+                                   reg_mxiC = "mxiC",
+                                   reg_ipgB1_spa15 = "ipgB1 & spa15")) +
   theme(axis.line = element_line(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
@@ -428,6 +479,9 @@ coefplot(t3ssRegAdj, innerCI = 0, outerCI = 1.96, intercept = F,
   geom_point(pch = 21)
 
 
+
+# -------------------------------
+#   testing 
 # -------------------------------
 t3ss$lab_sero <- as.factor(t3ss$lab_sero)
 count(t3ss$lab_sero)
