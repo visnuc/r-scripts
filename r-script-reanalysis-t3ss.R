@@ -10,10 +10,9 @@ library(ggplot2); library(ggpubr); library(ggthemes); library(grid); library(gri
 library(haven)
 library(MASS); library(moments)
 library(plotrix); library(plyr)
-library(reshape); library(rstatix)
+library(RColorBrewer); library(reshape); library(rstatix)
 library(tidyverse)
 library(utils)
-library(RColorBrewer)
 
 
 # ---------------------------------
@@ -451,8 +450,8 @@ mPlots <- ggplot(allModelFrame, aes(colour = modelName)) +
                   lwd = 1/2, position = position_dodge(width = 1/2),
                   shape = 21, fill = "WHITE") + 
   coord_flip() + 
-  theme_bw() +
-  ggtitle("Comparing several models")
+  theme_bw() 
+# + ggtitle("Comparing several models")
 
 print(mPlots)  # The trick is position_dodge()
 
@@ -480,26 +479,26 @@ coefplot3 <- coefplot(t3ssRegAdj3, innerCI = 0, outerCI = 1.96, intercept = F,
 
 
 
-# -------------------------------
-#   testing 
-# -------------------------------
-t3ss$lab_sero <- as.factor(t3ss$lab_sero)
-count(t3ss$lab_sero)
-seroColor <- c("#A3CECB", "#99D6D3", "#B0C2FF", "#4F9CED", "#066F71", "#118AB2", "#A6AEA9")
-seroDf <- data.frame(seroNames = c("1b", "1c", "2a", "2b", "3a", "4", "6a"), 
-                     seroCount = c(5, 9, 16, 15, 8, 3, 5))
-
-ggplot(data=seroDf, 
-       aes(x = seroNames, y = seroCount, fill = seroNames)) +
-  geom_bar(stat = "identity", width = 0.7) + 
-  scale_color_grey() +
-  theme_minimal() +
-  # theme_classic() +
-  scale_fill_grey() +
-  # scale_fill_brewer(palette="Blues") +
-  theme(legend.position="none") + 
-  # labs(title = "Frequencies of different serotypes") + 
-  xlab("Serotypes") + 
-  ylab("Counts") + 
-  # coord_flip() +
-  scale_y_continuous(breaks = seq(0, 16, 2), limits = c(0, 16))
+# # -------------------------------
+# #   testing 
+# # -------------------------------
+# t3ss$lab_sero <- as.factor(t3ss$lab_sero)
+# count(t3ss$lab_sero)
+# seroColor <- c("#A3CECB", "#99D6D3", "#B0C2FF", "#4F9CED", "#066F71", "#118AB2", "#A6AEA9")
+# seroDf <- data.frame(seroNames = c("1b", "1c", "2a", "2b", "3a", "4", "6a"), 
+#                      seroCount = c(5, 9, 16, 15, 8, 3, 5))
+# 
+# ggplot(data=seroDf, 
+#        aes(x = seroNames, y = seroCount, fill = seroNames)) +
+#   geom_bar(stat = "identity", width = 0.7) + 
+#   scale_color_grey() +
+#   theme_minimal() +
+#   # theme_classic() +
+#   scale_fill_grey() +
+#   # scale_fill_brewer(palette="Blues") +
+#   theme(legend.position="none") + 
+#   # labs(title = "Frequencies of different serotypes") + 
+#   xlab("Serotypes") + 
+#   ylab("Counts") + 
+#   # coord_flip() +
+#   scale_y_continuous(breaks = seq(0, 16, 2), limits = c(0, 16))
