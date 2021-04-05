@@ -2,23 +2,15 @@
 #     libraries
 # ---------------------------------
 library(arm)
-library(car)
-library(codebook)
-library(coefplot)
-library(datasets)
-library(devtools)
-library(dplyr)
+library(car); library(codebook); library(coefplot)
+library(datasets); library(devtools); library(dplyr)
 library(e1071)
 library(foreign)
-library(ggplot2)
-library(ggpubr)
+library(ggplot2); library(ggpubr); library(ggthemes); library(grid); library(gridExtra)
 library(haven)
-library(MASS)
-library(moments)
-library(plotrix)
-library(plyr)
-library(reshape)
-library(rstatix)
+library(MASS); library(moments)
+library(plotrix); library(plyr)
+library(RColorBrewer); library(reshape); library(rstatix)
 library(tidyverse)
 library(utils)
 
@@ -39,17 +31,16 @@ dir()
 # ---------------------------------
 #     data import 
 # ---------------------------------
-vaccine <- read.spss(file.choose(), header=T)
 vaccine <- read.csv(file.choose(), header=T)
+vaccine <- read.spss(file.choose(), header=T)
 
 
 # ---------------------------------
 #     others 
 # ---------------------------------
-attach(vaccine)
-names(vaccine)
-nrow(vaccine)
+attach(vaccine); names(vaccine)
 View(vaccine)
+nrow(vaccine)
 dim(vaccine)
 str(vaccine)
 

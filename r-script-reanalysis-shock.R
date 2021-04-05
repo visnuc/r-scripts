@@ -2,23 +2,15 @@
 #     libraries
 # ---------------------------------
 library(arm)
-library(car)
-library(codebook)
-library(coefplot)
-library(datasets)
-library(devtools)
-library(dplyr)
+library(car); library(codebook); library(coefplot)
+library(datasets); library(devtools); library(dplyr)
 library(e1071)
 library(foreign)
-library(ggplot2)
-library(ggpubr)
+library(ggplot2); library(ggpubr); library(ggthemes); library(grid); library(gridExtra)
 library(haven)
-library(MASS)
-library(moments)
-library(plotrix)
-library(plyr)
-library(reshape)
-library(rstatix)
+library(MASS); library(moments)
+library(plotrix); library(plyr)
+library(RColorBrewer); library(reshape); library(rstatix)
 library(tidyverse)
 library(utils)
 
@@ -39,30 +31,30 @@ dir()
 # ---------------------------------
 #     data import 
 # ---------------------------------
-shock <- read.spss(file.choose(), header=T)
 shock <- read.csv(file.choose(), header=T)
+shockTmp <- read.csv(file.choose(), header=T)
+shockSPSS <- read.spss(file.choose(), header=T)
 
 
 # ---------------------------------
 #     others 
 # ---------------------------------
-attach(shock)
-names(shock)
-nrow(shock)
+attach(shock); names(shock)
 View(shock)
+nrow(shock)
 dim(shock)
 
 
 # ---------------------------------
 # merging data sets 
-s13 <- merge(shock, shockBlcs, by = "pp_pid", all.x = T)
+s12 <- merge(shock, shockTmp, by = "pp_pid", all.x = T)
 
 
 # ---------------------------------
 #     export data 
 # ---------------------------------
 write.table(shock, 
-            file = "data_shock_part_20210329.csv", 
+            file = "tmp.csv", 
             sep = ",", 
             row.names = F)
 
@@ -282,6 +274,7 @@ shock$gap_shk_bt_2h <- recode(shock$gap_shk_bt_2h, "2h or less" = 1, ">2h" = 0)
 shock$gap_shk_bt_3h <- recode(shock$gap_shk_bt_3h, "3h or less" = 1, ">3h" = 0)
 shock$gap_shk_bt_4h <- recode(shock$gap_shk_bt_4h, "4h or less" = 1, ">4h" = 0)
 shock$gap_shk_bt_6h <- recode(shock$gap_shk_bt_6h, "6h or less" = 1, ">6h" = 0)
+shock$gap_shk_bt_12h_bi <- recode(shock$gap_shk_bt_12h, "12h or less" = 1, ">12h" = 0)
 
 shock$outcome_bivar <- recode(shock$outcome_bivar, "death" = 1, "survival" = 0)
 shock$bt_cause_bivar <- recode(shock$bt_cause_bivar, "shock" = 1, "other" = 0)
@@ -343,6 +336,10 @@ continTable <- table(shock$reg_outcome, shock$mx_line_3_bivar)
 continTable <- table(shock$reg_outcome, shock$reg_meropenem)
 continTable <- table(shock$reg_outcome, shock$reg_steroids)
 continTable <- table(shock$reg_outcome, shock$gap_shk_bt_3h)
+continTable <- table(shock$reg_outcome, shock$gap_shk_bt_4h)
+continTable <- table(shock$reg_outcome, shock$gap_shk_bt_6h)
+continTable <- table(shock$reg_outcome, shock$gap_shk_bt_12h)
+continTable <- table(shock$reg_outcome, shock$gapShkBt12h)
 
 rownames(continTable) <- c("Survival", "Death")
 colnames(continTable) <- c("Female", "Male")
@@ -377,8 +374,28 @@ fisher.test(continTable)
 # ---------------------------------
 #     normality check
 # ---------------------------------
-qqnorm(shock$cf_rbs, pch = 1, frame = F); qqline(shock$cf_rbs, col = "skyblue4", lwd = 1) # not
-shapiro.test(shock$cf_rbs) # p = 4.873e-09, not normal if p<0.05
+qqnorm(shock$inv_biochem_na, pch = 1, frame = F); qqline(shock$inv_biochem_na, col = "skyblue4", lwd = 1); shapiro.test(shock$inv_biochem_na)
+qqnorm(shock$inv_biochem_k, pch = 1, frame = F); qqline(shock$inv_biochem_k, col = "skyblue4", lwd = 1); shapiro.test(shock$inv_biochem_k) # NN
+qqnorm(shock$inv_biochem_cl, pch = 1, frame = F); qqline(shock$inv_biochem_cl, col = "skyblue4", lwd = 1); shapiro.test(shock$inv_biochem_cl) # n
+qqnorm(shock$inv_biochem_tco2, pch = 1, frame = F); qqline(shock$inv_biochem_tco2, col = "skyblue4", lwd = 1); shapiro.test(shock$inv_biochem_tco2)
+qqnorm(shock$inv_biochem_cr, pch = 1, frame = F); qqline(shock$inv_biochem_cr, col = "skyblue4", lwd = 1); shapiro.test(shock$inv_biochem_cr) # NN
+qqnorm(shock$inv_biochem_ca, pch = 1, frame = F); qqline(shock$inv_biochem_ca, col = "skyblue4", lwd = 1); shapiro.test(shock$inv_biochem_ca) # n
+qqnorm(shock$inv_biochem_mg, pch = 1, frame = F); qqline(shock$inv_biochem_mg, col = "skyblue4", lwd = 1); shapiro.test(shock$inv_biochem_mg) # NN
+
+qqnorm(shock$inv_hem_hb, pch = 1, frame = F); qqline(shock$inv_hem_hb, col = "skyblue4", lwd = 1); shapiro.test(shock$inv_hem_hb) # n
+qqnorm(shock$inv_hem_tc, pch = 1, frame = F); qqline(shock$inv_hem_tc, col = "skyblue4", lwd = 1); shapiro.test(shock$inv_hem_tc) 
+qqnorm(shock$inv_hem_neut, pch = 1, frame = F); qqline(shock$inv_hem_neut, col = "skyblue4", lwd = 1); shapiro.test(shock$inv_hem_neut) # n
+
+qqnorm(shock$gap_shk_bt, pch = 1, frame = F); qqline(shock$gap_shk_bt, col = "skyblue4", lwd = 1); shapiro.test(shock$gap_shk_bt) # NN
+
+qqnorm(shock$cf_spo2, pch = 1, frame = F); qqline(shock$cf_spo2, col = "skyblue4", lwd = 1); shapiro.test(shock$cf_spo2) # NN
+qqnorm(shock$cf_map, pch = 1, frame = F); qqline(shock$cf_map, col = "skyblue4", lwd = 1); shapiro.test(shock$cf_map) # NN
+qqnorm(shock$cf_temp_c, pch = 1, frame = F); qqline(shock$cf_temp_c, col = "skyblue4", lwd = 1); shapiro.test(shock$cf_temp) # n
+qqnorm(shock$cf_rbs, pch = 1, frame = F); qqline(shock$cf_rbs, col = "skyblue4", lwd = 1); shapiro.test(shock$cf_rbs) # NN, if p<0.05 not normal
+
+qqnorm(shock$anthro_wt, pch = 1, frame = F); qqline(shock$anthro_wt, col = "skyblue4", lwd = 1); shapiro.test(shock$anthro_wt)
+
+qqnorm(shock$hosp_hosp_stay, pch = 1, frame = F); qqline(shock$hosp_hosp_stay, col = "skyblue4", lwd = 1); shapiro.test(shock$hosp_hosp_stay) # NN
 
 
 # ---------------------------------------
@@ -388,11 +405,25 @@ shapiro.test(shock$cf_rbs) # p = 4.873e-09, not normal if p<0.05
 t.test(shock$anthro_wt ~ shock$reg_outcome, data=shock, var.equal = T)
 t.test(shock$cf_rr ~ shock$reg_outcome, data=shock, var.equal = T)
 t.test(shock$cf_spo2 ~ shock$reg_outcome, data=shock, var.equal = T)
+t.test(shock$inv_biochem_na ~ shock$reg_outcome, data=shock, var.equal = T)
+t.test(shock$inv_biochem_cl ~ shock$reg_outcome, data=shock, var.equal = T)
+t.test(shock$inv_biochem_tco2 ~ shock$reg_outcome, data=shock, var.equal = T)
+t.test(shock$inv_biochem_ca ~ shock$reg_outcome, data=shock, var.equal = T) # p=0.07668
+t.test(shock$inv_hem_hb ~ shock$reg_outcome, data=shock, var.equal = T)
+t.test(shock$inv_hem_tc ~ shock$reg_outcome, data=shock, var.equal = T)
+t.test(shock$inv_hem_neut ~ shock$reg_outcome, data=shock, var.equal = T)
+t.test(shock$cf_temp_c ~ shock$reg_outcome, data=shock, var.equal = T)
 # var.equal T or F, which one when  
 
 shock %>% group_by(reg_outcome) %>% get_summary_stats(anthro_wt, type = "mean_sd")
 shock %>% group_by(reg_outcome) %>% get_summary_stats(cf_rr, type = "mean_sd")
 shock %>% group_by(reg_outcome) %>% get_summary_stats(cf_spo2, type = "mean_sd")
+shock %>% group_by(reg_outcome) %>% get_summary_stats(inv_biochem_na, type = "mean_sd")
+shock %>% group_by(reg_outcome) %>% get_summary_stats(inv_biochem_tco2, type = "mean_sd")
+shock %>% group_by(reg_outcome) %>% get_summary_stats(inv_biochem_ca, type = "mean_sd")
+shock %>% group_by(reg_outcome) %>% get_summary_stats(inv_hem_hb, type = "mean_sd")
+shock %>% group_by(reg_outcome) %>% get_summary_stats(inv_hem_tc, type = "mean_sd")
+shock %>% group_by(reg_outcome) %>% get_summary_stats(inv_hem_neut, type = "mean_sd")
 
 
 # -------------------------------
@@ -404,11 +435,17 @@ boxplot(shock$pp_age_total_mnth ~ shock$pp_age_total_mnth)
 
 # two sided test 
 # exact = T, may produce errors if there are ties in ranks of observations 
-wilcox.test(shock$cf_rbs ~ shock$reg_outcome, 
-            mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, 
-            exact = F, correct = T) 
+wilcox.test(shock$cf_rbs ~ shock$reg_outcome, mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, exact = F, correct = T) 
+wilcox.test(shock$inv_biochem_k ~ shock$reg_outcome, mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, exact = F, correct = T) 
+wilcox.test(shock$inv_biochem_cr ~ shock$reg_outcome, mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, exact = F, correct = T)
+wilcox.test(shock$inv_biochem_mg ~ shock$reg_outcome, mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, exact = F, correct = T)
+wilcox.test(shock$gap_shk_bt ~ shock$reg_outcome, mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, exact = F, correct = T)
 
 shock %>% group_by(reg_outcome) %>% get_summary_stats(cf_rbs, type = "median_iqr")
+shock %>% group_by(reg_outcome) %>% get_summary_stats(inv_biochem_k, type = "median_iqr")
+shock %>% group_by(reg_outcome) %>% get_summary_stats(inv_biochem_cr, type = "median_iqr")
+shock %>% group_by(reg_outcome) %>% get_summary_stats(inv_biochem_mg, type = "median_iqr")
+shock %>% group_by(reg_outcome) %>% get_summary_stats(gap_shk_bt, type = "median_iqr")
 
 
 # ---------------------------------
@@ -463,16 +500,22 @@ round(exp(cbind(coef(shkRegUnad), confint(shkRegUnad))), 3)
 #                   data = shbtSmall2)
 
 shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + 
-                    reg_mod_anemia + reg_hai_hap + reg_sev_pneumonia + 
-                    reg_sclerema + gap_shk_bt_3h, 
-                  family = "binomial" (link="logit"), 
-                  data = shock)
-
-shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + 
                    reg_mod_anemia + reg_hai_hap + reg_sev_pneumonia + 
                    reg_sclerema + gap_shk_bt_3h, 
                   family = "binomial" (link="logit"), 
                   data = shock)
+
+shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + inv_hem_hb 
+                 + reg_hai_hap + reg_sev_pneumonia + reg_sclerema + gap_shk_bt_3h 
+                 + anthro_wt + pp_age_total_mnth 
+                 + inv_biochem_k + inv_biochem_ca + inv_biochem_na 
+                 + inv_biochem_cr + inv_hem_neut + inv_biochem_mg, 
+                 family = "binomial" (link="logit"), 
+                 data = shock)
+
+shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + inv_biochem_ca + inv_biochem_k + inv_hem_neut, 
+                 family = "binomial" (link="logit"), 
+                 data = shock)
 
 summary(shkRegAdj)
 
@@ -480,28 +523,88 @@ summary(shkRegAdj)
 # OR & 95% CI
 round(exp(cbind(coef(shkRegAdj), confint(shkRegAdj))), 3)
 
+
 # ---------------------------------
-#     plotting 
+#   regression - logistic - binomial
+# ---------------------------------
+glmFit <- glm(shock$reg_outcome ~ shock$inv_biochem_na, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$inv_biochem_k, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$inv_biochem_cl, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$inv_biochem_tco2, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$inv_biochem_cr, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$inv_biochem_ca, data = shock, family = binomial); summary(glmFit) # p<0.1
+glmFit <- glm(shock$reg_outcome ~ shock$inv_biochem_mg, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$inv_hem_hb, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$inv_hem_tc, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$inv_hem_neut, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$gap_shk_bt, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$gap_shk_bt_4h, data = shock, family = binomial); summary(glmFit) 
+glmFit <- glm(shock$reg_outcome ~ shock$cf_spo2, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$anthro_wt, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$hosp_hosp_stay, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$cf_map, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$cf_temp_c, data = shock, family = binomial); summary(glmFit)
+glmFit <- glm(shock$reg_outcome ~ shock$cf_rbs, data = shock, family = binomial); summary(glmFit)
+
+
+# ---------------------------------
+#     plotting - coefficients
 # ---------------------------------
 coefplot(shkRegAdj, 
-         innerCI = 0, outerCI = 2, lwdInner = 0, lwdOuter = 0.4, 
+         innerCI = 1, outerCI = 2, lwdInner = 1.3, lwdOuter = 0.4, 
          intercept = F, 
-         zeroColor = "darkgrey", zeroLWD = 0.5, zeroType = 9, 
+         zeroColor = "darkgrey", zeroLWD = 0.7, zeroType = 3, 
          title = "", 
-         xlab = "Reg. coefficients", 
+         xlab = "Regression coefficients", 
          ylab = "Predictors", 
          decreasing = T, 
-         col = "skyblue2", 
-         newNames = c(reg_sclerema = "Sclerema", 
-                      reg_meropenem = "Fourth-line antibiotics", 
-                      reg_steroids = "Corticosteroids", 
-                      reg_mod_anemia = "Moderate anemia", 
-                      reg_sev_pneumonia = "Severe Pneumonia", 
-                      reg_hai_hap = "Hosp. Acq. Infection", 
-                      gap_shk_bt_3h = "Early BT in 3hrs")) + 
+         col = "skyblue2") + 
   theme(axis.line = element_line(),
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.border = element_blank(),
         panel.background = element_blank()) + 
   geom_point(pch = 21)
+
+coefplot(shkRegAdj,
+         innerCI = 1, outerCI = 2, lwdInner = 1.3, lwdOuter = 0.4,
+         intercept = F,
+         zeroColor = "darkgrey", zeroLWD = 0.7, zeroType = 3,
+         title = "",
+         xlab = "Regression coefficients",
+         ylab = "Predictors",
+         decreasing = T,
+         col = "skyblue2",
+         newNames = c(reg_sclerema = "Sclerema",
+                      reg_meropenem = "Fourth-line antibiotics",
+                      reg_steroids = "Corticosteroids",
+                      reg_mod_anemia = "Moderate anemia",
+                      reg_sev_pneumonia = "Severe Pneumonia",
+                      reg_hai_hap = "Hosp. acquired infection",
+                      gap_shk_bt_3h = "Early BT (in 3hrs)",
+                      inv_biochem_ca = "Serum total Calcium (mmol/L)",
+                      inv_hem_neut = "Neutrophil (%)",
+                      inv_hem_hb = "Hemoglobin (gm/dL)",
+                      anthro_wt = "Weight (kg)",
+                      pp_age_total_mnth = "Age (months)",
+                      inv_biochem_k = "Serum Potassium (mmol/L)",
+                      inv_biochem_na = "Serum Sodium (mmol/L)",
+                      inv_biochem_cr = "Serum Creatinine (umol/L)",
+                      inv_biochem_mg = "Serum Magnesium (mmol/L)")) +
+  theme(axis.line = element_line(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank()) +
+  geom_point(pch = 21)
+
+
+
+
+# ---------------------------------
+#   plotting logistic regression model
+# ---------------------------------
+plot(inv_biochem_ca, reg_outcome, xlab = "Serum Calcium (mmol/L)", ylab = "Probability of survival") # plots Ca on x, survival (0 or 1) on y
+g <- glm(formula = reg_outcome ~ inv_biochem_ca, family = "binomial", data = shock)
+curve(predict(g, data.frame(inv_biochem_ca = x), type = "resp"), add=TRUE) # curve based on prediction from model
+# points(inv_biochem_ca, fitted(g), pch=20) # doesn't work
