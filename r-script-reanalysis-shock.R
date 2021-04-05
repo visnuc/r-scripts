@@ -509,18 +509,14 @@ shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + gap_shk_
                  + inv_biochem_na + inv_biochem_k + inv_biochem_ca + inv_biochem_mg + inv_biochem_cr
                  + anthro_wt + pp_age_total_mnth, 
                  family = "binomial" (link="logit"), 
-                 data = shock)
-
-summary(shkRegAdj)
+                 data = shock); summary(shkRegAdj)
 
 # shkRegUnadj <- glm(formula = reg_outcome ~ pp_age_total_mnth, family = "binomial" (link="logit"), data = shock); summary(shkRegUnadj)
 # round(exp(cbind(coef(shkRegUnadj), confint(shkRegUnadj))), 3)
 
 shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + inv_biochem_ca + inv_biochem_k + inv_hem_neut, 
                  family = "binomial" (link="logit"), 
-                 data = shock)
-
-summary(shkRegAdj)
+                 data = shock); summary(shkRegAdj)
 
 
 # OR & 95% CI
