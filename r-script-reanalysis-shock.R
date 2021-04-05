@@ -32,8 +32,6 @@ dir()
 #     data import 
 # ---------------------------------
 shock <- read.csv(file.choose(), header=T)
-shockTmp <- read.csv(file.choose(), header=T)
-shockSPSS <- read.spss(file.choose(), header=T)
 
 
 # ---------------------------------
@@ -505,13 +503,18 @@ shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids +
                   family = "binomial" (link="logit"), 
                   data = shock)
 
-shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + inv_hem_hb 
-                 + reg_hai_hap + reg_sev_pneumonia + reg_sclerema + gap_shk_bt_3h 
-                 + anthro_wt + pp_age_total_mnth 
-                 + inv_biochem_k + inv_biochem_ca + inv_biochem_na 
-                 + inv_biochem_cr + inv_hem_neut + inv_biochem_mg, 
+shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + gap_shk_bt_3h 
+                 + reg_hai_hap + reg_sev_pneumonia + reg_sclerema
+                 + inv_hem_hb + inv_hem_neut 
+                 + inv_biochem_na + inv_biochem_k + inv_biochem_ca + inv_biochem_mg + inv_biochem_cr
+                 + anthro_wt + pp_age_total_mnth, 
                  family = "binomial" (link="logit"), 
                  data = shock)
+
+summary(shkRegAdj)
+
+shkRegAdj <- glm(formula = reg_outcome ~ pp_age_total_mnth, family = "binomial" (link="logit"), data = shock); summary(shkRegAdj)
+round(exp(cbind(coef(shkRegAdj), confint(shkRegAdj))), 3)
 
 shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + inv_biochem_ca + inv_biochem_k + inv_hem_neut, 
                  family = "binomial" (link="logit"), 
