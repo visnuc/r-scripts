@@ -479,26 +479,63 @@ coefplot3 <- coefplot(t3ssRegAdj3, innerCI = 0, outerCI = 1.96, intercept = F,
 
 
 
-# # -------------------------------
-# #   testing 
-# # -------------------------------
+# -------------------------------
+#   barplots 
+# -------------------------------
 # t3ss$lab_sero <- as.factor(t3ss$lab_sero)
 # count(t3ss$lab_sero)
 # seroColor <- c("#A3CECB", "#99D6D3", "#B0C2FF", "#4F9CED", "#066F71", "#118AB2", "#A6AEA9")
-# seroDf <- data.frame(seroNames = c("1b", "1c", "2a", "2b", "3a", "4", "6a"), 
+# seroDf <- data.frame(seroNames = c("1b", "1c", "2a", "2b", "3a", "4", "6a"),
 #                      seroCount = c(5, 9, 16, 15, 8, 3, 5))
-# 
-# ggplot(data=seroDf, 
-#        aes(x = seroNames, y = seroCount, fill = seroNames)) +
-#   geom_bar(stat = "identity", width = 0.7) + 
-#   scale_color_grey() +
-#   theme_minimal() +
-#   # theme_classic() +
-#   scale_fill_grey() +
-#   # scale_fill_brewer(palette="Blues") +
-#   theme(legend.position="none") + 
-#   # labs(title = "Frequencies of different serotypes") + 
-#   xlab("Serotypes") + 
-#   ylab("Counts") + 
-#   # coord_flip() +
-#   scale_y_continuous(breaks = seq(0, 16, 2), limits = c(0, 16))
+
+cfDf <- data.frame(cfNames = c("Bloody stool", "Mucoid stool", "Rectal straining", "Fever", "Cough"), 
+                    cfCount = c(49, 50, 45, 22, 25))
+
+cfDf$cfNames <- factor(cfDf$cfNames, levels = c("Bloody stool", "Mucoid stool", "Rectal straining", "Fever", "Cough"))
+
+gnDf <- data.frame(gnNames = c("ipaH", "ial", "set", "sen", "virB", "ipaBCD", "ipgC", "ipgB1", "ipgA", "icsB", 
+                               "ipgD", "ipgE", "ipgF", "mxiH", "mxiI", "mxiK", "mxiE", "mxiC", "spa15", "spa47", 
+                               "spa32", "spa24"),
+                   gnCount = c(61, 54, 34, 34, 50, 55, 52, 44, 50, 27, 
+                               48, 52, 47, 49, 49, 43, 40, 22, 49, 49, 
+                               46, 43))
+
+gnDf$gnNames <- factor(gnDf$gnNames, 
+                       levels = c("ipaH", "ial", "set", "sen", "virB", "ipaBCD", "ipgC", "ipgB1", "ipgA", "icsB",
+                                  "ipgD", "ipgE", "ipgF", "mxiH", "mxiI", "mxiK", "mxiE", "mxiC", "spa15", "spa47", 
+                                  "spa32", "spa24"))
+
+
+bpCf <- ggplot(data = cfDf, aes(x = cfNames, y = cfCount)) +
+  geom_bar(stat = "identity", width = 0.175, fill = "#F77262", color = "#565656") +
+  geom_text(aes(label = cfCount), hjust = 1.5, vjust = 0.5, colour = "white") + 
+  # scale_color_grey() +
+  theme_minimal() +
+  # theme_classic() +
+  # scale_fill_grey() +
+  # scale_fill_brewer(palette="Blues") +
+  # scale_color_manual(values=seroColor) + 
+  theme(legend.position="none") +
+  # labs(title = "Frequencies of different serotypes") +
+  xlab("Clinical features") +
+  ylab("Frequencies") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 61, 10), limits = c(0, 61))
+
+bpGn <- ggplot(data = gnDf, aes(x = gnNames, y = gnCount)) +
+  geom_bar(stat = "identity", width = 0.7, fill = "#71A5D1", color = "#565656") +
+  geom_text(aes(label = gnCount), hjust = 1.5, vjust = 0.5, colour = "white") + 
+  # scale_color_grey() +
+  theme_minimal() +
+  # theme_classic() +
+  # scale_fill_grey() +
+  # scale_fill_brewer(palette="Blues") +
+  # scale_color_manual(values=seroColor) + 
+  theme(legend.position="none") +
+  # labs(title = "Frequencies of different serotypes") +
+  xlab("Genes") +
+  ylab("Frequencies") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 61, 10), limits = c(0, 61))
+
+grid.arrange(bpGn, bpCf, ncol = 2)
