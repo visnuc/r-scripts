@@ -39,8 +39,7 @@ t3ss <- read.dta(file.choose())
 # -------------------------------
 #   others 
 # ---------------------------------
-attach(t3ss); names(t3ss)
-View(t3ss)
+attach(t3ss); names(t3ss); View(t3ss)
 dim(t3ss)
 str(t3ss)
 
@@ -415,21 +414,15 @@ coefplot3 <- coefplot(t3ssRegAdj3, innerCI = 0, outerCI = 1.96, intercept = F,
 # -------------------------------
 #   barplots 
 # -------------------------------
-# t3ss$lab_sero <- as.factor(t3ss$lab_sero)
-# count(t3ss$lab_sero)
-# seroColor <- c("#A3CECB", "#99D6D3", "#B0C2FF", "#4F9CED", "#066F71", "#118AB2", "#A6AEA9")
-# seroDf <- data.frame(seroNames = c("1b", "1c", "2a", "2b", "3a", "4", "6a"),
-#                      seroCount = c(5, 9, 16, 15, 8, 3, 5))
-
-seroDf <- data.frame(seroNames = c("1b", "1c", "2a", "2b", "3a", "4", "6a"), seroCount = c(5, 9, 16, 15, 8, 3, 5))
+seroDf <- data.frame(seroNames = c("1b", "1c", "2a", "2b", "3a", "4", "6a"), seroCount = c(5, 9, 16, 15, 8, 3, 5)); 
 seroDf$seroNames <- factor(seroDf$seroNames, levels = c("1b", "1c", "2a", "2b", "3a", "4", "6a"))
 
 cfDf <- data.frame(cfNames = c("Bloody stool", "Mucoid stool", "Rectal straining", "Fever", "Cough"), 
-                    cfCount = c(49, 50, 45, 22, 25))
-cfDf$cfNames <- factor(cfDf$cfNames, levels = c("Bloody stool", "Mucoid stool", "Rectal straining", "Fever", "Cough"))
+                    cfCount = c(49, 50, 45, 22, 25)); 
+cfDf$cfNames <- factor(cfDf$cfNames, levels = c("Cough", "Fever", "Rectal straining", "Mucoid stool", "Bloody stool"))
 
 gnDf <- data.frame(gnNames = c("p140", 
-                               "ipaH", "ial", "set", "sen", "virB", "ipaBCD", "ipgC", "ipgB1", "ipgA", "icsB", 
+                               "ipaH", "ial", "set", "sen", "virB", "ipaBCD", "ipgC", "ipgB1", "ipgA", "icsB",
                                "ipgD", "ipgE", "ipgF", "mxiH", "mxiI", "mxiK", "mxiE", "mxiC", "spa15", "spa47", 
                                "spa32", "spa24"),
                    gnCount = c(48, 
@@ -437,10 +430,10 @@ gnDf <- data.frame(gnNames = c("p140",
                                48, 52, 47, 49, 49, 43, 40, 22, 49, 49, 
                                46, 43))
 gnDf$gnNames <- factor(gnDf$gnNames, 
-                       levels = c("p140", 
-                                  "ipaH", "ial", "set", "sen", "virB", "ipaBCD", "ipgC", "ipgB1", "ipgA", "icsB",
-                                  "ipgD", "ipgE", "ipgF", "mxiH", "mxiI", "mxiK", "mxiE", "mxiC", "spa15", "spa47", 
-                                  "spa32", "spa24"))
+                       levels = c("spa24","spa32", "spa47", "spa15", 
+                                  "mxiC", "mxiE", "mxiK", "mxiI", "mxiH", 
+                                  "ipgF", "ipgE", "ipgD", "icsB", "ipgA", "ipgB1", "ipgC", "ipaBCD", "virB", 
+                                  "sen", "set", "ial", "ipaH", "p140"))
 
 bpGn <- ggplot(data = gnDf, aes(x = gnNames, y = gnCount)) +
   geom_bar(stat = "identity", width = 0.7, fill = "#71A5D1", color = "#565656") +
@@ -477,4 +470,4 @@ bpSero <- ggplot(data = seroDf, aes(x = seroNames, y = seroCount)) +
   ylab("Counts") +
   scale_y_continuous(breaks = seq(0, 16, 5), limits = c(0, 16))
 
-grid.arrange(bpGn, bpSero, bpCf, layout_matrix = cbind(c(1,1), c(2,3)))
+grid.arrange(bpSero, bpCf, bpGn, layout_matrix = cbind(c(1,2), c(3,3)))
