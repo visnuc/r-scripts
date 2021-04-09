@@ -46,73 +46,25 @@ str(t3ss)
 
 
 # -------------------------------
+#   reorder
+# -------------------------------
+t2 <- t3ss[with(t3ss, order(-lab_id)),] # "-" for descending 
+# t2 <- t3ss[with(t3ss, order(ID,Date,Time)),]
+
+
+# -------------------------------
 #   export data
 # ---------------------------------
-write.table(t3ss, file = "laetr.csv", sep = ",", row.names = F)
-
+write.table(t3ss, file = "tmp.csv", sep = ",", row.names = F)
+write.table(t2, file = "tmp.csv", sep = ",", row.names = F)
 
 # ---------------------------------
 #   subsetting 
 # ---------------------------------
-t3ssReg <- subset(t3ss, 
-                  select = c(lab_id, 
-                             cf_temp_fever_01,
-                             ho_bloody_01, ho_cough_01,
-                             ho_mucoid_01, ho_re_str_01,
-                             reg_toxin, reg_virB, reg_ipaBCD_ipgC,
-                             reg_ial, reg_ipgB1_spa15,
-                             reg_ipgA_icsB, reg_ipgD_ipgE,
-                             reg_ipgF, reg_mxiH_mxiI, reg_mxiK, 
-                             reg_mxiE, reg_mxiC, reg_spa47,
-                             reg_spa32_spa24))
+t2 <- t3ss %>%
+  select(lab_ID, lab_set, lab_sen)
 
-
-t3ssChisq <- subset(t3ss, 
-                    select = c(lab_id, lab_sero, lab_p140, 
-                               lab_ipaH, lab_ial_01, lab_set_01, lab_sen, 
-                               lab_virB_01, lab_ipaBCD_01, lab_ipgC, 
-                               lab_ipgB1_01, lab_ipgA, lab_icsB_01, 
-                               lab_ipgD_01, lab_ipgE, lab_ipgF_01, 
-                               lab_mxiH_01, lab_mxiI, lab_mxiK_01, 
-                               lab_mxiE_01, lab_mxiC_01, lab_spa15, 
-                               lab_spa47_01, lab_spa32_01, lab_spa24, 
-                               ho_mucoid_01, ho_bloody_01, ho_vomiting_01, 
-                               ho_abd_pain_01, ho_re_str_01, ho_cough_01, 
-                               ho_fever_01, ho_convul_01, ho_measles_01,
-                               cf_mod_sev_dis_01, cf_temp_fever_01, 
-                               cf_eye_sunken_01, cf_dry_mouth_01, 
-                               cf_skin_pinch_slow_01, cf_restless_01, 
-                               cf_dh_01, cf_ped_ede_01, cf_rec_pro_01))
-
-# t3ssDemo <- subset(t3ss, 
-#                     select = c(lab_ID, 
-#                                age_mon, sex, weight, y_s_pc, ys_p_15, 
-#                                liv_h_6, elec, siz_hom, cul_lan, total, 
-#                                sou_w_dr, bfc_hwp, bef_e_hw, af_ut_hw, 
-#                                bcg, dpt_3rd, hib_3rd, pol_3rd, measl, 
-#                                hepa_3rd))
-
-# age_mon = demAgeMnth
-# sex = demSex
-# weight = demWeight
-# y_s_pc = demYrSchlPC
-# ys_p_15 = demYrSchlPC15
-# liv_h_6 = demPplInH6m
-# elec = demElec
-# siz_cul = demOwnCulLandSize
-# cul_lan = demOwnCulLand
-# total = demTotIncomeMnth
-# sou_w_dr = demSrcDrinkWtr
-# bfc_hwp = demHndWashB4ChFeed
-# bef_e_hw = demHndWashB4Eat
-# af_ut_hw = demHndWashAftToilet
-# bcg = vacBcg
-# dpt_3rd = vacDpt
-# hib_3rd = vacHib
-# pol_3rd = vacPolio
-# measl = vacMeasl
-# hepa_3rd = vacHepB
-
+t3ssReg <- subset(t3ss, select = c(lab_id, cf_temp_fever_01))
 
 # ---------------------------------
 #   conditional variable 
@@ -216,10 +168,9 @@ continTable <- table(t3ss$ho_abd_pain_01, t3ss$lab_ial_01)
 continTable <- table(t3ss$ho_mucoid_01, t3ss$lab_set_01)
 continTable <- table(t3ss$ho_bloody_01, t3ss$lab_set_01)
 continTable <- table(t3ss$ho_re_str_01, t3ss$lab_set_01)
-continTable <- table(t3ss$ho_mucoid_01, t3ss$lab_sen)
-continTable <- table(t3ss$ho_bloody_01, t3ss$lab_sen)
-continTable <- table(t3ss$ho_re_str_01, t3ss$lab_sen)
-
+continTable <- table(t3ss$ho_mucoid_01, t3ss$lab_sen); continTable
+continTable <- table(t3ss$ho_bloody_01, t3ss$lab_sen); continTable
+continTable <- table(t3ss$ho_re_str_01, t3ss$lab_sen); continTable
 continTable <- table(t3ss$lab_ipaBCD_01, t3ss$ho_abd_pain_01)
 continTable <- table(t3ss$lab_set_01, t3ss$cf_temp_fever_01)
 continTable <- table(t3ss$lab_set_01, t3ss$cf_dh)
@@ -230,12 +181,10 @@ continTable <- table(t3ss$lab_set_01, t3ss$cf_mod_sev_dis)
 
 rownames(continTable) <- c("no_pain", "abd_pain")
 rownames(continTable) <- c("non_mucoid", "mucoid")
-rownames(continTable) <- c("non_bloody", "bloody")
-rownames(continTable) <- c("no_straining", "straining")
+rownames(continTable) <- c("non_bloody", "bloody"); continTable
+rownames(continTable) <- c("no_straining", "straining"); continTable
 
-colnames(continTable) <- c("No", "Yes")
-
-continTable
+colnames(continTable) <- c("No", "Yes"); continTable
 
 # relative frequencies percentage 
 prop.table(continTable)*100
@@ -252,7 +201,6 @@ chisq.test(continTable)$expected
 # Monte Carlo simulation as expected freq <5
 chisq.test(continTable, simulate.p.value = T, B = 10000) 
 
-
 # -------------------------------
 #   Fisher's Exact test
 # -------------------------------
@@ -262,7 +210,7 @@ fisher.test(continTable)
 # -------------------------------
 #   Binary logistic regression - unadjusted
 # -------------------------------
-
+t3ssRegUnadj <- glm(ho_re_str_01 ~ lab_sen, family = "binomial", data = t3ss); summary(t3ssRegUnadj)
 # final models - unadjusted 
 t3ssRegUnadj <- glm(cf_temp_fever_01 ~ reg_toxin, family = "binomial", data = t3ss) 
 t3ssRegUnadj <- glm(ho_bloody_01 ~ reg_toxin, family = "binomial", data = t3ss) 
@@ -275,7 +223,6 @@ t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_ipgA_icsB, family = "binomial", data = t3
 t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_mxiC, family = "binomial", data = t3ss)
 t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_ipgB1_spa15, family = "binomial", data = t3ss)
 
-summary(t3ssRegUnadj)
 
 # OR & 95% CI
 round(exp(cbind(coef(t3ssRegUnadj), confint(t3ssRegUnadj))), 3)
@@ -285,126 +232,102 @@ round(exp(cbind(coef(t3ssRegUnadj), confint(t3ssRegUnadj))), 3)
 #   Binary logistic regression - adjusted
 # -------------------------------
 
-# t3ssRegAdj <- glm(cf_temp_fever_01 ~ reg_ial + reg_toxin + reg_virB + 
-#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB + 
-#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + 
-#                     reg_mxiK + reg_mxiE + reg_mxiC + 
-#                     reg_spa47 + reg_spa32_spa24, 
-#                   family = "binomial", 
-#                   data = t3ss) # Warning message:
-# # glm.fit: fitted probabilities numerically 0 or 1 occurred 
-# 
-# summary(t3ssRegAdj)
+# t3ssRegAdj <- glm(cf_temp_fever_01 ~ reg_ial + reg_toxin + reg_virB +
+#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB +
+#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI +
+#                     reg_mxiK + reg_mxiE + reg_mxiC +
+#                     reg_spa47 + reg_spa32_spa24,
+#                   family = "binomial",
+#                   data = t3ss); summary(t3ssRegAdj) # Warning message:
+# # glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-# # working combinations 
-# t3ssRegAdj <- glm(ho_bloody_01 ~ reg_ial + reg_toxin + reg_virB + 
-#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB + 
-#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK + 
-#                     reg_mxiE + reg_mxiC + reg_spa47, 
-#                   family = "binomial", 
-#                   data = t3ss) 
+# # working combinations
+# t3ssRegAdj <- glm(ho_bloody_01 ~ reg_ial + reg_toxin + lab_sen + reg_virB +
+#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB +
+#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK +
+#                     reg_mxiE + reg_mxiC + reg_spa47,
+#                   family = "binomial" (link="logit"),
+#                   data = t3ss); summary(t3ssRegAdj)
+
+# t3ssRegAdj <- glm(ho_bloody_01 ~ reg_ial + reg_toxin + reg_virB + lab_sen + 
+#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB +
+#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK +
+#                     reg_mxiE + reg_spa47 + reg_spa32_spa24,
+#                   family = "binomial" (link="logit"), 
+#                   data = t3ss); summary(t3ssRegAdj)
 # 
-# t3ssRegAdj <- glm(ho_bloody_01 ~ reg_ial + reg_toxin + reg_virB + 
-#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB + 
-#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK + 
-#                     reg_mxiE + reg_spa47 + reg_spa32_spa24, 
-#                   family = "binomial", 
-#                   data = t3ss)
+# t3ssRegAdj <- glm(ho_bloody_01 ~ reg_ial + reg_toxin + reg_virB + lab_sen + 
+#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB +
+#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK +
+#                     reg_mxiC + reg_spa47 + reg_spa32_spa24,
+#                   family = "binomial" (link="logit"), 
+#                   data = t3ss); summary(t3ssRegAdj)
 # 
-# t3ssRegAdj <- glm(ho_bloody_01 ~ reg_ial + reg_toxin + reg_virB + 
-#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB + 
-#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK + 
-#                     reg_mxiC + reg_spa47 + reg_spa32_spa24, 
-#                   family = "binomial", 
-#                   data = t3ss)
+# t3ssRegAdj <- glm(ho_cough_01 ~ reg_ial + reg_toxin + reg_virB + lab_sen + 
+#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB +
+#                     reg_ipgD_ipgE + reg_mxiH_mxiI + reg_mxiK +
+#                     reg_mxiE + reg_mxiC + reg_spa47 + reg_spa32_spa24,
+#                   family = "binomial" (link="logit"),
+#                   data = t3ss); summary(t3ssRegAdj)
 # 
-# t3ssRegAdj <- glm(ho_cough_01 ~ reg_ial + reg_toxin + reg_virB + 
-#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB + 
-#                     reg_ipgD_ipgE + reg_mxiH_mxiI + reg_mxiK + 
-#                     reg_mxiE + reg_mxiC + reg_spa47 + reg_spa32_spa24, 
-#                   family = "binomial", 
-#                   data = t3ss)
+# t3ssRegAdj <- glm(ho_cough_01 ~ reg_ial + reg_toxin + reg_virB + lab_sen + 
+#                     reg_ipaBCD_ipgC + reg_ipgA_icsB +
+#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK +
+#                     reg_mxiE + reg_mxiC + reg_spa47 + reg_spa32_spa24,
+#                   family = "binomial" (link="logit"),
+#                   data = t3ss); summary(t3ssRegAdj)
 # 
-# t3ssRegAdj <- glm(ho_cough_01 ~ reg_ial + reg_toxin + reg_virB + 
-#                     reg_ipaBCD_ipgC + reg_ipgA_icsB + 
-#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK + 
-#                     reg_mxiE + reg_mxiC + reg_spa47 + reg_spa32_spa24, 
-#                   family = "binomial", 
-#                   data = t3ss)
+# t3ssRegAdj <- glm(ho_mucoid_01 ~ reg_ial + reg_toxin + reg_virB + lab_sen + 
+#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB +
+#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK +
+#                     reg_mxiC + reg_spa47 + reg_spa32_spa24,
+#                   family = "binomial" (link="logit"),
+#                   data = t3ss); summary(t3ssRegAdj)
 # 
-# t3ssRegAdj <- glm(ho_mucoid_01 ~ reg_ial + reg_toxin + reg_virB + 
-#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB + 
-#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK + 
-#                     reg_mxiC + reg_spa47 + reg_spa32_spa24, 
-#                   family = "binomial", 
-#                   data = t3ss)
+# t3ssRegAdj <- glm(ho_mucoid_01 ~ reg_ial + reg_toxin + reg_virB + lab_sen + 
+#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB +
+#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK +
+#                     reg_mxiE + reg_spa47 + reg_spa32_spa24,
+#                   family = "binomial" (link="logit"),
+#                   data = t3ss); summary(t3ssRegAdj)
 # 
-# t3ssRegAdj <- glm(ho_mucoid_01 ~ reg_ial + reg_toxin + reg_virB + 
-#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB + 
-#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK + 
-#                     reg_mxiE + reg_spa47 + reg_spa32_spa24, 
-#                   family = "binomial", 
-#                   data = t3ss)
+# t3ssRegAdj <- glm(ho_mucoid_01 ~ reg_ial + reg_toxin + reg_virB + lab_sen + 
+#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB +
+#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK +
+#                     reg_mxiE + reg_mxiC + reg_spa47,
+#                   family = "binomial" (link="logit"),
+#                   data = t3ss); summary(t3ssRegAdj)
 # 
-# t3ssRegAdj <- glm(ho_mucoid_01 ~ reg_ial + reg_toxin + reg_virB + 
-#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB + 
-#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK + 
-#                     reg_mxiE + reg_mxiC + reg_spa47, 
-#                   family = "binomial", 
-#                   data = t3ss)
+# t3ssRegAdj <- glm(ho_re_str_01 ~ reg_ial + reg_toxin + reg_virB + lab_sen + 
+#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB +
+#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK +
+#                     reg_mxiC + reg_spa47 + reg_spa32_spa24,
+#                   family = "binomial" (link="logit"),
+#                   data = t3ss); summary(t3ssRegAdj)
 # 
-# t3ssRegAdj <- glm(ho_re_str_01 ~ reg_ial + reg_toxin + reg_virB + 
-#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB + 
-#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK + 
-#                     reg_mxiC + reg_spa47 + reg_spa32_spa24, 
-#                   family = "binomial", 
-#                   data = t3ss)
+# t3ssRegAdj <- glm(ho_re_str_01 ~ reg_ial + reg_toxin + reg_virB + lab_sen + 
+#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB +
+#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK +
+#                     reg_mxiE + reg_spa47 + reg_spa32_spa24,
+#                   family = "binomial" (link="logit"),
+#                   data = t3ss); summary(t3ssRegAdj)
 # 
-# t3ssRegAdj <- glm(ho_re_str_01 ~ reg_ial + reg_toxin + reg_virB + 
-#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB + 
-#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK + 
-#                     reg_mxiE + reg_spa47 + reg_spa32_spa24, 
-#                   family = "binomial", 
-#                   data = t3ss)
-# 
-# t3ssRegAdj <- glm(ho_re_str_01 ~ reg_ial + reg_toxin + reg_virB + 
-#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB + 
-#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK + 
-#                     reg_mxiE + reg_mxiC + reg_spa47, 
-#                   family = "binomial", 
-#                   data = t3ss)
+# t3ssRegAdj <- glm(ho_re_str_01 ~ reg_ial + reg_toxin + reg_virB + lab_sen + 
+#                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB +
+#                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK +
+#                     reg_mxiE + reg_mxiC + reg_spa47,
+#                   family = "binomial" (link="logit"),
+#                   data = t3ss); summary(t3ssRegAdj)
 # 
 # summary(t3ssRegAdj)
 
 #   final models
-t3ssRegAdj1 <- glm(ho_bloody_01 ~ reg_toxin + reg_ipgA_icsB, 
-                   family = "binomial" (link="logit"), 
-                   data = t3ss) 
-t3ssRegAdj2 <- glm(ho_mucoid_01 ~ reg_toxin + reg_mxiC, 
-                   family = "binomial" (link="logit"), 
-                   data = t3ss)
+t3ssRegAdj1 <- glm(ho_bloody_01 ~ lab_set_01 + reg_ipgA_icsB, 
+                   family = "binomial" (link="logit"), data = t3ss); summary(t3ssRegAdj1)  
+t3ssRegAdj2 <- glm(ho_mucoid_01 ~ reg_toxin + reg_mxiC,
+                   family = "binomial" (link="logit"), data = t3ss); summary(t3ssRegAdj2) 
 t3ssRegAdj3 <- glm(ho_re_str_01 ~ reg_toxin + reg_ipgA_icsB + reg_mxiC + reg_ipgB1_spa15, 
-                   family = "binomial" (link="logit"), 
-                   data = t3ss)
-
-
-#   final models - tmp 
-set_sen <- reg_toxin
-ipgA_icsB <- reg_ipgA_icsB
-mxiC <- reg_mxiC
-ipgB1_spa15 <- reg_ipgB1_spa15
-
-t3ssRegAdj1 <- glm(ho_bloody_01 ~ set_sen + ipgA_icsB, 
-                  family = "binomial" (link="logit"), 
-                  data = t3ss) 
-t3ssRegAdj2 <- glm(ho_mucoid_01 ~ set_sen + mxiC, 
-                  family = "binomial" (link="logit"), 
-                  data = t3ss)
-t3ssRegAdj3 <- glm(ho_re_str_01 ~ set_sen + ipgA_icsB + mxiC + ipgB1_spa15, 
-                  family = "binomial" (link="logit"), 
-                  data = t3ss)
-
-summary(t3ssRegAdj)
+                   family = "binomial" (link="logit"), data = t3ss); summary(t3ssRegAdj3) 
 
 # OR & 95% CI
 round(exp(cbind(coef(t3ssRegAdj), confint(t3ssRegAdj))), 3)
@@ -414,6 +337,16 @@ round(exp(cbind(coef(t3ssRegAdj), confint(t3ssRegAdj))), 3)
 #   Coefficient plotting - multiple
 # -------------------------------
 # Thanks to https://github.com/dsparks
+
+# renaming variables for plot 
+set <- lab_set_01
+ipgA_icsB <- reg_ipgA_icsB
+mxiC <- reg_mxiC
+ipgB1_spa15 <- reg_ipgB1_spa15
+
+t3ssRegAdj1 <- glm(ho_bloody_01 ~ set + ipgA_icsB, family = "binomial" (link="logit"), data = t3ss) 
+t3ssRegAdj2 <- glm(ho_mucoid_01 ~ set + mxiC, family = "binomial" (link="logit"), data = t3ss)
+t3ssRegAdj3 <- glm(ho_re_str_01 ~ set + ipgA_icsB + mxiC + ipgB1_spa15, family = "binomial" (link="logit"), data = t3ss)
 
 # Put model estimates into temporary data.frames 
 model1Frame <- data.frame(Variable = rownames(summary(t3ssRegAdj1)$coef),
@@ -488,39 +421,26 @@ coefplot3 <- coefplot(t3ssRegAdj3, innerCI = 0, outerCI = 1.96, intercept = F,
 # seroDf <- data.frame(seroNames = c("1b", "1c", "2a", "2b", "3a", "4", "6a"),
 #                      seroCount = c(5, 9, 16, 15, 8, 3, 5))
 
+seroDf <- data.frame(seroNames = c("1b", "1c", "2a", "2b", "3a", "4", "6a"), seroCount = c(5, 9, 16, 15, 8, 3, 5))
+seroDf$seroNames <- factor(seroDf$seroNames, levels = c("1b", "1c", "2a", "2b", "3a", "4", "6a"))
+
 cfDf <- data.frame(cfNames = c("Bloody stool", "Mucoid stool", "Rectal straining", "Fever", "Cough"), 
                     cfCount = c(49, 50, 45, 22, 25))
-
 cfDf$cfNames <- factor(cfDf$cfNames, levels = c("Bloody stool", "Mucoid stool", "Rectal straining", "Fever", "Cough"))
 
-gnDf <- data.frame(gnNames = c("ipaH", "ial", "set", "sen", "virB", "ipaBCD", "ipgC", "ipgB1", "ipgA", "icsB", 
+gnDf <- data.frame(gnNames = c("p140", 
+                               "ipaH", "ial", "set", "sen", "virB", "ipaBCD", "ipgC", "ipgB1", "ipgA", "icsB", 
                                "ipgD", "ipgE", "ipgF", "mxiH", "mxiI", "mxiK", "mxiE", "mxiC", "spa15", "spa47", 
                                "spa32", "spa24"),
-                   gnCount = c(61, 54, 34, 34, 50, 55, 52, 44, 50, 27, 
+                   gnCount = c(48, 
+                               61, 54, 34, 38, 50, 55, 52, 44, 50, 27, 
                                48, 52, 47, 49, 49, 43, 40, 22, 49, 49, 
                                46, 43))
-
 gnDf$gnNames <- factor(gnDf$gnNames, 
-                       levels = c("ipaH", "ial", "set", "sen", "virB", "ipaBCD", "ipgC", "ipgB1", "ipgA", "icsB",
+                       levels = c("p140", 
+                                  "ipaH", "ial", "set", "sen", "virB", "ipaBCD", "ipgC", "ipgB1", "ipgA", "icsB",
                                   "ipgD", "ipgE", "ipgF", "mxiH", "mxiI", "mxiK", "mxiE", "mxiC", "spa15", "spa47", 
                                   "spa32", "spa24"))
-
-
-bpCf <- ggplot(data = cfDf, aes(x = cfNames, y = cfCount)) +
-  geom_bar(stat = "identity", width = 0.175, fill = "#F77262", color = "#565656") +
-  geom_text(aes(label = cfCount), hjust = 1.5, vjust = 0.5, colour = "white") + 
-  # scale_color_grey() +
-  theme_minimal() +
-  # theme_classic() +
-  # scale_fill_grey() +
-  # scale_fill_brewer(palette="Blues") +
-  # scale_color_manual(values=seroColor) + 
-  theme(legend.position="none") +
-  # labs(title = "Frequencies of different serotypes") +
-  xlab("Clinical features") +
-  ylab("Frequencies") +
-  coord_flip() +
-  scale_y_continuous(breaks = seq(0, 61, 10), limits = c(0, 61))
 
 bpGn <- ggplot(data = gnDf, aes(x = gnNames, y = gnCount)) +
   geom_bar(stat = "identity", width = 0.7, fill = "#71A5D1", color = "#565656") +
@@ -533,9 +453,28 @@ bpGn <- ggplot(data = gnDf, aes(x = gnNames, y = gnCount)) +
   # scale_color_manual(values=seroColor) + 
   theme(legend.position="none") +
   # labs(title = "Frequencies of different serotypes") +
-  xlab("Genes") +
-  ylab("Frequencies") +
+  xlab("Genes and Plasmid (p140)") +
+  ylab("Counts") +
   coord_flip() +
   scale_y_continuous(breaks = seq(0, 61, 10), limits = c(0, 61))
 
-grid.arrange(bpGn, bpCf, ncol = 2)
+bpCf <- ggplot(data = cfDf, aes(x = cfNames, y = cfCount)) +
+  geom_bar(stat = "identity", width = 0.39, fill = "#F77262", color = "#565656") +
+  geom_text(aes(label = cfCount), hjust = 1.5, vjust = 0.5, colour = "white") + 
+  theme_minimal() + 
+  theme(legend.position="none") +
+  xlab("Clinical features") +
+  ylab("Counts") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 61, 10), limits = c(0, 61))
+
+bpSero <- ggplot(data = seroDf, aes(x = seroNames, y = seroCount)) +
+  geom_bar(stat = "identity", width = 0.66, fill = "#cacaca", color = "#565656") +
+  geom_text(aes(label = seroCount), hjust = 0.5, vjust = 2, colour = "#454545") + 
+  theme_minimal() +
+  theme(legend.position="none") +
+  xlab("Serotypes") +
+  ylab("Counts") +
+  scale_y_continuous(breaks = seq(0, 16, 5), limits = c(0, 16))
+
+grid.arrange(bpGn, bpSero, bpCf, layout_matrix = cbind(c(1,1), c(2,3)))
