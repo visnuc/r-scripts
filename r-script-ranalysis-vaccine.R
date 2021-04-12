@@ -7,7 +7,7 @@ library(datasets); library(devtools); library(dplyr)
 library(e1071)
 library(foreign)
 library(ggplot2); library(ggpubr); library(ggthemes); library(grid); library(gridExtra)
-library(haven)
+library(haven); library(hrbrthemes)
 library(MASS); library(moments)
 library(plotrix); library(plyr)
 library(RColorBrewer); library(reshape); library(rstatix)
@@ -18,7 +18,7 @@ library(utils)
 # ---------------------------------
 #     working directory 
 # ---------------------------------
-setwd("~/Dropbox/projects_DSDC/study_vaccine_stunting_dsdc/data")
+setwd("/home/visnu/MEGA/projects/icddrb/projects_dsdc/project_vaccineStunting_dsdc_deadEnd_20210329/data")
 setwd("C:/Users/visnu.pritom/Dropbox/tmp_sync/tmp_shbt/poster_presentation/del_tmp")
 
 
@@ -38,8 +38,7 @@ vaccine <- read.spss(file.choose(), header=T)
 # ---------------------------------
 #     others 
 # ---------------------------------
-attach(vaccine); names(vaccine)
-View(vaccine)
+attach(vaccine); names(vaccine); View(vaccine)
 nrow(vaccine)
 dim(vaccine)
 str(vaccine)
@@ -278,73 +277,31 @@ vaccine %>% group_by(reversed) %>%
 
 
 # -------------------------------
-# Binary logistic regression - unadjusted
+#   logistic regression - binary 
 # ---------------------------------
-shbtRegUnadj <- glm(reg_outcome ~ reg_meropenem, # Pr 0.0287
-                  family = binomial(link = "logit"),
-                  data = shbtSmall2)
+logisticReg <- glm(formula = reversed ~ momwt + momht + blength + bweight + blaz + bwaz + bwlz + avgLog2mea + avgLog2pert + avgLog2pol1 + avgLog2pol2 + avgLog2pol3 + avgLog2polG + avgLog2rotA + avgLog2rotG + avgLog2tet, 
+                  family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
 
-shbtRegUnadj <- glm(reg_outcome ~ reg_steroids, # Pr 0.00106
-                  family = binomial(link = "logit"),
-                  data = shbtSmall2)
-# 
-# shbtRegUnadj <- glm(reg_outcome ~ reg_mod_anemia, # Pr 0.251
-#                     family = binomial(link = "logit"), 
-#                     data = shbtSmall2)
-
-# shbtRegUnadj <- glm(reg_outcome ~ reg_sev_pneumonia, # Pr 0.2549
-#                     family = binomial(link = "logit"), 
-#                     data = shbtSmall2)
-# 
-# shbtRegUnadj <- glm(reg_outcome ~ reg_sclerema, # Pr 0.178
-#                     family = binomial(link = "logit"), 
-#                     data = shbtSmall2)
-
-summary(shbtRegUnadj)
-
-# OR & 95% CI
-round(exp(cbind(coef(shbtRegUnadj), confint(shbtRegUnadj))), 3)
-
-shkRegUnad <- glm(formula = reg_outcome ~ reg_meropenem, family = "binomial", data = shock)
-shkRegUnad <- glm(formula = reg_outcome ~ reg_steroids, family = "binomial", data = shock)
-shkRegUnad <- glm(formula = reg_outcome ~ reg_mod_anemia, family = "binomial", data = shock)
-shkRegUnad <- glm(formula = reg_outcome ~ reg_hai_hap, family = "binomial", data = shock)
-shkRegUnad <- glm(formula = reg_outcome ~ reg_sev_pneumonia, family = "binomial", data = shock)
-shkRegUnad <- glm(formula = reg_outcome ~ reg_sclerema, family = "binomial", data = shock)
-shkRegUnad <- glm(formula = reg_outcome ~ gap_shk_bt_3h, family = "binomial", data = shock)
-
-summary(shkRegUnad)
-
-# OR & 95% CI
-round(exp(cbind(coef(shkRegUnad), confint(shkRegUnad))), 3)
-
-
-# -------------------------------
-#   Binary logistic regression - adjusted
-# ---------------------------------
-# shbtRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + 
-#                     reg_steroids + reg_mod_anemia + 
-#                     reg_sev_pneumonia + reg_sclerema, 
-#                   family = binomial(link = "logit"), # ?? link = "logit"
-#                   data = shbtSmall2)
-
-shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + 
-                    reg_mod_anemia + reg_hai_hap + reg_sev_pneumonia + 
-                    reg_sclerema + gap_shk_bt_3h, 
-                  family = "binomial" (link="logit"), 
-                  data = shock)
-
-shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + reg_steroids + 
-                   reg_mod_anemia + reg_hai_hap + reg_sev_pneumonia + 
-                   reg_sclerema + gap_shk_bt_3h, 
-                  family = "binomial" (link="logit"), 
-                  data = shock)
-
-summary(shkRegAdj)
+logisticReg <- glm(formula = reversed ~ momwt, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ momht, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ blength, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ bweight, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ blaz, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ bwaz, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ bwlz, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ avgLog2mea, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ avgLog2pert, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ avgLog2pol1, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ avgLog2pol2, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ avgLog2pol3, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ avgLog2polG, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ avgLog2rotA, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ avgLog2rotG, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
+logisticReg <- glm(formula = reversed ~ avgLog2tet, family = "binomial" (link="logit"), data = vaccine); summary(logisticReg)
 
 
 # OR & 95% CI
-round(exp(cbind(coef(shkRegAdj), confint(shkRegAdj))), 3)
+round(exp(cbind(coef(logisticReg), confint(logisticReg))), 3)
 
 
 # ---------------------------------

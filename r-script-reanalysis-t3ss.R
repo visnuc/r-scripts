@@ -18,9 +18,7 @@ library(utils)
 # ---------------------------------
 #   set working directory
 # ---------------------------------
-setwd("/home/visnu/MEGA/biotech/04_spring_2013/thesis_550_A/manuscript/manuscript/statisticalAnalysis/t3ssData")
-getwd()
-
+setwd("/home/visnu/MEGA/biotech/04_spring_2013/thesis_550_A/manuscript/manuscript/statisticalAnalysis/t3ssData"); getwd()
 
 # ---------------------------------
 #   list files in dir 
@@ -211,16 +209,16 @@ fisher.test(continTable)
 # -------------------------------
 t3ssRegUnadj <- glm(ho_re_str_01 ~ lab_sen, family = "binomial", data = t3ss); summary(t3ssRegUnadj)
 # final models - unadjusted 
-t3ssRegUnadj <- glm(cf_temp_fever_01 ~ reg_toxin, family = "binomial", data = t3ss) 
+t3ssRegUnadj <- glm(cf_temp_fever_01 ~ reg_toxin, family = "binomial", data = t3ss); summary(t3ssRegUnadj) 
 t3ssRegUnadj <- glm(ho_bloody_01 ~ reg_toxin, family = "binomial", data = t3ss) 
-t3ssRegUnadj <- glm(ho_bloody_01 ~ reg_ipgA_icsB, family = "binomial", data = t3ss) 
+t3ssRegUnadj <- glm(ho_bloody_01 ~ reg_ipgA_icsB, family = "binomial", data = t3ss); summary(t3ssRegUnadj)  
 t3ssRegUnadj <- glm(ho_cough_01 ~ reg_toxin, family = "binomial", data = t3ss)
 t3ssRegUnadj <- glm(ho_mucoid_01 ~ reg_toxin, family = "binomial", data = t3ss)
-t3ssRegUnadj <- glm(ho_mucoid_01 ~ reg_mxiC, family = "binomial", data = t3ss)
+t3ssRegUnadj <- glm(ho_mucoid_01 ~ reg_mxiC, family = "binomial", data = t3ss); summary(t3ssRegUnadj) 
 t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_toxin, family = "binomial", data = t3ss)
-t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_ipgA_icsB, family = "binomial", data = t3ss)
-t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_mxiC, family = "binomial", data = t3ss)
-t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_ipgB1_spa15, family = "binomial", data = t3ss)
+t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_ipgA_icsB, family = "binomial", data = t3ss); summary(t3ssRegUnadj) 
+t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_mxiC, family = "binomial", data = t3ss); summary(t3ssRegUnadj) 
+t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_ipgB1_spa15, family = "binomial", data = t3ss); summary(t3ssRegUnadj) 
 
 
 # OR & 95% CI
@@ -311,7 +309,7 @@ round(exp(cbind(coef(t3ssRegUnadj), confint(t3ssRegUnadj))), 3)
 #                   family = "binomial" (link="logit"),
 #                   data = t3ss); summary(t3ssRegAdj)
 # 
-# t3ssRegAdj <- glm(ho_re_str_01 ~ reg_ial + reg_toxin + reg_virB + lab_sen + 
+# t3ssRegAdj <- glm(ho_re_str_01 ~ reg_ial + reg_toxin + reg_virB + lab_sen +
 #                     reg_ipaBCD_ipgC + reg_ipgB1_spa15 + reg_ipgA_icsB +
 #                     reg_ipgD_ipgE + reg_ipgF + reg_mxiH_mxiI + reg_mxiK +
 #                     reg_mxiE + reg_mxiC + reg_spa47,
@@ -412,14 +410,21 @@ coefplot3 <- coefplot(t3ssRegAdj3, innerCI = 0, outerCI = 1.96, intercept = F,
 
 
 # -------------------------------
-#   barplots 
+#   barplots - 3 in 1
 # -------------------------------
-seroDf <- data.frame(seroNames = c("1b", "1c", "2a", "2b", "3a", "4", "6a"), seroCount = c(5, 9, 16, 15, 8, 3, 5)); 
-seroDf$seroNames <- factor(seroDf$seroNames, levels = c("1b", "1c", "2a", "2b", "3a", "4", "6a"))
+seroDf <- data.frame(seroNames = c("1b", "1c", "2a", "2b", "3a", "4", "6a"), 
+                     seroCount = c(5, 9, 16, 15, 8, 3, 5), 
+                     seroPrcnt = c(8.20, 14.75, 26.23, 24.59, 13.14, 4.92, 8.20)); 
+seroDf$seroNames <- factor(seroDf$seroNames, levels = c("6a", "4", "3a", "2b", "2a", "1c", "1b"))
 
 cfDf <- data.frame(cfNames = c("Bloody stool", "Mucoid stool", "Rectal straining", "Fever", "Cough"), 
-                    cfCount = c(49, 50, 45, 22, 25)); 
+                   cfCount = c(49, 50, 45, 22, 25), 
+                   cfPrcnt = c(80.33, 81.97, 73.77, 36.07, 40.98)); 
+                    # "Severe disease", "Abdominal pain", "Vomiting", "Dehydration", "Convulsion"
+                    # 55, 52, 28, 13, 2
+                    # 90.16, 85.24, 45.90, 21.31, 3.28
 cfDf$cfNames <- factor(cfDf$cfNames, levels = c("Cough", "Fever", "Rectal straining", "Mucoid stool", "Bloody stool"))
+                    # "Convulsion", "Dehydration", "Vomiting", "Abdominal pain", "Severe disease"
 
 gnDf <- data.frame(gnNames = c("p140", 
                                "ipaH", "ial", "set", "sen", "virB", "ipaBCD", "ipgC", "ipgB1", "ipgA", "icsB",
@@ -428,16 +433,20 @@ gnDf <- data.frame(gnNames = c("p140",
                    gnCount = c(48, 
                                61, 54, 34, 38, 50, 55, 52, 44, 50, 27, 
                                48, 52, 47, 49, 49, 43, 40, 22, 49, 49, 
-                               46, 43))
+                               46, 43), 
+                   gnPrcnt = c(78.69, 
+                               100, 88.52, 55.74, 62.30, 81.97, 90.16, 85.25, 72.13, 81.97, 44.26, 
+                               78.69, 85.25, 77.05, 80.33, 80.33, 70.49, 65.57, 36.07, 80.33, 80.33, 
+                               75.41, 70.49))
 gnDf$gnNames <- factor(gnDf$gnNames, 
                        levels = c("spa24","spa32", "spa47", "spa15", 
                                   "mxiC", "mxiE", "mxiK", "mxiI", "mxiH", 
                                   "ipgF", "ipgE", "ipgD", "icsB", "ipgA", "ipgB1", "ipgC", "ipaBCD", "virB", 
                                   "sen", "set", "ial", "ipaH", "p140"))
 
-bpGn <- ggplot(data = gnDf, aes(x = gnNames, y = gnCount)) +
-  geom_bar(stat = "identity", width = 0.7, fill = "#71A5D1", color = "#565656") +
-  geom_text(aes(label = gnCount), hjust = 1.5, vjust = 0.5, colour = "white") + 
+bpGn <- ggplot(data = gnDf, aes(x = gnNames, y = gnPrcnt)) +
+  geom_bar(stat = "identity", width = 0.65, fill = "#6994c0", color = "#565656") +
+  geom_text(aes(label = gnPrcnt), hjust = 1.2, vjust = 0.5, colour = "#ffffff") + 
   # scale_color_grey() +
   theme_minimal() +
   # theme_classic() +
@@ -447,27 +456,28 @@ bpGn <- ggplot(data = gnDf, aes(x = gnNames, y = gnCount)) +
   theme(legend.position="none") +
   # labs(title = "Frequencies of different serotypes") +
   xlab("Genes and Plasmid (p140)") +
-  ylab("Counts") +
+  ylab("Percentage (%)") +
   coord_flip() +
-  scale_y_continuous(breaks = seq(0, 61, 10), limits = c(0, 61))
+  scale_y_continuous(breaks = seq(0, 100, 10), limits = c(0, 100))
 
-bpCf <- ggplot(data = cfDf, aes(x = cfNames, y = cfCount)) +
-  geom_bar(stat = "identity", width = 0.39, fill = "#F77262", color = "#565656") +
-  geom_text(aes(label = cfCount), hjust = 1.5, vjust = 0.5, colour = "white") + 
+bpCf <- ggplot(data = cfDf, aes(x = cfNames, y = cfPrcnt)) +
+  geom_bar(stat = "identity", width = 0.35, fill = "#F77262", color = "#565656") +
+  geom_text(aes(label = cfPrcnt), hjust = 1.2, vjust = 0.5, colour = "#ffffff") + 
   theme_minimal() + 
   theme(legend.position="none") +
   xlab("Clinical features") +
-  ylab("Counts") +
+  ylab("Percentage (%)") +
   coord_flip() +
-  scale_y_continuous(breaks = seq(0, 61, 10), limits = c(0, 61))
+  scale_y_continuous(breaks = seq(0, 100, 10), limits = c(0, 82))
 
-bpSero <- ggplot(data = seroDf, aes(x = seroNames, y = seroCount)) +
-  geom_bar(stat = "identity", width = 0.66, fill = "#cacaca", color = "#565656") +
-  geom_text(aes(label = seroCount), hjust = 0.5, vjust = 2, colour = "#454545") + 
+bpSero <- ggplot(data = seroDf, aes(x = seroNames, y = seroPrcnt)) +
+  geom_bar(stat = "identity", width = 0.5, fill = "#a8a8a8", color = "#565656") +
+  geom_text(aes(label = seroPrcnt), hjust = 1.2, vjust = 0.5, colour = "#ffffff") + 
   theme_minimal() +
   theme(legend.position="none") +
   xlab("Serotypes") +
-  ylab("Counts") +
-  scale_y_continuous(breaks = seq(0, 16, 5), limits = c(0, 16))
+  ylab("Percentage (%)") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 30, 10), limits = c(0, 27))
 
 grid.arrange(bpSero, bpCf, bpGn, layout_matrix = cbind(c(1,2), c(3,3)))
