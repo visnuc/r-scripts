@@ -67,9 +67,20 @@ hist.day1 <- ggplot(Data, aes(day1)) +
 #                 colour = "#ff0000", size = 0.25); hist.day3
 
 # ---------------------------------
-# normality check - with qq-plot
+# normality check - with q-q plot
 # ---------------------------------
+qqplot.day1 <- qplot(sample = Data$day1, stat="qq"); qqplot.day1
+qqplot.day2 <- qplot(sample = Data$day2, stat="qq"); qqplot.day2
+qqplot.day3 <- qplot(sample = Data$day3, stat="qq"); qqplot.day3
 
+# ---------------------------------
+# normality check - with skew and kurtosis 
+#     values ≈0 for normal distribution
+# ---------------------------------
+round(describe(cbind(Data$day1, Data$day2, Data$day3)), digits = 3)
+round(stat.desc(cbind(Data$day1, Data$day2, Data$day3), basic = F, norm = T), digits = 3)
+# describe(Data[,c("day1", "day2", "day3")])
+# stat.desc(Data[, c("day1", "day2", "day3")], basic = F, norm = T)
 
 
 
@@ -88,104 +99,26 @@ Data2 <- subset(Data, select = c(var_1, var_2, var_3))
 # ---------------------------------
 #   conditional variable 
 # ---------------------------------
-t3ss$reg_ial <- t3ss$lab_ial_01
-t3ss$reg_toxin <- ifelse(t3ss$lab_set_01 == 1 | t3ss$lab_sen == 1 , 1, 0)
-t3ss$reg_virB <- t3ss$lab_virB
-t3ss$reg_ipaBCD_ipgC <- ifelse(t3ss$lab_ipaBCD_01 == 1 & t3ss$lab_ipgC == 1 , 1, 0)
-t3ss$reg_ipgB1_spa15 <- ifelse(t3ss$lab_ipgB1_01 == 1 & t3ss$lab_spa15 == 1 , 1, 0)
-t3ss$reg_ipgA_icsB <- ifelse(t3ss$lab_ipgA == 1 & t3ss$lab_icsB_01 == 1 , 1, 0)
-t3ss$reg_ipgD_ipgE <- ifelse(t3ss$lab_ipgD_01 == 1 & t3ss$lab_ipgE == 1 , 1, 0)
-t3ss$reg_ipgF <- t3ss$lab_ipgF_01
-t3ss$reg_mxiH_mxiI <- ifelse(t3ss$lab_mxiH_01 == 1 & t3ss$lab_mxiI == 1 , 1, 0)
-t3ss$reg_mxiK <- t3ss$lab_mxiK_01
-t3ss$reg_mxiE <- t3ss$lab_mxiE_01
-t3ss$reg_mxiC <- t3ss$lab_mxiC_01
-t3ss$reg_spa47 <- t3ss$lab_spa47_01
-t3ss$reg_spa32_spa24 <- ifelse(t3ss$lab_spa32_01 == 1 & t3ss$lab_spa24 == 1 , 1, 0)
-
+Data$varNewName <- ifelse(Data$var_1 == 1 | Data$var_1 == 1 , 1, 0)
+Data$varNewName <- ifelse(Data$var_1 == 1 & Data$var_1 == 1 , 1, 0)
 
 # ---------------------------------
 #     removing variables 
 # ---------------------------------
 Data$var_1 <- NULL
 
-
 # ---------------------------------
 #   recoding
 # ---------------------------------
-t3ss$lab_p140 <- recode(t3ss$lab_p140, "Positive" = 1, "Negative" = 0)
-t3ss$lab_ipaH <- recode(t3ss$lab_ipaH, "Positive" = 1, "Negative" = 0)
-t3ss$lab_ial_01 <- recode(t3ss$lab_ial_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_set1A <- recode(t3ss$lab_set1A, "Positive" = 1, "Negative" = 0)
-t3ss$lab_set1B <- recode(t3ss$lab_set1B, "Positive" = 1, "Negative" = 0)
-t3ss$lab_set_01 <- recode(t3ss$lab_set_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_sen <- recode(t3ss$lab_sen, "Positive" = 1, "Negative" = 0)
-t3ss$lab_virB_01 <- recode(t3ss$lab_virB_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_ipaBCD_01 <- recode(t3ss$lab_ipaBCD_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_ipgC <- recode(t3ss$lab_ipgC, "Positive" = 1, "Negative" = 0)
-t3ss$lab_ipgB1_01 <- recode(t3ss$lab_ipgB1_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_ipgA <- recode(t3ss$lab_ipgA, "Positive" = 1, "Negative" = 0)
-t3ss$lab_icsB_01 <- recode(t3ss$lab_icsB_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_ipgD_01 <- recode(t3ss$lab_ipgD_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_ipgE <- recode(t3ss$lab_ipgE, "Positive" = 1, "Negative" = 0)
-t3ss$lab_ipgF_01 <- recode(t3ss$lab_ipgF_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_mxiH_01 <- recode(t3ss$lab_mxiH_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_mxiI <- recode(t3ss$lab_mxiI, "Positive" = 1, "Negative" = 0)
-t3ss$lab_mxiK_01 <- recode(t3ss$lab_mxiK_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_mxiE_01 <- recode(t3ss$lab_mxiE_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_mxiC_01 <- recode(t3ss$lab_mxiC_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_spa15 <- recode(t3ss$lab_spa15, "Positive" = 1, "Negative" = 0)
-t3ss$lab_spa47_01 <- recode(t3ss$lab_spa47_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_spa32_01 <- recode(t3ss$lab_spa32_01, "Positive" = 1, "Negative" = 0)
-t3ss$lab_spa24 <- recode(t3ss$lab_spa24, "Positive" = 1, "Negative" = 0)
-t3ss$lab_spa <- recode(t3ss$lab_spa, "Positive" = 1, "Negative" = 0)
-
-t3ss$ho_mucoid_01 <- recode(t3ss$ho_mucoid_01, "Yes" = 1, "No" = 0)
-t3ss$ho_bloody_01 <- recode(t3ss$ho_bloody_01, "Yes" = 1, "No" = 0)
-t3ss$ho_vomiting_01 <- recode(t3ss$ho_vomiting_01, "Yes" = 1, "No" = 0)
-t3ss$ho_abd_pain_01 <- recode(t3ss$ho_abd_pain_01, "Yes" = 1, "No" = 0)
-t3ss$ho_re_str_01 <- recode(t3ss$ho_re_str_01, "Yes" = 1, "No" = 0)
-t3ss$ho_cough_01 <- recode(t3ss$ho_cough_01, "Yes" = 1, "No" = 0)
-t3ss$ho_fever_01 <- recode(t3ss$ho_fever_01, "Yes" = 1, "No" = 0)
-t3ss$ho_convul_01 <- recode(t3ss$ho_convul_01, "Yes" = 1, "No" = 0)
-t3ss$ho_measles_01 <- recode(t3ss$ho_measles_01, "Yes" = 1, "No" = 0)
-
-t3ss$cf_mod_sev_dis_01 <- recode(t3ss$cf_mod_sev_dis_01, "Yes" = 1, "No" = 0)
-t3ss$cf_temp_fever_01 = recode(t3ss$cf_temp_fever_01, "Yes" = 1, "No" = 0)
-t3ss$cf_eye_sunken_01 <- recode(t3ss$cf_eye_sunken_01, "Yes" = 1, "No" = 0)
-t3ss$cf_dry_mouth_01 <- recode(t3ss$cf_dry_mouth_01, "Yes" = 1, "No" = 0)
-t3ss$cf_skin_pinch_slow_01 <- recode(t3ss$cf_skin_pinch_slow_01, "Yes" = 1, "No" = 0)
-t3ss$cf_restless_01 <- recode(t3ss$cf_restless_01, "Yes" = 1, "No" = 0)
-t3ss$cf_dh_01 <- recode(t3ss$cf_dh_01, "Yes" = 1, "No" = 0)
-t3ss$cf_ped_ede_01 <- recode(t3ss$cf_ped_ede_01, "Yes" = 1, "No" = 0)
-t3ss$cf_rec_pro_01 <- recode(t3ss$cf_rec_pro_01, "Yes" = 1, "No" = 0)
-
+Data$var_1 <- recode(Data$var_1, "Positive" = 1, "Negative" = 0)
 
 # ---------------------------------
 # two-way contingency table
 # ---------------------------------
-continTable <- table(t3ss$ho_abd_pain_01, t3ss$lab_ial_01)
-continTable <- table(t3ss$ho_mucoid_01, t3ss$lab_set_01)
-continTable <- table(t3ss$ho_bloody_01, t3ss$lab_set_01)
-continTable <- table(t3ss$ho_re_str_01, t3ss$lab_set_01)
-continTable <- table(t3ss$ho_mucoid_01, t3ss$lab_sen)
-continTable <- table(t3ss$ho_bloody_01, t3ss$lab_sen)
-continTable <- table(t3ss$ho_re_str_01, t3ss$lab_sen)
+continTable <- table(Data$var_dependent, Data$var_independent); continTable
 
-continTable <- table(t3ss$lab_ipaBCD_01, t3ss$ho_abd_pain_01)
-continTable <- table(t3ss$lab_set_01, t3ss$cf_temp_fever_01)
-continTable <- table(t3ss$lab_set_01, t3ss$cf_dh)
-continTable <- table(t3ss$lab_spa24, t3ss$ho_re_str_01)
-continTable <- table(t3ss$lab_set_01, t3ss$ho_cough_01)
-continTable <- table(t3ss$lab_ipgD_01, t3ss$ho_cough_01)
-continTable <- table(t3ss$lab_set_01, t3ss$cf_mod_sev_dis)
-
-rownames(continTable) <- c("no_pain", "abd_pain")
-rownames(continTable) <- c("non_mucoid", "mucoid")
-rownames(continTable) <- c("non_bloody", "bloody")
-rownames(continTable) <- c("no_straining", "straining")
-
-colnames(continTable) <- c("No", "Yes")
+rownames(continTable) <- c("response of dependent var", "response of dependent var")
+colnames(continTable) <- c("response of independent var", "response of independent var")
 
 continTable
 
@@ -204,49 +137,29 @@ chisq.test(continTable)$expected
 # Monte Carlo simulation as expected freq <5
 chisq.test(continTable, simulate.p.value = T, B = 10000) 
 
-
 # -------------------------------
 #   Fisher's Exact test
 # -------------------------------
 fisher.test(continTable)
-
 
 # -------------------------------
 #   Binary logistic regression - unadjusted
 # -------------------------------
 
 # final models - unadjusted 
-t3ssRegUnadj <- glm(cf_temp_fever_01 ~ reg_toxin, family = "binomial", data = t3ss) 
-t3ssRegUnadj <- glm(ho_bloody_01 ~ reg_toxin, family = "binomial", data = t3ss) 
-t3ssRegUnadj <- glm(ho_bloody_01 ~ reg_ipgA_icsB, family = "binomial", data = t3ss) 
-t3ssRegUnadj <- glm(ho_cough_01 ~ reg_toxin, family = "binomial", data = t3ss)
-t3ssRegUnadj <- glm(ho_mucoid_01 ~ reg_toxin, family = "binomial", data = t3ss)
-t3ssRegUnadj <- glm(ho_mucoid_01 ~ reg_mxiC, family = "binomial", data = t3ss)
-t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_toxin, family = "binomial", data = t3ss)
-t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_ipgA_icsB, family = "binomial", data = t3ss)
-t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_mxiC, family = "binomial", data = t3ss)
-t3ssRegUnadj <- glm(ho_re_str_01 ~ reg_ipgB1_spa15, family = "binomial", data = t3ss)
-
-summary(t3ssRegUnadj)
+model_lr <- glm(var_dependent ~ var_independent, family = "binomial", data = Data); summary(model_lr)
 
 # OR & 95% CI
-round(exp(cbind(coef(t3ssRegUnadj), confint(t3ssRegUnadj))), 3)
-
+round(exp(cbind(coef(model_lr), confint(model_lr))), 3)
 
 # -------------------------------
 #   Binary logistic regression - adjusted
 # -------------------------------
-t3ssRegAdj <- glm(ho_re_str_01 ~ reg_toxin + reg_ipgA_icsB + reg_mxiC + 
-                    reg_ipgB1_spa15, 
-                  family = "binomial" (link="logit"), 
-                  data = t3ss)
-
-summary(t3ssRegAdj)
+model_lr <- glm(var_dependent ~ var_independent_1 + var_independent_2, 
+                  family = "binomial" (link="logit"), data = Data); summary(model_lr)
 
 # OR & 95% CI
-round(exp(cbind(coef(t3ssRegAdj), confint(t3ssRegAdj))), 3)
-
-
+round(exp(cbind(coef(model_lr), confint(model_lr))), 3)
 
 # -------------------------------
 #   Coefficient plot - multiple
