@@ -420,7 +420,7 @@ shkRegUnad <- glm(formula = reg_outcome ~ reg_meropenem, family = "binomial", da
 shkRegUnad <- glm(formula = reg_outcome ~ reg_steroids, family = "binomial", data = shock)
 shkRegUnad <- glm(formula = reg_outcome ~ mx_dopamine, family = "binomial", data = shock); summary(shkRegUnad)
 shkRegUnad <- glm(formula = reg_outcome ~ mx_vasopressor, family = "binomial", data = shock); summary(shkRegUnad)
-shkRegUnad <- glm(formula = reg_outcome ~ reg_mod_anemia, family = "binomial", data = shock)
+shkRegUnad <- glm(formula = reg_outcome ~ reg_mod_anemia, family = "binomial" (link="logit"), data = shock)
 shkRegUnad <- glm(formula = reg_outcome ~ reg_hai_hap, family = "binomial", data = shock)
 shkRegUnad <- glm(formula = reg_outcome ~ reg_sev_pneumonia, family = "binomial", data = shock)
 shkRegUnad <- glm(formula = reg_outcome ~ reg_sclerema, family = "binomial", data = shock)
@@ -453,9 +453,8 @@ shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + mx_dopamine + reg_stero
                  family = "binomial" (link="logit"), 
                  data = shock); summary(shkRegAdj)
 
-shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + mx_dopamine + reg_steroids 
-                 + inv_biochem_ca + inv_biochem_k + inv_hem_neut,
-                 family = "binomial" (link="logit"), data = shock); summary(shkRegAdj)
+# shkRegAdj <- glm(formula = reg_outcome ~ reg_meropenem + mx_dopamine + reg_steroids + inv_biochem_ca,
+#                  family = "binomial" (link="logit"), data = shock); summary(shkRegAdj)
 
 
 # OR & 95% CI
@@ -544,7 +543,16 @@ coefplot(shkRegAdj,
 # ---------------------------------
 #   plotting logistic regression model
 # ---------------------------------
-plot(inv_biochem_ca, reg_outcome, xlab = "Serum Calcium (mmol/L)", ylab = "Probability of survival") # plots Ca on x, survival (0 or 1) on y
-g <- glm(formula = reg_outcome ~ inv_biochem_ca, family = "binomial", data = shock)
-curve(predict(g, data.frame(inv_biochem_ca = x), type = "resp"), add=TRUE) # curve based on prediction from model
-# points(inv_biochem_ca, fitted(g), pch=20) # doesn't work
+plot(reg_outcome ~ inv_biochem_ca, 
+     data = shock, col="red4", 
+     xlab = "Serum Calcium (mmol/L)", ylab = "Probability of Death") # plot(x, y)
+abline(h =.5, lty = 3, col="red4")
+model <- glm(formula = reg_outcome ~ inv_biochem_ca, family = "binomial"  (link="logit"), data = shock); summary(model)
+curve(predict(model, data.frame(inv_biochem_ca = x), type = "response"), add = T) # curve based on prediction from model
+
+# # testing
+# fit = glm(vs ~ hp, data=mtcars, family=binomial)
+# newdat <- data.frame(hp=seq(min(mtcars$hp), max(mtcars$hp),len=100))
+# newdat$vs = predict(fit, newdata=newdat, type="response")
+# plot(vs~hp, data=mtcars, col="red4")
+# lines(vs ~ hp, newdat, col="green4", lwd=2)
