@@ -6,14 +6,14 @@ library(car); library(codebook); library(coefplot)
 library(datasets); library(devtools); library(dplyr)
 library(e1071)
 library(foreign)
-library(ggplot2); library(ggpubr); library(ggthemes)
-library(haven)
+library(ggplot2); library(ggpubr); library(ggthemes); library(grid); library(gridExtra)
+library(haven); library(hrbrthemes)
 library(MASS); library(moments)
 library(pastecs); library(plotrix); library(plyr); library(psych)
-library(Rcmdr); library(RColorBrewer); library(reshape); library(rstatix)
+library(RColorBrewer); library(reshape); library(rstatix)
 library(tidyverse)
 library(utils)
-
+# library(Rcmdr) # do not load unless needed, messes with exporting plots
 
 # ---------------------------------
 #     working directory 
@@ -21,12 +21,10 @@ library(utils)
 setwd("/home/visnu/MEGA/projects/icddrb/study_retro_shock/manuscript_shock/data")
 setwd("C:/Users/visnu.pritom/Dropbox/tmp_sync/tmp_shbt/poster_presentation/del_tmp")
 
-
 # ---------------------------------
 #     list objects in dir 
 # ---------------------------------
 dir()
-
 
 # ---------------------------------
 #     data import 
@@ -44,24 +42,19 @@ View(shock)
 nrow(shock)
 dim(shock)
 
-
 # ---------------------------------
 # merging data sets 
 s12 <- merge(shock, shockTmp, by = "pp_pid", all.x = T)
-
 
 # ---------------------------------
 #     export data 
 # ---------------------------------
 write.table(shock, file = "new.csv", sep = ",", row.names = F)
 
-
 # ---------------------------------
 #     subsetting 
 # ---------------------------------
-shock2 <- shockTmp %>%
-  select(pp_pid, mx_ino) 
-
+shock2 <- shockTmp %>% select(pp_pid, mx_ino) 
 
 # ---------------------------------
 #     removing var
@@ -140,12 +133,10 @@ shock$inv_hem_lympho <- NULL
 shock$inv_hem_mono <- NULL
 shock$inv_hem_pc <- NULL
 
-
 # ---------------------------------
 #     renaming var
 # ---------------------------------
 names(shock)[4] <- "socio_restype_bivar"
-
 
 # ---------------------------------
 #     recoding 
@@ -536,9 +527,6 @@ coefplot(shkRegAdj,
         panel.border = element_blank(),
         panel.background = element_blank()) +
   geom_point(pch = 21)
-
-
-
 
 # ---------------------------------
 #   plotting logistic regression model

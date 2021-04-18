@@ -6,21 +6,19 @@ library(car); library(codebook); library(coefplot)
 library(datasets); library(devtools); library(dplyr)
 library(e1071)
 library(foreign)
-library(ggplot2); library(ggpubr); library(ggthemes)
-library(haven)
+library(ggplot2); library(ggpubr); library(ggthemes); library(grid); library(gridExtra)
+library(haven); library(hrbrthemes)
 library(MASS); library(moments)
 library(pastecs); library(plotrix); library(plyr); library(psych)
-library(Rcmdr); library(RColorBrewer); library(reshape); library(rstatix)
+library(RColorBrewer); library(reshape); library(rstatix)
 library(tidyverse)
 library(utils)
-
+# library(Rcmdr) # do not load unless needed, messes with exporting plots
 
 # ---------------------------------
 #   set working directory
 # ---------------------------------
-setwd("/home/visnu/MEGA/800x/mathematics/statistics/discovering_statistics_using_r_-_field_miles_field/DSUR_field_miles_datafiles")
-getwd()
-
+setwd("/home/visnu/MEGA/800x/mathematics/statistics/discovering_statistics_using_r_-_field_miles_field/DSUR_field_miles_datafiles"); getwd()
 
 # ---------------------------------
 #   list files in dir 

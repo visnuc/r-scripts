@@ -9,11 +9,11 @@ library(foreign)
 library(ggplot2); library(ggpubr); library(ggthemes); library(grid); library(gridExtra)
 library(haven); library(hrbrthemes)
 library(MASS); library(moments)
-library(plotrix); library(plyr)
+library(pastecs); library(plotrix); library(plyr); library(psych)
 library(RColorBrewer); library(reshape); library(rstatix)
 library(tidyverse)
 library(utils)
-
+# library(Rcmdr) # do not load unless needed, messes with exporting plots
 
 # ---------------------------------
 #   set working directory
@@ -24,7 +24,6 @@ setwd("/home/visnu/MEGA/biotech/04_spring_2013/thesis_550_A/manuscript/manuscrip
 #   list files in dir 
 # ---------------------------------
 dir()
-
 
 # ---------------------------------
 #   import data
@@ -58,8 +57,7 @@ write.table(t2, file = "tmp.csv", sep = ",", row.names = F)
 # ---------------------------------
 #   subsetting 
 # ---------------------------------
-t2 <- t3ss %>%
-  select(lab_ID, lab_set, lab_sen)
+t2 <- t3ss %>% select(lab_ID, lab_set, lab_sen)
 
 t3ssReg <- subset(t3ss, select = c(lab_id, cf_temp_fever_01))
 
