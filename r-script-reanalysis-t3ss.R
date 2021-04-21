@@ -29,16 +29,25 @@ dir()
 #   import data
 # ---------------------------------
 t3ss <- read.csv(file.choose(), header=T)
-t3ss <- read.spss(file.choose(), header=T)
+t3ssTmp <- read.csv(file.choose(), header=T)
+t3ss <- read.delim(file.choose(), header = T)
+t3ss <- read.spss(file.choose(), header = T)
 t3ss <- read.dta(file.choose())
 
 
-# -------------------------------
+# ---------------------------------
 #   others 
 # ---------------------------------
 attach(t3ss); names(t3ss); View(t3ss)
+# attach(t3ssTmp); names(t3ssTmp); View(t3ssTmp)
+# attach(t3ssMerged); names(t3ssMerged); View(t3ssMerged)
 dim(t3ss)
 str(t3ss)
+
+# ---------------------------------
+#   merging data sets 
+# ---------------------------------
+t3ssMerged <- merge(t3ss, t3ssTmp, by = "lab_id", all.x = T)
 
 
 # -------------------------------
@@ -51,13 +60,15 @@ t2 <- t3ss[with(t3ss, order(-lab_id)),] # "-" for descending
 # -------------------------------
 #   export data
 # ---------------------------------
-write.table(t3ss, file = "tmp.csv", sep = ",", row.names = F)
-write.table(t2, file = "tmp.csv", sep = ",", row.names = F)
+write.table(t3ssMerged, file = "tmp.csv", sep = ",", row.names = F)
 
 # ---------------------------------
 #   subsetting 
 # ---------------------------------
-t2 <- t3ss %>% select(lab_ID, lab_set, lab_sen)
+t2 <- t3ss %>% select(lab_ID, age_mon, 
+                      bcg, dpt_1st, dpt_2nd, dpt_3rd, hib_1st, hib_2nd, hib_3rd, 
+                      pol_1st, pol_2nd, pol_3rd, measl, hepa_1st, hepa_2nd, hepa_3rd, 
+                      rota, vibrio, vc_n_013, V_INABA, v_01_oga)
 
 t3ssReg <- subset(t3ss, select = c(lab_id, cf_temp_fever_01))
 
@@ -155,6 +166,28 @@ t3ss$cf_dh_01 <- recode(t3ss$cf_dh_01, "Yes" = 1, "No" = 0)
 t3ss$cf_ped_ede_01 <- recode(t3ss$cf_ped_ede_01, "Yes" = 1, "No" = 0)
 t3ss$cf_rec_pro_01 <- recode(t3ss$cf_rec_pro_01, "Yes" = 1, "No" = 0)
 
+# ---------------------------------
+#     normality check
+# ---------------------------------
+qqnorm(t3ss$age_mon, pch = 1, frame = F); qqline(t3ss$age_mon, col = "skyblue4", lwd = 1); shapiro.test(t3ss$age_mon) # NN
+
+# -------------------------------
+#   Wilcoxon test - two sided 
+# -------------------------------
+# exact = T, may produce errors if there are ties in ranks of observations 
+wilcox.test(t3ss$age_mon ~ t3ss$ho_abd_pain_01, mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, exact = F, correct = T) 
+wilcox.test(t3ss$age_mon ~ t3ss$ho_mucoid_01, mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, exact = F, correct = T) 
+wilcox.test(t3ss$age_mon ~ t3ss$ho_bloody_01, mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, exact = F, correct = T) # p<0.05
+wilcox.test(t3ss$age_mon ~ t3ss$ho_re_str_01, mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, exact = F, correct = T) # p<0.05
+wilcox.test(t3ss$age_mon ~ t3ss$cf_dh_01, mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, exact = F, correct = T) # p<0.05
+wilcox.test(t3ss$age_mon ~ t3ss$ho_cough_01, mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, exact = F, correct = T) 
+wilcox.test(t3ss$age_mon ~ t3ss$cf_mod_sev_dis, mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, exact = F, correct = T) 
+wilcox.test(t3ss$age_mon ~ t3ss$cf_temp_fever_01, mu = 0, alt = "two.sided", conf.int = T, conf.level = 0.95, paired = F, exact = F, correct = T) # p<0.05
+
+t3ss %>% group_by(ho_bloody_01) %>% get_summary_stats(age_mon, type = "median_iqr")
+t3ss %>% group_by(ho_re_str_01) %>% get_summary_stats(age_mon, type = "median_iqr")
+t3ss %>% group_by(cf_dh_01) %>% get_summary_stats(age_mon, type = "median_iqr")
+t3ss %>% group_by(cf_temp_fever_01) %>% get_summary_stats(age_mon, type = "median_iqr")
 
 # ---------------------------------
 # two-way contingency table
