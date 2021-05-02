@@ -13,7 +13,7 @@ library(pastecs); library(plotrix); library(plyr); library(psych)
 library(RColorBrewer); library(reshape); library(rstatix)
 library(tidyverse)
 library(utils)
-# library(Rcmdr) # do not load unless needed, messes with exporting plots
+library(Rcmdr) # do not load unless needed, messes with exporting plots
 
 # ---------------------------------
 #   set working directory
