@@ -1,16 +1,24 @@
 # ---------------------------------
 #     libraries
 # ---------------------------------
-library(arm)
-library(car); library(codebook); library(coefplot)
-library(datasets); library(devtools); library(dplyr)
+# library(arm)
+# library(car); 
+# library(codebook); 
+library(coefplot)
+library(datasets); 
+# library(devtools); 
+library(dplyr)
 library(e1071)
 library(foreign)
-library(ggplot2); library(ggpubr); library(ggthemes); library(grid); library(gridExtra)
+library(ggplot2); 
+# library(ggpubr); 
+library(ggthemes); library(grid); library(gridExtra)
 library(haven); library(hrbrthemes)
 library(MASS); library(moments)
-library(pastecs); library(plotrix); library(plyr); library(psych)
-library(RColorBrewer); library(reshape); library(rstatix)
+library(pastecs); library(plotrix); library(plyr); 
+# library(psych)
+library(RColorBrewer); library(reshape); 
+# library(rstatix)
 library(tidyverse)
 library(utils)
 # library(Rcmdr) # do not load unless needed, messes with exporting plots
@@ -534,9 +542,15 @@ coefplot(shkRegAdj,
 plot(reg_outcome ~ inv_biochem_ca, 
      data = shock, col="red4", 
      xlab = "Serum Calcium (mmol/L)", ylab = "Probability of Death") # plot(x, y)
-abline(h =.5, lty = 3, col="red4")
-model <- glm(formula = reg_outcome ~ inv_biochem_ca, family = "binomial"  (link="logit"), data = shock); summary(model)
-curve(predict(model, data.frame(inv_biochem_ca = x), type = "response"), add = T) # curve based on prediction from model
+abline(h =.5, lty = 3, col="red4"); abline(h = 0, lty = 3, col="red4"); abline(h = 1, lty = 3, col="red4")
+model <- glm(formula = reg_outcome ~ inv_biochem_ca, 
+             family = "binomial"  (link="logit"), data = shock); summary(model)
+curve(predict(model, data.frame(inv_biochem_ca = x), 
+              type = "response"), add = T) # curve based on prediction from model
+coefficients(model)
+abline(v = -coef(model)[1] / coef(model)[2], lty = 3, col="red4")
+v = -coef(model)[1] / coef(model)[2]; v
+
 
 # # testing
 # fit = glm(vs ~ hp, data=mtcars, family=binomial)
