@@ -539,18 +539,16 @@ coefplot(shkRegAdj,
 # ---------------------------------
 #   plotting logistic regression model
 # ---------------------------------
-plot(reg_outcome ~ inv_biochem_ca, 
-     data = shock, col="red4", 
-     xlab = "Serum Calcium (mmol/L)", ylab = "Probability of Death") # plot(x, y)
-abline(h =.5, lty = 3, col="red4"); abline(h = 0, lty = 3, col="red4"); abline(h = 1, lty = 3, col="red4")
+plot(reg_outcome ~ inv_biochem_ca, data = shock, col = "darkorange", pch = "|", ylim = c(0, 1.0), 
+     xlab = "Serum Calcium (mmol/L)", ylab = "Probability of Death (0 = no, 1 = yes)") # plot(x, y)
+abline(h =.5, lty = 3, col="grey"); abline(h = 0, lty = 3, col="grey2"); abline(h = 1, lty = 3, col="grey2")
 model <- glm(formula = reg_outcome ~ inv_biochem_ca, 
              family = "binomial"  (link="logit"), data = shock); summary(model)
 curve(predict(model, data.frame(inv_biochem_ca = x), 
-              type = "response"), add = T) # curve based on prediction from model
+              type = "response"), add = T, col = "dodgerblue") # curve based on prediction from model
 coefficients(model)
-abline(v = -coef(model)[1] / coef(model)[2], lty = 3, col="red4")
+abline(v = -coef(model)[1] / coef(model)[2], lty = 3, col="grey")
 v = -coef(model)[1] / coef(model)[2]; v
-
 
 # # testing
 # fit = glm(vs ~ hp, data=mtcars, family=binomial)
