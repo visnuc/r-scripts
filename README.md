@@ -5,7 +5,7 @@ An effort to put together the r codes that public health professionals frequentl
 
 ## Contributor
 
-- Visnu Pritom Chowdhury <visnu.pritom@icddrb.org>
+- Visnu Pritom Chowdhury <visnu.pritom.chowdhury@gmail.com>
 
 ## Prerequisites
 
