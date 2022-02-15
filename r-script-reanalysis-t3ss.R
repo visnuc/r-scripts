@@ -18,7 +18,7 @@ library(Rcmdr) # do not load unless needed, messes with exporting plots
 # ---------------------------------
 #   set working directory
 # ---------------------------------
-setwd("/home/visnu/MEGA/biotech/04_spring_2013/thesis_550_A/manuscript/manuscript/statisticalAnalysis/t3ssData"); getwd()
+setwd("/home/visnu/MEGA/projects/higherStudies/c_bangladesh/MSc BRACU completed/biotechnology/04_spring_2013/thesis_550_A/manuscript/data"); getwd()
 
 # ---------------------------------
 #   list files in dir 
