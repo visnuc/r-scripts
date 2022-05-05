@@ -12,6 +12,7 @@ An effort to put together the r codes that public health professionals frequentl
 - [x] r
 - [x] r editor (e.g. rStudio) 
 - [x] data 
+- [x] IQ 
 
 
 ## Contents 
