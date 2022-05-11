@@ -1,6 +1,12 @@
 # ---------------------------------
 # libraries
 # ---------------------------------
+# install.packages(c("arm", "car", "codebook", "coefplot", "tidyverse", "utils"))
+# install.packages(c("datasets", "devtools", "dplyr", "e1071", "foreign"))
+# install.packages(c("ggplot2", "ggpubr", "ggthemes", "grid", "gridExtra", "plotrix"))
+# install.packages(c("plyr", "psych", "RColorBrewer", "reshape", "rstatix"))
+# install.packages(c("haven", "hrbrthemes", "MASS", "moments", "pastecs"))
+# install.packages("Rcmdr")
 library(arm)
 library(car); library(codebook); library(coefplot)
 library(datasets); library(devtools); library(dplyr)
