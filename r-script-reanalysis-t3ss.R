@@ -12,7 +12,7 @@ library(car); library(codebook); library(coefplot)
 library(datasets); library(devtools); library(dplyr)
 library(e1071)
 library(foreign)
-library(ggplot2); library(ggpubr); library(ggthemes); library(grid); library(gridExtra)
+library(ggplot2); library(ggpubr); library(ggtext); library(ggthemes); library(grid); library(gridExtra)
 library(haven); library(hrbrthemes)
 library(MASS); library(moments)
 library(pastecs); library(plotrix); library(plyr); library(psych)
@@ -24,7 +24,7 @@ library(Rcmdr) # do not load unless needed, messes with exporting plots
 # ---------------------------------
 #   set working directory
 # ---------------------------------
-setwd("/home/visnu/MEGA/projects/higherStudies/c_bangladesh/MSc BRACU completed/biotechnology/04_spring_2013/thesis_550_A/manuscript/data"); getwd()
+setwd("/home/visnu/MEGA/projects/higherStudies/c_bangladesh/MSc BRACU completed/biotechnology/04_spring_2013/thesis_550_A/manuscript_files_t3ss/data"); getwd()
 
 # ---------------------------------
 #   list files in dir 
@@ -405,7 +405,7 @@ interval2 <- -qnorm((1-0.95)/2) # 95% multiplier
 
 # Plot 
 mPlots <- ggplot(allModelFrame, aes(colour = modelName)) + 
-  geom_hline(yintercept = 0, colour = gray(1/2), lty = 2) + 
+  geom_hline(yintercept = 0, colour = gray(1/2), lty = 3) + 
   geom_linerange(aes(x = Variable, 
                      ymin = Coefficient - SE*interval1, 
                      ymax = Coefficient + SE*interval1), 
@@ -420,7 +420,9 @@ mPlots <- ggplot(allModelFrame, aes(colour = modelName)) +
   theme_bw() 
 # + ggtitle("Comparing several models")
 
-print(mPlots)  # The trick is position_dodge()
+mPlots + theme(axis.text.y = element_text(face = "italic"))
+
+# print(mPlots)  # The trick is position_dodge()
 
 
 # -------------------------------
@@ -481,9 +483,29 @@ gnDf$gnNames <- factor(gnDf$gnNames,
                                   "ipgF", "ipgE", "ipgD", "icsB", "ipgA", "ipgB1", "ipgC", "ipaBCD", "virB", 
                                   "sen", "set", "ial", "ipaH", "p140"))
 
+bpSero <- ggplot(data = seroDf, aes(x = seroNames, y = seroPrcnt)) +
+  geom_bar(stat = "identity", width = 0.75, fill = "#c8c8c8") +
+  geom_text(aes(label = seroPrcnt), hjust = 1.12, vjust = 0.5, colour = "#333333") + 
+  theme_minimal() +
+  theme(legend.position="none") +
+  xlab("Serotypes") +
+  ylab("Percentage (%)") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 30, 10), limits = c(0, 27)) 
+
+bpCf <- ggplot(data = cfDf, aes(x = cfNames, y = cfPrcnt)) +
+  geom_bar(stat = "identity", width = 0.75, fill = "#ee9ca7") +
+  geom_text(aes(label = cfPrcnt), hjust = 1.12, vjust = 0.5, colour = "#333333") + 
+  theme_minimal() + 
+  theme(legend.position="none") +
+  xlab("Clinical features") +
+  ylab("Percentage (%)") +
+  coord_flip() +
+  scale_y_continuous(breaks = seq(0, 100, 10), limits = c(0, 82))
+
 bpGn <- ggplot(data = gnDf, aes(x = gnNames, y = gnPrcnt)) +
-  geom_bar(stat = "identity", width = 0.65, fill = "#6994c0", color = "#565656") +
-  geom_text(aes(label = gnPrcnt), hjust = 1.2, vjust = 0.5, colour = "#ffffff") + 
+  geom_bar(stat = "identity", width = 0.77, fill = "#92c6f3") +
+  geom_text(aes(label = gnPrcnt), hjust = 1.08, vjust = 0.5, colour = "#333333") + 
   # scale_color_grey() +
   theme_minimal() +
   # theme_classic() +
@@ -495,26 +517,10 @@ bpGn <- ggplot(data = gnDf, aes(x = gnNames, y = gnPrcnt)) +
   xlab("Genes and Plasmid (p140)") +
   ylab("Percentage (%)") +
   coord_flip() +
-  scale_y_continuous(breaks = seq(0, 100, 10), limits = c(0, 100))
+  scale_y_continuous(breaks = seq(0, 100, 10), limits = c(0, 100)) + 
+  theme(axis.text.y = element_text(face = "italic"))
 
-bpCf <- ggplot(data = cfDf, aes(x = cfNames, y = cfPrcnt)) +
-  geom_bar(stat = "identity", width = 0.35, fill = "#F77262", color = "#565656") +
-  geom_text(aes(label = cfPrcnt), hjust = 1.2, vjust = 0.5, colour = "#ffffff") + 
-  theme_minimal() + 
-  theme(legend.position="none") +
-  xlab("Clinical features") +
-  ylab("Percentage (%)") +
-  coord_flip() +
-  scale_y_continuous(breaks = seq(0, 100, 10), limits = c(0, 82))
+grid.arrange(bpSero, bpCf, bpGn, 
+             widths = c(1, 1.63), 
+             layout_matrix = cbind(c(1,2), c(3,3))) 
 
-bpSero <- ggplot(data = seroDf, aes(x = seroNames, y = seroPrcnt)) +
-  geom_bar(stat = "identity", width = 0.5, fill = "#a8a8a8", color = "#565656") +
-  geom_text(aes(label = seroPrcnt), hjust = 1.2, vjust = 0.5, colour = "#ffffff") + 
-  theme_minimal() +
-  theme(legend.position="none") +
-  xlab("Serotypes") +
-  ylab("Percentage (%)") +
-  coord_flip() +
-  scale_y_continuous(breaks = seq(0, 30, 10), limits = c(0, 27))
-
-grid.arrange(bpSero, bpCf, bpGn, layout_matrix = cbind(c(1,2), c(3,3)))
